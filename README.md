@@ -52,17 +52,20 @@ number of digits can follow towards the trail. A function identifier is of maxim
 ### Data Types
 
 The language supports the following types
-* **Integer type**: The keyword used for representing integer data type is int and will be supported by the
+#### **Integer type**: 
+The keyword used for representing integer data type is int and will be supported by the
 underlying architecture. A statically available number of the pattern [0-9][0-9]*
 is of integer type.
 
-* **Real type**: The keyword used for representing integer data type is real and will be supported by the
+#### **Real type**: 
+The keyword used for representing integer data type is real and will be supported by the
 underlying architecture. A statically available real number has the pattern [0-9][0-9]*
 [.][0-9][0-9] and is of type real. The language also supports exponent and mantissa form of real number representation. The
 regular expression for the same is [0-9][0-9]* [.][0-9][0-9] [E] [+|-| ∈] [0-9][0-9] restricting to exactly two
 digits in the exponent part.
 
-* **Record type**: This isthe constructed data type of the form of the Cartesian product of types of its constituent
+#### **Record type**: 
+This isthe constructed data type of the form of the Cartesian product of types of its constituent
 fields. For example the following record is defined to be of type 'finance' and its actual type is <int , real ,
 int> preserving the types and sequence of fields appearing in the record type definition.
 
@@ -98,5 +101,84 @@ depicted below. The record type #book declared in _main function is also visible
 The language supports name equivalence and not structural equivalence, which means that similar
 structured record definitions are treated different. For example, #new and #book are the two record types
 with similar structure (sequence and type of variables) but different names.
+
+An assignment statement with variables from two different record types is not allowed in the language.
+Also, once a record type is defined, its re-occurrence anywhere in the program is not allowed and is treated
+as an error.
+A variable of record type can only be multiplied or divided by a scalar (integer or real) i.e. two record type
+variables cannot be multiplied together nor can be divided by the other. Two operands (variables) of record
+type can be added, subtracted from one provided the types of the operands match and both the operands are of record type. An addition/subtraction means addition/subtraction of corresponding field values, for
+Example :
+```
+type record #finance : d5;
+type record #finance : c4;
+type record #finance : c3;
+c3 <--- c4 + d5;
+```
+
+#### Union Type: 
+
+A union type is similar to record structure in its lexical formations other than the union
+keyword used. For example
+
+```
+union #student
+type int: rollno;
+type real:marks;
+type int: age;
+endunion
+```
+
+As usual, the union data type refers to maximum of all fields memory allocation to the variables. Based on
+your understanding of unions, it is understood that the static type checking is not possible and it leads to
+spurious data access. In order to prevent the users from this situation, tagged union is supported in this
+language where the tag is computed at run time. The tag is part of the variant record following the same
+syntax as that of the record defining the (a) variant field as the union data type and (b) the fixed field of the
+tag. The tag can be of any primitive type integer or real.
+
+```
+definetype union #student as #newname;
+record #taggedunionexample
+type int: tagvalue;
+type newname: field;
+endrecord
+```
+
+The tagged union variable is defined in the similar way as other variables are. For example
+
+```
+type record #taggedunionexample b7bc34;
+```
+The variable b7bc34 of type #taggedunionexample which is a variant record has a fixed field tagvalue of
+integer type and the variant field of union type newname. The tagvalue field is used as
+
+```
+b7bc34.tagvalue = 1;
+b7bc34. field.rollno = 23;
+write(b7bc34. field.rollno); //No type error
+write(b7bc34. field.marks); // Compiler reports the type error – dynamic type checking
+b7bc34.tagvalue = 2;
+b7bc34. field.marks = 97.5;
+b7bc34.tagvalue = 3;
+b7bc34. field.age = 21;
+```
+
+#### Global: 
+This defines the scope of the variable as global and the variable specified as global is visible
+anywhere in the code. The syntax for specifying a variable of any type to be global is as follows
+`type int: c5d2: global;`
+
+#### Type definition (Aliases): 
+The language supports type redefinition using the keyword definetype for record
+and union data type. For example
+```
+definetype union #student as #newname;
+definetype record #book as #newbook;
+```
+Since record and union type definitions are visible anywhere in the program, their type definitions
+representing equivalent names are also visible anywhere in the program. Hence, the type definition for other
+records or unions cannot be type defined similar to the ones already defined.
+
+### Functions 
 
 
