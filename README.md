@@ -7,16 +7,17 @@ C code for the compiler project
 1. [Overview of Compiler]()
 2. [Sample Code]()
 3. [Language Specs]()
-  - [Variable Identifiers]()
-  - [Function Identifiers]()
-  - [Data Types]()
-      - [Integer]()
-      - [Real]()
-      - [Record]()
-      - [Union]()
-      - [Global]()
-      - [Type Definitions]()
-  - [Functions]()
+   - [Variable Identifiers]()
+   - [Function Identifiers]()
+   - [Data Types]()
+     - [Integer]()
+     - [Real]()
+     - [Record]()
+     - [Union]()
+     - [Global]()
+     - [Type Definitions]()
+   - [Functions]()
+
 
 ## Overview of a compiler
 
