@@ -52,17 +52,17 @@ number of digits can follow towards the trail. A function identifier is of maxim
 ### Data Types
 
 The language supports the following types
-**Integer type**: The keyword used for representing integer data type is int and will be supported by the
+* **Integer type**: The keyword used for representing integer data type is int and will be supported by the
 underlying architecture. A statically available number of the pattern [0-9][0-9]*
 is of integer type.
 
-**Real type**: The keyword used for representing integer data type is real and will be supported by the
+* **Real type**: The keyword used for representing integer data type is real and will be supported by the
 underlying architecture. A statically available real number has the pattern [0-9][0-9]*
 [.][0-9][0-9] and is of type real. The language also supports exponent and mantissa form of real number representation. The
 regular expression for the same is [0-9][0-9]* [.][0-9][0-9] [E] [+|-| ∈] [0-9][0-9] restricting to exactly two
 digits in the exponent part.
 
-**Record type**: This isthe constructed data type of the form of the Cartesian product of types of its constituent
+* **Record type**: This isthe constructed data type of the form of the Cartesian product of types of its constituent
 fields. For example the following record is defined to be of type 'finance' and its actual type is <int , real ,
 int> preserving the types and sequence of fields appearing in the record type definition.
 
