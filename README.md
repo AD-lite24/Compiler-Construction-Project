@@ -4,19 +4,19 @@ C code for the compiler project
 
 ## Table of contents:
 
-1. [Overview of Compiler]()
-2. [Sample Code]()
-3. [Language Specs]()
-   - [Variable Identifiers]()
-   - [Function Identifiers]()
-   - [Data Types]()
-     - [Integer]()
-     - [Real]()
-     - [Record]()
-     - [Union]()
-     - [Global]()
-     - [Type Definitions]()
-   - [Functions]()
+1. [Overview of Compiler](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#overview-of-a-compiler)
+2. [Sample Code](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#sample-code)
+3. [Language Specs](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#language-specs)
+   - [Variable Identifiers](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#variable-identifiers)
+   - [Function Identifiers](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#function-identifiers)
+   - [Data Types](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#data-types)
+     - [Integer](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#integer-type)
+     - [Real](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#real-type)
+     - [Record](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#real-type)
+     - [Union](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#union-type)
+     - [Global](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#global)
+     - [Type Definitions](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#type-definition-aliases)
+   - [Functions](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#functions)
 
 
 ## Overview of a compiler
