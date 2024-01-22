@@ -1,6 +1,7 @@
-#include "include/datastructures/hashtable.h"
+#include "datastructures/hashtable.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 h_item *create_item(long long int key, char *value) {
     h_item* item = malloc(sizeof(h_item));
