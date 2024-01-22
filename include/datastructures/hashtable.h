@@ -1,7 +1,7 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
-#define SIZE 5000
+#define HASHTABLE_SIZE 5000
 
 typedef struct h_item {
     long long int key;
