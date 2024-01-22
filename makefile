@@ -1,5 +1,5 @@
 CC = gcc
-UNITYDIR = /Users/adityadandwate/Desktop/acads/codes/coco/Compiler-Construction-Project/tests/unity
+UNITYDIR = tests/unity
 CFLAGS = -Wall -I./include -I./include/datastructures -I$(UNITYDIR) -g
 LIBS = -lm
 
