@@ -29,14 +29,18 @@ htable *create_table(int size) {
 }
 
 void free_item(h_item *item) {
-    free(item->value);
+    // free(item->value);
     free(item);
 }
 
 void free_table(htable *table) {
     for (int i = 0; i < table->size; i++)
     {
-        h_item *item = table->items[i];
+        // if (table == NULL) {
+        //     int b = 0;
+        // }
+        // h_item** test = table->items;
+        h_item* item = table->items[i];
 
         if (item != NULL)
             free_item(item);

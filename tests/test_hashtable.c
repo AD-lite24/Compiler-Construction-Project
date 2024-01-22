@@ -15,6 +15,7 @@ void tearDown(void)
 void test_create_table(void)
 {
     htable *table = create_table(10);
+    // printf("%d", table->size);
 
     TEST_ASSERT_NOT_NULL(table);
     TEST_ASSERT_EQUAL_INT(10, table->size);
@@ -33,6 +34,8 @@ void test_insert_and_retrieve(void)
     TEST_ASSERT_NOT_NULL(retrieved_item);
     TEST_ASSERT_EQUAL_INT(123, retrieved_item->key);
     TEST_ASSERT_EQUAL_STRING("value123", retrieved_item->value);
+
+    // printf("%s", retrieved_item->value);
 
     free_table(table);
 }
