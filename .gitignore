@@ -4,6 +4,7 @@
 # Compiled binaries
 /bin/
 
+/.vscode/
 # Prerequisites
 *.d
 
