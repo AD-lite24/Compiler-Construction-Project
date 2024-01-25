@@ -13,7 +13,6 @@ void test_createNewList(void) {
     TEST_ASSERT_NULL(testList->head);
     TEST_ASSERT_EQUAL_INT(0, testList->count);
 
-
 }
 
 void test_insertNodeFirst(void) {

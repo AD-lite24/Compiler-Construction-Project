@@ -21,9 +21,11 @@ tests: $(TEST_EXECUTABLE)
 	./$(TEST_EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
+	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) $^ -o $@
 
 $(TEST_EXECUTABLE): $(TEST_OBJECTS) $(OBJECTS)
+	@mkdir -p $(BINDIR)
 	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
