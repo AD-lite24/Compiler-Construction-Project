@@ -14,49 +14,53 @@ void tearDown(void)
 
 void test_create_table(void)
 {
-    htable *table = create_table(10);
-    // printf("%d", table->size);
+    HTABLE table = createTable();
 
     TEST_ASSERT_NOT_NULL(table);
-    TEST_ASSERT_EQUAL_INT(10, table->size);
     TEST_ASSERT_NOT_NULL(table->items);
 
-    free_table(table);
+    freeTable(table);
 }
 
 void test_insert_and_retrieve(void)
 {
-    htable *table = create_table(10);
+    HTABLE table = createTable();
 
-    ht_insert(table, 123, "value123");
+    htInsert(table, "value123");
 
-    h_item *retrieved_item = table->items[hashfunction(123, table->size)];
-    TEST_ASSERT_NOT_NULL(retrieved_item);
-    TEST_ASSERT_EQUAL_INT(123, retrieved_item->key);
-    TEST_ASSERT_EQUAL_STRING("value123", retrieved_item->value);
+    int key = hashfunction("value123");
+    LL list = table->items[key];
+    NODE retrievedNode = list->head;
 
-    // printf("%s", retrieved_item->value);
+    TEST_ASSERT_NOT_NULL(retrievedNode);
+    TEST_ASSERT_EQUAL_STRING("value123", retrievedNode->item);
 
-    free_table(table);
+    freeTable(table);
 }
 
 void test_insert_collision(void)
 {
-    htable *table = create_table(10);
+    HTABLE table = createTable();
 
-    ht_insert(table, 123, "value123");
-    ht_insert(table, 133, "value133");
+    htInsert(table, "value123");
+    htInsert(table, "value133");
 
-    h_item *item1 = table->items[hashfunction(123, table->size)];
-    h_item *item2 = table->items[hashfunction(133, table->size)];
-    TEST_ASSERT_NOT_NULL(item1);
-    TEST_ASSERT_NOT_NULL(item2);
-    TEST_ASSERT_EQUAL_INT(123, item1->key);
-    TEST_ASSERT_EQUAL_STRING("value123", item1->value);
-    TEST_ASSERT_EQUAL_INT(133, item2->key);
-    TEST_ASSERT_EQUAL_STRING("value133", item2->value);
+    int key1 = hashfunction("value123");
+    int key2 = hashfunction("value133");
 
-    free_table(table);
+    LL list1 = table->items[key1];
+    LL list2 = table->items[key2];
+
+    NODE retrievedNode1 = list1->head;
+    NODE retrievedNode2 = list2->head;
+
+    TEST_ASSERT_NOT_NULL(retrievedNode1);
+    TEST_ASSERT_NOT_NULL(retrievedNode2);
+
+    TEST_ASSERT_EQUAL_STRING("value123", retrievedNode1->item);
+    TEST_ASSERT_EQUAL_STRING("value133", retrievedNode2->item);
+
+    freeTable(table);
 }
 
 int main(void)
