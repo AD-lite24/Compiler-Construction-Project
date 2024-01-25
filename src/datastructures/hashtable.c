@@ -26,7 +26,8 @@ HTABLE createTable(){
 
 void htInsert(HTABLE table, char* value){
     int key=hashfunction(value);
-    NODE newNode=createNewNode(value);
+    node_item newItem= createNewItem(value);
+    NODE newNode=createNewNode(newItem);
     if(!table->items[key])table->items[key]=createNewList();
     insertNodeFirst(newNode,table->items[key]);
 }
