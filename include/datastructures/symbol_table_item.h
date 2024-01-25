@@ -20,6 +20,6 @@ typedef struct NodeItem
     char* val;
 } node_item;
 
-node_item createNewItem();
+node_item createNewItem(char* val);
 
 #endif
