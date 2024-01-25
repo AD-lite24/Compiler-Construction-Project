@@ -13,6 +13,7 @@ void test_createNewList(void) {
     TEST_ASSERT_NULL(testList->head);
     TEST_ASSERT_EQUAL_INT(0, testList->count);
 
+    freeLL(testList);
 }
 
 void test_insertNodeFirst(void) {
@@ -25,9 +26,13 @@ void test_insertNodeFirst(void) {
 
     TEST_ASSERT_EQUAL_PTR(newNode, testList->head);
     TEST_ASSERT_EQUAL_INT(1, testList->count);
+
+    freeLL(testList);
 }
 
 void test_insertNodeLast(void) {
+
+    LL testList = createNewList();
     node_item data1 = {/* data structure initialization */};
     node_item data2 = {/* data structure initialization */};
 
@@ -40,9 +45,14 @@ void test_insertNodeLast(void) {
     TEST_ASSERT_EQUAL_PTR(newNode1, testList->head);
     TEST_ASSERT_EQUAL_PTR(newNode2, testList->head->next);
     TEST_ASSERT_EQUAL_INT(2, testList->count);
+
+    freeLL(testList);
 }
 
 void test_removeNodeFirst(void) {
+
+    LL testList = createNewList();
+
     node_item data1 = {/* data structure initialization */};
     node_item data2 = {/* data structure initialization */};
 
@@ -64,6 +74,8 @@ void test_removeNodeFirst(void) {
     TEST_ASSERT_EQUAL_PTR(newNode2, testList->head);
     TEST_ASSERT_NULL(newNode1->next);
     TEST_ASSERT_EQUAL_INT(1, testList->count);
+
+    freeLL(testList);
 }
 
 void test_removeNodeLast(void) {

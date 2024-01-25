@@ -30,6 +30,6 @@ void removeNodeFirst(LL list);
 
 void removeNodeLast(LL list);
 
-
+void freeLL(LL list);
 
 #endif

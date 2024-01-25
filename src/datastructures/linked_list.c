@@ -70,3 +70,16 @@ void removeNodeLast(LL list) {
     list->count--;
 }
 
+void freeLL(LL list) {
+    NODE current = list->head;
+    NODE next;
+
+    while (current != NULL)
+    {
+        next = current->next;
+        free(current);
+        current = next;
+    }
+
+    free(list);
+}
