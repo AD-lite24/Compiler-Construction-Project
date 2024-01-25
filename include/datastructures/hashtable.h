@@ -23,4 +23,3 @@ void freeList(LL list);
 int hashfunction(char* name);
 
 #endif
-
