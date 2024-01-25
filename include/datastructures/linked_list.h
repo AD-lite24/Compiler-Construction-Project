@@ -4,7 +4,7 @@
 #include "datastructures/symbol_table_item.h"
 
 typedef struct Node {
-    char* item;
+    node_item item;
     struct Node* next;
 } node;
 
@@ -18,7 +18,7 @@ typedef ll* LL;
 
 LL createNewList();
 
-NODE createNewNode(char* data);
+NODE createNewNode(node_item data);
 
 void freeNode(NODE node);
 
