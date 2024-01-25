@@ -23,12 +23,17 @@ void insertNodeFirst(NODE node, LL list) {
 }
 
 void insertNodeLast(NODE node, LL list) {
-    NODE temp = list->head;
-    while (temp->next) {
-        temp = temp->next;
-    }
 
-    temp->next = node;
+    if (!node || !list) return;
+
+    if (list->head == NULL) list->head = node;
+
+    else {
+        NODE temp = list->head;
+        while (temp->next) temp = temp->next;
+        temp->next = node;
+    }
+    node->next = NULL;
     list->count++;
 }
 

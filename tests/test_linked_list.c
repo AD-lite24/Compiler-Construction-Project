@@ -1,24 +1,24 @@
 #include "datastructures/linked_list.h"
+#include "test_linked_list.h"
 #include <unity.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-void setUp(void) {
-    // set up test environment, if needed
-}
-
-void tearDown(void) {
-    // clean up test environment, if needed
-}
-
-LL testList;
 
 void test_createNewList(void) {
+    LL testList;
+    testList = createNewList();
+
+    TEST_ASSERT_NOT_NULL(testList);
     TEST_ASSERT_NULL(testList->head);
     TEST_ASSERT_EQUAL_INT(0, testList->count);
+
+
 }
 
 void test_insertNodeFirst(void) {
+    LL testList;
+    testList = createNewList();
     node_item data = {/*data structure initialization*/};
     NODE newNode = createNewNode(data);
 
@@ -67,20 +67,14 @@ void test_removeNodeFirst(void) {
     TEST_ASSERT_EQUAL_INT(1, testList->count);
 }
 
-void test_removeNodeLast(void)
-{
+void test_removeNodeLast(void) {
     // Similar to test_removeNodeFirst, but test removeNodeLast
 }
 
-int main(void)
-{
-    UNITY_BEGIN();
+void test_linkedlist() {
     RUN_TEST(test_createNewList);
     RUN_TEST(test_insertNodeFirst);
     RUN_TEST(test_insertNodeLast);
     RUN_TEST(test_removeNodeFirst);
     RUN_TEST(test_removeNodeLast);
-    UNITY_END();
-
-    return 0;
 }

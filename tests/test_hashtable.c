@@ -1,16 +1,7 @@
 #include <unity.h>
 #include <stdio.h>
 #include "datastructures/hashtable.h"
-
-void setUp(void)
-{
-    // set up test environment, if needed
-}
-
-void tearDown(void)
-{
-    // clean up test environment, if needed
-}
+#include "test_hashtable.h"
 
 void test_create_table(void)
 {
@@ -40,8 +31,7 @@ void test_insert_and_retrieve(void)
     free_table(table);
 }
 
-void test_insert_collision(void)
-{
+void test_insert_collision(void) {
     htable *table = create_table(10);
 
     ht_insert(table, 123, "value123");
@@ -59,14 +49,8 @@ void test_insert_collision(void)
     free_table(table);
 }
 
-int main(void)
-{
-    UNITY_BEGIN();
-
-    // Run the test cases
+void test_hash_table() {
     RUN_TEST(test_create_table);
     RUN_TEST(test_insert_and_retrieve);
     RUN_TEST(test_insert_collision);
-
-    return UNITY_END();
 }

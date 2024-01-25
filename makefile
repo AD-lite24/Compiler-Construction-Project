@@ -15,7 +15,7 @@ TEST_OBJECTS = $(patsubst $(TESTDIR)/%.c, $(OBJDIR)/%.o, $(TEST_SOURCES))
 EXECUTABLE = $(BINDIR)/my_program
 TEST_EXECUTABLE = $(BINDIR)/test_suite
 
-all: $(EXECUTABLE)
+all: $(EXECUTABLE) $(TEST_EXECUTABLE)
 
 tests: $(TEST_EXECUTABLE)
 	./$(TEST_EXECUTABLE)
