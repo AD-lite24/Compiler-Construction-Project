@@ -1,93 +1,48 @@
 #include "datastructures/hashtable.h"
+#include "datastructures/linked_list.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-h_item *create_item(long long int key, char *value) {
-    h_item* item = malloc(sizeof(h_item));
-    item->key = key;
-    strcpy(item->value, value);
-    return item;
+//Using polynomial rolling hashing function
+//Change to long long later if required.
+int hashfunction(char* name) {
+    int hashval=0;
+    int pow=1;
+    int ln=strlen(name);
+    for(int i=0;i<ln;i++){
+        hashval=(hashval+((*(name+i)-'0'+1)%HASHTABLE_SIZE)*pow)%HASHTABLE_SIZE;
+        pow=(pow*31)%HASHTABLE_SIZE;
+    }
+    return hashval;
 }
 
-int hashfunction(long long int key, int size) {
-    return key%size;
-}
-
-htable *create_table(int size) {
-    if (size == -1) 
-        size = HASHTABLE_SIZE;
-
-    htable* table = malloc(sizeof(htable));
-    table->size = size;
-    table->items = calloc(table->size, sizeof(h_item*));
-
-    for (int i = 0; i < table->size; i++)
-        table->items[i] = NULL;
-
+HTABLE createTable(){
+    HTABLE table=malloc(sizeof(htable));
+    table->items = calloc(HASHTABLE_SIZE,sizeof(LL));
+    for(int i=0;i < HASHTABLE_SIZE;i++)table->items[i]=NULL;
     return table;
 }
 
-void free_item(h_item *item) {
+void freeItem(H_ITEM item) {
     // free(item->value);
     free(item);
 }
 
-void free_table(htable *table) {
-    for (int i = 0; i < table->size; i++)
-    {
-        // if (table == NULL) {
-        //     int b = 0;
-        // }
-        // h_item** test = table->items;
-        h_item* item = table->items[i];
+void htInsert(HTABLE table,char* value){
+    int key=hashfunction(value);
+    NODE newNode=createNewNode(value);
+    if(!table->items[key])table->items[key]=createNewList();
+    insertNodeFirst(newNode,table->items[key]);
+}
 
-        if (item != NULL)
-            free_item(item);
-    }
+void freeList(LL list){
+    free(list);
+}
 
+void freeTable(HTABLE table) {
+    for(int i=0;i< HASHTABLE_SIZE ;i++)freeList(table->items[i]);
     free(table->items);
     free(table);
 }
 
-void print_table(htable *table) {
-    for (int i = 0; i < table->size; i++)
-        if (table->items[i])
-            printf("Index:%d, Key:%lld, Value:%s\n", i, table->items[i]->key, table->items[i]->value);   
-}
-
-void ht_insert(htable *table, long long int key, char *value)
-{
-
-    h_item *item = create_item(key, value);
-
-    int index = hashfunction(key, table->size);
-
-    h_item* curr_item = table->items[index];
-
-    // No collision resolution applied here
-
-    if (curr_item == NULL)
-    {
-        // Key does not exist.
-        if (table->count == table->size)
-        {
-            // HashTable is full.
-            printf("Insert Error: Hash Table is full\n");
-            free_item(item);
-            return;
-        }
-        // Insert directly.
-        table->items[index] = item;
-        table->count++;
-    }
-
-    else
-    {
-        if (curr_item->key == key)
-        {
-            strcpy(table->items[index]->value, value);
-            return;
-        }
-    }
-}
