@@ -24,11 +24,6 @@ HTABLE createTable(){
     return table;
 }
 
-void freeItem(H_ITEM item) {
-    // free(item->value);
-    free(item);
-}
-
 void htInsert(HTABLE table,char* value){
     int key=hashfunction(value);
     NODE newNode=createNewNode(value);
