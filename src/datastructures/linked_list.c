@@ -19,6 +19,7 @@ NODE createNewNode(node_item data) {
 void insertNodeFirst(NODE node, LL list) {
     node->next = list->head;
     list->head = node;
+    list->count++;
 }
 
 void insertNodeLast(NODE node, LL list) {
@@ -28,6 +29,7 @@ void insertNodeLast(NODE node, LL list) {
     }
 
     temp->next = node;
+    list->count++;
 }
 
 void freeNode(NODE node) {
@@ -44,6 +46,7 @@ void removeNodeFirst(LL list) {
     list->head = temp;
     rem->next = NULL;
     free(rem);
+    list->count--;
 }
 
 void removeNodeLast(LL list) {
@@ -59,5 +62,6 @@ void removeNodeLast(LL list) {
 
     prev->next = NULL;
     freeNode(temp);
+    list->count--;
 }
 
