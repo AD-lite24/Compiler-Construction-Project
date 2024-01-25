@@ -19,13 +19,37 @@ void test_createNewList(void) {
 void test_insertNodeFirst(void) {
     LL testList;
     testList = createNewList();
-    node_item data = {/*data structure initialization*/};
-    NODE newNode = createNewNode(data);
 
-    insertNodeFirst(newNode, testList);
+    node_item data1 = {};
+    node_item data2 = {};
+    node_item data3 = {};
+    node_item data4 = {};
+    node_item data5 = {};
 
-    TEST_ASSERT_EQUAL_PTR(newNode, testList->head);
+    NODE newNode1 = createNewNode(data1);
+    insertNodeFirst(newNode1, testList);
+    TEST_ASSERT_EQUAL_PTR(newNode1, testList->head);
     TEST_ASSERT_EQUAL_INT(1, testList->count);
+
+    NODE newNode2 = createNewNode(data2);
+    insertNodeFirst(newNode2, testList);
+    TEST_ASSERT_EQUAL_PTR(newNode2, testList->head);
+    TEST_ASSERT_EQUAL_INT(2, testList->count);
+
+    NODE newNode3 = createNewNode(data3);
+    insertNodeFirst(newNode3, testList);
+    TEST_ASSERT_EQUAL_PTR(newNode3, testList->head);
+    TEST_ASSERT_EQUAL_INT(3, testList->count);
+
+    NODE newNode4 = createNewNode(data4);
+    insertNodeFirst(newNode4, testList);
+    TEST_ASSERT_EQUAL_PTR(newNode4, testList->head);
+    TEST_ASSERT_EQUAL_INT(4, testList->count);
+
+    NODE newNode5 = createNewNode(data5);
+    insertNodeFirst(newNode5, testList);
+    TEST_ASSERT_EQUAL_PTR(newNode5, testList->head);
+    TEST_ASSERT_EQUAL_INT(5, testList->count);
 
     freeLL(testList);
 }
