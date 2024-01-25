@@ -12,7 +12,7 @@ LL createNewList(){
 NODE createNewNode(node_item data) {
     NODE new_node = malloc(sizeof(node));
     new_node->next = NULL;
-    new_node->item = data;
+    new_node->item = data->val;
     return new_node;
 }
 
