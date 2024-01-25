@@ -14,9 +14,10 @@ typedef ref_list* REFLIST;
 
 typedef struct NodeItem
 {
-    char name[MAXLEN];
-    int size;
-    int scope;
+    // char name[MAXLEN];
+    // int size;
+    // int scope;
+    char* val;
 } node_item;
 
 node_item createNewItem();
