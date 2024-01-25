@@ -2,16 +2,6 @@
 #include <stdio.h>
 #include "datastructures/hashtable.h"
 
-void setUp(void)
-{
-    // set up test environment, if needed
-}
-
-void tearDown(void)
-{
-    // clean up test environment, if needed
-}
-
 void test_create_table(void)
 {
     HTABLE table = createTable();
