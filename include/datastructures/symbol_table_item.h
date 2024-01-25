@@ -3,13 +3,14 @@
 
 #define MAXLEN 1024
 
+
 typedef struct LineReferenceList {
-
     int line;
-    REFLIST next;
+    struct LineReferenceList* next;
     int type;
-
 } ref_list;
+
+typedef ref_list* REFLIST;
 
 typedef struct NodeItem
 {
@@ -17,8 +18,6 @@ typedef struct NodeItem
     int size;
     int scope;
 } node_item;
-
-typedef ref_list* REFLIST;
 
 node_item createNewItem();
 

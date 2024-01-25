@@ -5,15 +5,15 @@
 
 typedef struct Node {
     node_item item;
-    NODE next;
+    struct Node* next;
 } node;
+
+typedef node* NODE;
 
 typedef struct LinkedList {
     NODE head;
     int count;
 } ll;
-
-typedef node* NODE;
 typedef ll* LL;
 
 LL createNewList();

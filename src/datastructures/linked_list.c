@@ -51,7 +51,7 @@ void removeNodeFirst(LL list) {
 
 void removeNodeLast(LL list) {
     if (!list->head) 
-        return NULL;
+        return;
 
     NODE temp = list->head;
     NODE prev;
