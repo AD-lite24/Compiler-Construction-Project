@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include "datastructures/hashtable.h"
 
-void test_create_table(void)
-{
+void test_create_table(void) {
     HTABLE table = createTable();
 
     TEST_ASSERT_NOT_NULL(table);
@@ -12,8 +11,7 @@ void test_create_table(void)
     freeTable(table);
 }
 
-void test_insert_and_retrieve(void)
-{
+void test_insert_and_retrieve(void) {
     HTABLE table = createTable();
 
     char* values[] = {"value1", "value2", "value3", "value4", "value5", "value6", "value7", "value8", "value9", "value10",
@@ -34,8 +32,7 @@ void test_insert_and_retrieve(void)
     freeTable(table);
 }
 
-void test_insert_collision(void)
-{
+void test_insert_collision(void) {
     HTABLE table = createTable();
 
     char* values1[] = {"value1", "value2", "value3", "value4", "value5"};
@@ -66,14 +63,8 @@ void test_insert_collision(void)
     freeTable(table);
 }
 
-int main(void)
-{
-    UNITY_BEGIN();
-
-    // Run the test cases
+int test_hash_table() {
     RUN_TEST(test_create_table);
     RUN_TEST(test_insert_and_retrieve);
     RUN_TEST(test_insert_collision);
-
-    return UNITY_END();
 }

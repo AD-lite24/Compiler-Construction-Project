@@ -4,6 +4,6 @@
 
 node_item createNewItem(char* val){
   node_item itm;
-  itm.value=val;
-  return node_item;
+  itm.val=val;
+  return itm;
 }
