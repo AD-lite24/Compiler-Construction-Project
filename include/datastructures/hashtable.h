@@ -3,29 +3,60 @@
 
 #define HASHTABLE_SIZE 5000
 
+typedef struct Node {
+    char* item;
+    struct Node* next;
+} node;
+
+typedef node* NODE;
+
+typedef struct LinkedList {
+    NODE head;
+    int count;
+} ll;
+typedef ll* LL;
+
+LL createNewList();
+
+NODE createNewNode(char* data);
+
+void freeNode(NODE node);
+
+void insertNodeFirst(NODE node, LL list);
+
+void insertNodeLast(NODE node, LL list);
+
+void removeNodeFirst(LL list);
+
+void removeNodeLast(LL list);
+
+
 typedef struct h_item {
     long long int key;
     char value[30];
 } h_item;
 
+typedef h_item* H_ITEM;
+
 typedef struct hashtable {
-    h_item **items;
-    int size;
+    LL* items;
     int count;
 } htable;
 
-h_item *create_item(long long int key, char *value);
+typedef htable* HTABLE;
 
-htable *create_table(int size);
+H_ITEM createItem(long long int key, char *value);
 
-void print_table(htable *table);
+HTABLE createTable();
 
-void ht_insert(htable *table, long long int key, char *value);
+// void printTable(HTABLE table);
 
-void free_item(h_item *item);
+void htInsert(HTABLE table,char *value);
 
-void free_table(htable *table);
+void freeItem(H_ITEM item);
 
-int hashfunction(long long int key, int size);
+void freeTable(HTABLE table);
+
+int hashfunction(char* name);
 
 #endif 
