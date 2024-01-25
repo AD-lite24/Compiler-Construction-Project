@@ -31,7 +31,7 @@ void test_insert_and_retrieve(void)
 
 
 void test_insert_collision(void) {
-    htable *table = create_table(10);
+    htable *table = createTable();
 
 
     htInsert(table, "value123");

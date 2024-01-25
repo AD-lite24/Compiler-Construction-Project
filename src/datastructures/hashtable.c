@@ -24,7 +24,7 @@ HTABLE createTable(){
     return table;
 }
 
-void htInsert(HTABLE table,char* value){
+void htInsert(HTABLE table, char* value){
     int key=hashfunction(value);
     NODE newNode=createNewNode(value);
     if(!table->items[key])table->items[key]=createNewList();
