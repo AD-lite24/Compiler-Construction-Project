@@ -1,15 +1,8 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
+#include "tokens/tokens.h"
 
 #define MAXLEN 1024
-
-// token types
-#define NUM_TK 0
-#define R_NUM_TK 1
-#define RUID 2
-#define FUNID_TK 3
-#define FIELDID_TK 4
-#define ID_TK 5
 
 typedef struct LineReferenceList {
     int line;
@@ -20,10 +13,31 @@ typedef struct LineReferenceList {
 typedef ref_list* REFLIST;
 
 typedef struct NodeItem {
+
     char* name;
     int size;
-    int scope;
+    REFLIST ref_head;
+    Token token;
+
+    // values
+    int int_val;
+    double real_val;
+
+    // Record and union type here 
+    
+    // function params
+    PARAM* input_params;
+    PARAM* output_params;
+    int num_of_inp_params;
+    int num_of_out_params;
+
 } node_item;
+
+typedef struct ParamItem {
+
+} ParamItem;
+
+typedef ParamItem* PARAM;
 
 node_item createNewItem(char* val);
 
