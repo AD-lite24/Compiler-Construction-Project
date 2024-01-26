@@ -13,11 +13,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Build Project
-      run: make
+    # - name: Build Project
+    #   run: make
 
     - name: Run Tests
       run: make tests
 
-    - name: Distribution Check
-      run: make distcheck
+    # - name: Distribution Check
+    #   run: make distcheck

@@ -62,6 +62,7 @@ void test_insert_collision(void) {
 
     freeTable(table);
 }
+
 void test_hash_table() {
     RUN_TEST(test_create_table);
     RUN_TEST(test_insert_and_retrieve);
