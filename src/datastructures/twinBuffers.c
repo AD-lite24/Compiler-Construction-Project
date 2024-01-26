@@ -8,7 +8,6 @@
 char* buf1;
 char* buf2;
 FILE* fpclean;
-
 FILE* removeComments(FILE* fp1){
     FILE* fp2=(FILE*) malloc(sizeof(FILE));
     fp2 = fopen("WithoutComments.txt", "w+");
@@ -59,7 +58,7 @@ void initializeBuffers(){
     fclose(fpwcom);
     fseek(fpclean,0,SEEK_SET);
     int readlen;
-    while(fpclean && strlen(buf1)<BUFFER_SIZE && !feof(fpclean)){
+    if(fpclean && !feof(fpclean)){
         readlen=fread(buf1,sizeof(char),BUFFER_SIZE,fpclean);
     }
     buf1[readlen++]='\0';
@@ -69,19 +68,22 @@ void initializeBuffers(){
 
 void reloadBuffer(char* buf){
     int readlen;
-    if(!fpclean)printf("Hehe sed Harsh Deshpande");
-    while(fpclean && strlen(buf)<BUFFER_SIZE && !feof(fpclean)){
-        readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
-    }
+    // memset(buf1, NULL, 1024);
+    if(fpclean /*&& forward - buf <BUFFER_SIZE*/ && !feof(fpclean)) readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
+    // while(fpclean && forward - buf <BUFFER_SIZE && !feof(fpclean)){
+    //     readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
+
+    // }
     buf[readlen++]='\0';
 }
 
 void traverseBuffer(){
     char* lexemeBegin=(char*) malloc(sizeof(char));
-    char* forward=(char*) malloc(sizeof(char));
+    char * forward=(char*) malloc(sizeof(char));
     lexemeBegin=buf1;
     forward=buf1;
     while(1){
+        char c=*forward;
         switch(*(forward++)){
             case '\0':
                 if((forward)==(buf1+1025)){
@@ -102,7 +104,8 @@ void traverseBuffer(){
                 }
                 break;
             default:
-                printf("%c", *(forward));
+                printf("%c", c);
+
         }
     }
     
