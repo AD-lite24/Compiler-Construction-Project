@@ -1,7 +1,7 @@
 #ifndef LINKED_L
 #define LINKED_L
 
-#include "datastructures/symbol_table_item.h"
+#include "symbol_table/symboltable.h"
 
 typedef struct Node {
     node_item item;
