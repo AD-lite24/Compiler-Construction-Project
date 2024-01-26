@@ -10,12 +10,12 @@ void tearDown(void) {
 
 }
 
-int main(void)
-{
+int main(void) {
     UNITY_BEGIN();
 
     test_linkedlist();
     test_hash_table();
-
+    test_trie();
+    
     return UNITY_END();
 }

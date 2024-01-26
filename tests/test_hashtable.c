@@ -26,7 +26,7 @@ void test_insert_and_retrieve(void) {
         LL list = table->items[key];
         NODE retrievedNode = list->head;
         TEST_ASSERT_NOT_NULL(retrievedNode);
-        TEST_ASSERT_EQUAL_STRING(values[i], retrievedNode->item.val);
+        TEST_ASSERT_EQUAL_STRING(values[i], retrievedNode->item.name);
     }
 
     freeTable(table);
@@ -56,8 +56,8 @@ void test_insert_collision(void) {
         TEST_ASSERT_NOT_NULL(retrievedNode1);
         TEST_ASSERT_NOT_NULL(retrievedNode2);
 
-        TEST_ASSERT_EQUAL_STRING(values1[i], retrievedNode1->item.val);
-        TEST_ASSERT_EQUAL_STRING(values2[i], retrievedNode2->item.val);
+        TEST_ASSERT_EQUAL_STRING(values1[i], retrievedNode1->item.name);
+        TEST_ASSERT_EQUAL_STRING(values2[i], retrievedNode2->item.name);
     }
 
     freeTable(table);
