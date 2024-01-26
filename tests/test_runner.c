@@ -10,8 +10,7 @@ void tearDown(void) {
 
 }
 
-int main(void)
-{
+int main(void) {
     UNITY_BEGIN();
 
     test_linkedlist();
