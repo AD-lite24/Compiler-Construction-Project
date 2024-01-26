@@ -80,7 +80,6 @@ void reloadBuffer(char* buf){
 void traverseBuffer(){
     char* lexemeBegin=(char*) malloc(sizeof(char));
     char * forward=(char*) malloc(sizeof(char));
-    char * forward=(char*) malloc(sizeof(char));
     lexemeBegin=buf1;
     forward=buf1;
     while(1){
