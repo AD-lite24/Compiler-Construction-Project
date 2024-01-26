@@ -15,6 +15,7 @@ int main(void) {
 
     test_linkedlist();
     test_hash_table();
-
+    test_trie();
+    
     return UNITY_END();
 }

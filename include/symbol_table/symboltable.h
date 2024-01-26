@@ -25,6 +25,6 @@ typedef struct NodeItem {
     int scope;
 } node_item;
 
-node_item createNewItem(char* val);
+node_item createNewItem(char* name);
 
 #endif
