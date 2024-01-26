@@ -1,5 +1,6 @@
 #include "datastructures/linked_list.h"
 #include "test_linked_list.h"
+#include "datastructures/symbol_table_item.h"
 #include <unity.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -57,8 +58,8 @@ void test_insertNodeFirst(void) {
 void test_insertNodeLast(void) {
 
     LL testList = createNewList();
-    node_item data1 = {/* data structure initialization */};
-    node_item data2 = {/* data structure initialization */};
+    node_item data1 = createNewItem("val1");
+    node_item data2 = createNewItem("val2");
 
     NODE newNode1 = createNewNode(data1);
     NODE newNode2 = createNewNode(data2);
@@ -77,8 +78,8 @@ void test_removeNodeFirst(void) {
 
     LL testList = createNewList();
 
-    node_item data1 = {/* data structure initialization */};
-    node_item data2 = {/* data structure initialization */};
+    node_item data1 = createNewItem("val1");
+    node_item data2 = createNewItem("val2");
 
     NODE newNode1 = createNewNode(data1);
     NODE newNode2 = createNewNode(data2);
@@ -96,7 +97,6 @@ void test_removeNodeFirst(void) {
 
     // Ensure the first node is removed
     TEST_ASSERT_EQUAL_PTR(newNode2, testList->head);
-    TEST_ASSERT_NULL(newNode1->next);
     TEST_ASSERT_EQUAL_INT(1, testList->count);
 
     freeLL(testList);

@@ -50,8 +50,8 @@ void removeNodeFirst(LL list) {
     NODE rem = list->head;
     list->head = temp;
     rem->next = NULL;
-    free(rem);
     list->count--;
+    freeNode(rem);
 }
 
 void removeNodeLast(LL list) {
