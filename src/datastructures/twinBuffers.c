@@ -8,7 +8,6 @@
 char* buf1;
 char* buf2;
 FILE* fpclean;
-
 FILE* removeComments(FILE* fp1){
     FILE* fp2=(FILE*) malloc(sizeof(FILE));
     fp2 = fopen("WithoutComments.txt", "w+");
@@ -70,15 +69,18 @@ void initializeBuffers(){
 void reloadBuffer(char* buf){
     int readlen;
     if(!fpclean)printf("Hehe sed Harsh Deshpande");
-    while(fpclean && strlen(buf)<BUFFER_SIZE && !feof(fpclean)){
-        readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
-    }
+    // memset(buf1, NULL, 1024);
+    if(fpclean /*&& forward - buf <BUFFER_SIZE*/ && !feof(fpclean)) readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
+    // while(fpclean && forward - buf <BUFFER_SIZE && !feof(fpclean)){
+    //     readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
+
+    // }
     buf[readlen++]='\0';
 }
 
 void traverseBuffer(){
     char* lexemeBegin=(char*) malloc(sizeof(char));
-    char* forward=(char*) malloc(sizeof(char));
+    char * forward=(char*) malloc(sizeof(char));
     lexemeBegin=buf1;
     forward=buf1;
     while(1){

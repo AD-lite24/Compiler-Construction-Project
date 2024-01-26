@@ -49,3 +49,168 @@ FILE* removeComments(FILE* fp1){
     // fclose(fp2);
     return fp2;
 }
+
+1
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define BUFFER_SIZE 1024
+
+char* buf1;
+char* buf2;
+
+FILE* removeComments(FILE* fp1){
+    FILE* fp2=(FILE*) malloc(sizeof(FILE));
+    fp2 = fopen("WithoutComments.txt", "w+");
+    // open the file in which we supposed to write
+
+    if (fp1 == NULL || fp2 == NULL)
+    {
+        // handle error in opening of any file
+        printf("Error reading file");
+        exit(1);
+    }
+
+    char c; // read character by character input in this variable
+    bool start = 0;
+    // if start==0, no comment is being read
+    // if start==1, a comment is being read
+    
+    while ((c = fgetc(fp1)) != EOF)
+    {
+        if (c == '
+        {
+            // comment start
+            start = 1;
+        }
+        if (start == 0)
+        {
+            // write only when no comment is being read
+            fputc(c, fp2);
+        }
+        if (start == 1 && c == '\n')
+        {
+            // if comment is in progress and we encounter endline, end the comment
+            start = 0;
+            fputc('\n',fp2);
+        }
+    }
+
+    // fclose(fp1);
+    // fclose(fp2);
+    return fp2;
+}
+
+2
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define BUFFER_SIZE 1024
+
+char* buf1;
+char* buf2;
+
+FILE* removeComments(FILE* fp1){
+    FILE* fp2=(FILE*) malloc(sizeof(FILE));
+    fp2 = fopen("WithoutComments.txt", "w+");
+    // open the file in which we supposed to write
+
+    if (fp1 == NULL || fp2 == NULL)
+    {
+        // handle error in opening of any file
+        printf("Error reading file");
+        exit(1);
+    }
+
+    char c; // read character by character input in this variable
+    bool start = 0;
+    // if start==0, no comment is being read
+    // if start==1, a comment is being read
+    
+    while ((c = fgetc(fp1)) != EOF)
+    {
+        if (c == '
+        {
+            // comment start
+            start = 1;
+        }
+        if (start == 0)
+        {
+            // write only when no comment is being read
+            fputc(c, fp2);
+        }
+        if (start == 1 && c == '\n')
+        {
+            // if comment is in progress and we encounter endline, end the comment
+            start = 0;
+            fputc('\n',fp2);
+        }
+    }
+
+    // fclose(fp1);
+    // fclose(fp2);
+    return fp2;
+}
+
+3
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define BUFFER_SIZE 1024
+
+char* buf1;
+char* buf2;
+
+FILE* removeComments(FILE* fp1){
+    FILE* fp2=(FILE*) malloc(sizeof(FILE));
+    fp2 = fopen("WithoutComments.txt", "w+");
+    // open the file in which we supposed to write
+
+    if (fp1 == NULL || fp2 == NULL)
+    {
+        // handle error in opening of any file
+        printf("Error reading file");
+        exit(1);
+    }
+
+    char c; // read character by character input in this variable
+    bool start = 0;
+    // if start==0, no comment is being read
+    // if start==1, a comment is being read
+    
+    while ((c = fgetc(fp1)) != EOF)
+    {
+        if (c == '
+        {
+            // comment start
+            start = 1;
+        }
+        if (start == 0)
+        {
+            // write only when no comment is being read
+            fputc(c, fp2);
+        }
+        if (start == 1 && c == '\n')
+        {
+            // if comment is in progress and we encounter endline, end the comment
+            start = 0;
+            fputc('\n',fp2);
+        }
+    }
+
+    // fclose(fp1);
+    // fclose(fp2);
+    return fp2;
+}
+
+
+4
