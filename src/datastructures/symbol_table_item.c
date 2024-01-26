@@ -1,4 +1,4 @@
-#include "datastructures/symbol_table_item.h"
+#include "symbol_table/symboltable.h"
 #include <stdlib.h>
 #include <stdio.h>
 

@@ -1,6 +1,6 @@
 #include "datastructures/hashtable.h"
 #include "datastructures/linked_list.h"
-#include "datastructures/symbol_table_item.h"
+#include "symbol_table/symboltable.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
