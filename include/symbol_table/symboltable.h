@@ -19,12 +19,10 @@ typedef struct LineReferenceList {
 
 typedef ref_list* REFLIST;
 
-typedef struct NodeItem
-{
-    // char name[MAXLEN];
-    // int size;
-    // int scope;
-    char* val;
+typedef struct NodeItem {
+    char* name;
+    int size;
+    int scope;
 } node_item;
 
 node_item createNewItem(char* val);
