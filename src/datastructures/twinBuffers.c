@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "tokens/tokens.h"
+#include "/home/harsh/Compiler-Construction-Project/include/tokens/tokens.h"
+
 
 #define BUFFER_SIZE 1024
 
@@ -11,7 +12,7 @@ char* buf2;
 FILE* fpclean;
 int state;
 //Line number functionality yet to be implemented
-
+Token tk;    
 FILE* removeComments(FILE* fp1){
     FILE* fp2=(FILE*) malloc(sizeof(FILE));
     fp2 = fopen("WithoutComments.txt", "w+");
@@ -61,7 +62,8 @@ void failure(){
 
 char* getLexeme(char* begin, char* forward){
     char* res = (char*)malloc(sizeof(char) * (forward - begin));
-    memcpy(res, begin, forward - begin);
+    memcpy(res, begin, forward - begin-1);
+    res[forward-begin-1]='\0';
     printf("%s \n", res);
     return res;
 }
@@ -174,23 +176,35 @@ void traverseBuffer(){
                     //case 0 ends here
                 case 1:
                     //final state
-                    lexemeBegin=forward;
                     state=0;
+                    tk = TK_NOT;
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    lexemeBegin=forward;
                     break;
                     //case 1 ends here
                 case 2:
                     //final state
+                    tk = TK_LT;
                     if(c=='='){
                         state=3;
                     }else if(c=='-'){
                         state=4;
                     }else{
-                        //obtained TK_LT
+                        state = 0;
+                        // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                        lexemeBegin = forward;
                     }
                     break;
                     //case 2 ends here
                 case 3:
                     //final state
+                    tk = TK_LE;
+                    state = 0;
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    lexemeBegin = forward;
                     break;
                     //case 3 ends here
                 case 4:
@@ -211,6 +225,9 @@ void traverseBuffer(){
                     //case 5 ends here
                 case 6:
                     //final state
+                    tk = TK_ASSIGNOP;
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    lexemeBegin = forward;
                     break;
                     //case 6 ends here
                 case 7:
@@ -223,6 +240,9 @@ void traverseBuffer(){
                     //case 7 ends here
                 case 8:
                     //final state
+                    tk = TK_EQ;
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    lexemeBegin = forward;
                     break;
                     //case 8 ends here
                 case 9:
@@ -405,6 +425,7 @@ int main(){
     // b = "owefdweihfncwiuehncireutviurtvekr";
     // char* c = b + 11;
     // getLexeme(b, c);
+
 
 
 }
