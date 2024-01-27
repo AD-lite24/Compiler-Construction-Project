@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "tokens/tokens.h"
 
 #define BUFFER_SIZE 1024
 
@@ -9,6 +10,7 @@ char* buf1;
 char* buf2;
 FILE* fpclean;
 int state;
+//Line number functionality yet to be implemented
 
 FILE* removeComments(FILE* fp1){
     FILE* fp2=(FILE*) malloc(sizeof(FILE));
@@ -50,6 +52,18 @@ FILE* removeComments(FILE* fp1){
     // fclose(fp1);
     // fclose(fp2);
     return fp2;
+}
+
+void failure(){
+    printf("Incorrect syntax!!! ");
+
+}
+
+char* getLexeme(char* begin, char* forward){
+    char* res = (char*)malloc(sizeof(char) * (forward - begin));
+    memcpy(res, begin, forward - begin);
+    printf("%s \n", res);
+    return res;
 }
 
 void initializeBuffers(){
@@ -128,6 +142,18 @@ void traverseBuffer(){
                     case '_':
                         state=23;
                         break;
+                    case '\n':
+                        lexemeBegin=forward;
+                        state=0;
+                        break;
+                    case '\t':
+                        lexemeBegin=forward;
+                        state=0;
+                        break;
+                    case ' ':
+                        lexemeBegin=forward;
+                        state=0;
+                        break;
                     default:
                         if(c>='0' && c<='9'){
                             state=15;
@@ -138,7 +164,8 @@ void traverseBuffer(){
                         }else{
                             //This should give the failure state
                             //Since none of the recognizable characters are taken
-                            //failure();
+                            failure();
+                            lexemeBegin=forward;
                             state=0;//Temporary line
                         }
                         break;
@@ -147,6 +174,8 @@ void traverseBuffer(){
                     //case 0 ends here
                 case 1:
                     //final state
+                    lexemeBegin=forward;
+                    state=0;
                     break;
                     //case 1 ends here
                 case 2:
@@ -156,7 +185,7 @@ void traverseBuffer(){
                     }else if(c=='-'){
                         state=4;
                     }else{
-                        //other condition
+                        //obtained TK_LT
                     }
                     break;
                     //case 2 ends here
@@ -372,4 +401,10 @@ void traverseBuffer(){
 int main(){
     initializeBuffers();
     traverseBuffer();
+    // char* b = (char*)malloc(sizeof(char)*1000);
+    // b = "owefdweihfncwiuehncireutviurtvekr";
+    // char* c = b + 11;
+    // getLexeme(b, c);
+
+
 }
