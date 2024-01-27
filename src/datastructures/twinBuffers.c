@@ -62,18 +62,12 @@ void initializeBuffers(){
         readlen=fread(buf1,sizeof(char),BUFFER_SIZE,fpclean);
     }
     buf1[readlen++]='\0';
-    // printf("%s ",buf1);
     
 }
 
 void reloadBuffer(char* buf){
     int readlen;
-    // memset(buf1, NULL, 1024);
-    if(fpclean /*&& forward - buf <BUFFER_SIZE*/ && !feof(fpclean)) readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
-    // while(fpclean && forward - buf <BUFFER_SIZE && !feof(fpclean)){
-    //     readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
-
-    // }
+    if(fpclean && !feof(fpclean)) readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
     buf[readlen++]='\0';
 }
 
@@ -86,17 +80,15 @@ void traverseBuffer(){
         char c=*forward;
         switch(*(forward++)){
             case '\0':
-                if((forward)==(buf1+1025)){
+                if((forward)==(buf1+BUFFER_SIZE+1)){
                     //reload buffer2
                     reloadBuffer(buf2);
-                    //set lexemeBegin to buffer2
-                    lexemeBegin=buf2;
+                    //set forward to buffer2
                     forward=buf2;
-                }else if((forward)==(buf2+1025)){
+                }else if((forward)==(buf2+BUFFER_SIZE+1)){
                     //reload buffer1
                     reloadBuffer(buf1);
-                    //set lexemeBegin to buffer1
-                    lexemeBegin=buf1;
+                    //set forward to buffer1
                     forward=buf1;
                 }else{
                     //terminate lexical analysis
