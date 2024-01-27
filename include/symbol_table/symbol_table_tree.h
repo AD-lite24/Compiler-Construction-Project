@@ -5,7 +5,7 @@
 
 typedef struct SymbolTree {
     NODETREEESYM root;
-    NODETREEESYM curr_node;
+    NODETREEESYM curr_tree_node;
 } SymbolTree;
 
 typedef struct SymbolTreeNode {
