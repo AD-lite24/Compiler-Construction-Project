@@ -101,7 +101,7 @@ void traverseBuffer(){
                 break;
             default:
                 printf("%c", c);
-                //Just changing states as of now
+                //Just changing states as of now 
                 switch (state)
                 {
                 case 0:
@@ -146,90 +146,218 @@ void traverseBuffer(){
                     break;
                     //case 0 ends here
                 case 1:
+                    //final state
                     break;
                     //case 1 ends here
                 case 2:
+                    //final state
+                    if(c=='='){
+                        state=3;
+                    }else if(c=='-'){
+                        state=4;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 2 ends here
                 case 3:
+                    //final state
                     break;
                     //case 3 ends here
                 case 4:
+                    if(c=='-'){
+                        state=5;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 4 ends here
                 case 5:
+                    if(c=='-'){
+                        state=6;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 5 ends here
                 case 6:
+                    //final state
                     break;
                     //case 6 ends here
                 case 7:
+                    if(c=='='){
+                        state=8;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 7 ends here
                 case 8:
+                    //final state
                     break;
                     //case 8 ends here
                 case 9:
+                    //final state
+                    if(c=='='){
+                        state=10;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 9 ends here
                 case 10:
+                    //final state
                     break;
                     //case 10 ends here
                 case 11:
+                    if(c=='='){
+                        state=12;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 11 ends here
                 case 12:
+                    //final
                     break;
                     //case 12 ends here
                 case 13:
+                    if(c>='a' && c<='z'){
+                        state=14;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 13 ends here
                 case 14:
+                    //final state
+                    if(c>='a' && c<='z'){
+                        state=14;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 14 ends here
                 case 15:
+                    //final state
+                    if(c>='0' && c<='9'){
+                        state=15;
+                    }else if (c=='.'){
+                        state=16;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 15 ends here
                 case 16:
+                    if(c>='0' && c<='9'){
+                        state=17;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 16 ends here
                 case 17:
+                    if(c>='0' && c <= '9') state = 18;
+                    //other condition
                     break;
                     //case 17 ends here
                 case 18:
+                    if(c=='E') state = 19;
+                    else{
+                        //other condition
+                    }
+                    //final state
                     break;
                     //case 18 ends here
                 case 19:
+                    if(c=='+'||c=='-'){
+                        state=20;
+                    }else if(c>='0' && c<='9'){
+                        state=21;
+                    }else{
+                        //other condition
+                    }
                     break;
                     //case 19 ends here
                 case 20:
+                    if(c >= '0' && c<='9') state= 21;
+                    else{
+                        //other condition
+                    }
                     break;
                     //case 20 ends here
                 case 21:
+                    if(c >= '0' && c<='9') state= 22;
+                    else{
+                        //other condition
+                    }
                     break;
                     //case 21 ends here
                 case 22:
+                    //final state
                     break;
-                    //case 22 ends here
+                    //case 22 ends here;
                 case 23:
+                    if(c>='a' && c<='z') state = 24;
+                    else if(c>='A' && c<= 'Z') state = 24;
+                    else{
+                        //other condition
+                    }
                     break;
                     //case 23 ends here
                 case 24:
+                    if(c>='a' && c<='z') state = 25;
+                    else if(c>='A' && c<='Z') state = 25;
+                    else if(c>='0' && c<= '9') state = 25;
+                    else{
+                        //other condition
+                    }
+                    //final state
                     break;
                     //case 24 ends here
                 case 25:
+                    if(c>='0' && c<='9') state = 25;
+                    else{
+                        //other condition
+                    }
+                    //final state
                     break;
                     //case 25 ends here
                 case 26:
+                    if(c>='2' && c<='7'){
+                        state = 27;
+                    }else if(c>='a' && c<='z'){
+                        state=29;
+                    }else{
+                        //other condition
+                    }
+                    //final state
                     break;
                     //case 26 ends here
                 case 27:
+                    if(c>='b' && c<='d') state = 27;
+                    else if(c>='2' && c<='7') state = 28;
+                    else{
+                        //other condition
+                    }
+                    //final state
                     break;
                     //case 27 ends here
                 case 28:
+                    if(c>='2' && c<='7') state = 28;
+                    else{
+                        //other condition
+                    }
+                    //final state
                     break;
                     //case 28 ends here
                 case 29:
+                    if(c>='a' && c<= 'z') state = 29;
+                    else{
+                        //other condition
+                    }
+                    //final state
                     break;
                     //case 29 ends here
                 default:
