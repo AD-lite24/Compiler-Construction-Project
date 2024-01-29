@@ -1,6 +1,7 @@
 #include <unity.h>
 #include "test_linked_list.h"
 #include "test_hashtable.h"
+#include "test_trie.h"
 
 void setUp(void) {
 
