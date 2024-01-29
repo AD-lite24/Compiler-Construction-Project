@@ -4,17 +4,18 @@
 #include "datastructures/hashtable.h"
 #include "tokens/tokens.h"
 
+typedef struct SymbolTreeNode {
+    struct SymbolTreeNode* par;
+    HTABLE curr_table;
+} SymbolTreeNode;
+
+typedef SymbolTreeNode* NODETREEESYM;
+
 typedef struct SymbolTree {
     NODETREEESYM root;
     NODETREEESYM curr_tree_node;
 } SymbolTree;
 
-typedef struct SymbolTreeNode {
-    NODETREEESYM par;
-    HTABLE curr_table;
-} SymbolTreeNode;
-
-typedef SymbolTreeNode* NODETREEESYM;
 typedef SymbolTree* TREESYM;
 
 void insert_node_tree(TREESYM tree, NODETREEESYM node);
