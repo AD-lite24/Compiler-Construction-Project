@@ -6,17 +6,17 @@
 #include <stdio.h>
 
 typedef struct SymbolTree {
-    struct SymbolTreeNode* root;
-    struct SymbolTreeNode* curr_tree_node;
+    struct SymbolTreeNode *root;
+    struct SymbolTreeNode *curr_tree_node;
 } SymbolTree;
 
 typedef struct SymbolTreeNode {
-    struct SymbolTreeNode* par;
+    struct SymbolTreeNode *par;
     HTABLE curr_table;
 } SymbolTreeNode;
 
-typedef SymbolTreeNode* NODETREESYM;
-typedef SymbolTree* TREESYM;
+typedef SymbolTreeNode *NODETREESYM;
+typedef SymbolTree *TREESYM;
 
 void insert_node_tree(TREESYM tree, NODETREESYM node);
 
@@ -26,8 +26,6 @@ TREESYM create_tree();
 
 NODETREESYM create_tree_node();
 
-node_item * lookup_id(char* attr,TREESYM tree);
+node_item *lookup_id(char *attr, TREESYM tree);
 
-
-
-#endif 
+#endif
