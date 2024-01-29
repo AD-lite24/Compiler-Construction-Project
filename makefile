@@ -8,7 +8,7 @@ TESTDIR = tests
 OBJDIR = build
 BINDIR = bin
 
-SOURCES = $(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/datastructures/*.c)
+SOURCES = $(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/datastructures/*.c) $(wildcard $(SRCDIR)/symbol_table/*.c)
 TEST_SOURCES = $(wildcard $(TESTDIR)/*.c) $(UNITYDIR)/unity.c
 OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
 TEST_OBJECTS = $(patsubst $(TESTDIR)/%.c, $(OBJDIR)/%.o, $(TEST_SOURCES))
