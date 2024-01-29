@@ -2,16 +2,16 @@
 #define SYMBOL_TABLE_TREE_H
 
 #include "datastructures/hashtable.h"
-#include "symboltable.h"
+#include "symbol_table.h"
 #include <stdio.h>
 
 typedef struct SymbolTree {
-    NODETREESYM root;
-    NODETREESYM curr_tree_node;
+    struct SymbolTreeNode* root;
+    struct SymbolTreeNode* curr_tree_node;
 } SymbolTree;
 
 typedef struct SymbolTreeNode {
-    NODETREESYM par;
+    struct SymbolTreeNode* par;
     HTABLE curr_table;
 } SymbolTreeNode;
 
