@@ -14,7 +14,7 @@ typedef htable* HTABLE;
 
 HTABLE createTable();
 
-void htInsert(HTABLE table, node_item item);
+void htInsert(HTABLE table, char * value);
 
 void freeTable(HTABLE table);
 
