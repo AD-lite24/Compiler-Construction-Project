@@ -20,7 +20,7 @@ typedef SymbolTree *TREESYM;
 
 void insert_node_tree(TREESYM tree, NODETREESYM node);
 
-void remove_node_tree(TREESYM tree, NODETREESYM node);
+void remove_node_tree(TREESYM tree);
 
 TREESYM create_tree();
 

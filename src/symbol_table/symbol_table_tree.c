@@ -7,9 +7,10 @@ void insert_node_tree(TREESYM tree, NODETREESYM node) {
     return;
 }
 
-void remove_node_tree(TREESYM tree, NODETREESYM node) {
-    tree->curr_tree_node = node->par;
-    free(node);
+void remove_node_tree(TREESYM tree) {
+    NODETREESYM ptr = tree->curr_tree_node;
+    tree->curr_tree_node = tree->curr_tree_node->par;
+    free(ptr);
     return;
 }
 

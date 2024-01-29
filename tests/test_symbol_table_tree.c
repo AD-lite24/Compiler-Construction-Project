@@ -1,16 +1,10 @@
+#include "test_symbol_table_tree.h"
 #include "symbol_table/symbol_table_tree.h"
 #include "unity.h"
-#include "test_symbol_table_tree.h"
 
+void setUp(void) {}
 
-void setUp(void) {
-
-}
-
-
-void tearDown(void) {
-
-}
+void tearDown(void) {}
 
 // Test case for create_tree_node function
 void test_create_tree_node(void) {
@@ -32,14 +26,12 @@ void test_insert_node_tree(void) {
 
     insert_node_tree(tree, node1);
 
-
     TEST_ASSERT_EQUAL_PTR(node1, tree->curr_tree_node);
     TEST_ASSERT_EQUAL_PTR(tree->root, tree->curr_tree_node->par);
 
     insert_node_tree(tree, node2);
 
     TEST_ASSERT_EQUAL_PTR(node2, tree->curr_tree_node);
-
 }
 
 // Test case for remove_node_tree function
@@ -54,7 +46,6 @@ void test_remove_node_tree(void) {
     remove_node_tree(tree, node2);
 
     TEST_ASSERT_EQUAL_PTR(node1, tree->curr_tree_node);
-
 }
 
 void test_lookup_id(void) {
