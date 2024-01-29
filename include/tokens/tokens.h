@@ -61,4 +61,12 @@ enum Token {
     TK_GE, 
     TK_NE};
 
+typedef enum Token Token;
+
+typedef struct Lexeme {
+    Token tk;
+    char* attr;
+} Lexeme;
+
+
 #endif
