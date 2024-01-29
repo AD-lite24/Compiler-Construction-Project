@@ -1,30 +1,31 @@
 #ifndef SYMBOL_TABLE_TREE_H
 #define SYMBOL_TABLE_TREE_H
 #include "datastructures/hashtable.h"
-#include "tokens/tokens.h"
+#include "symboltable.h"
+#include <stdio.h>
 
 typedef struct SymbolTree {
-    NODETREEESYM root;
-    NODETREEESYM curr_tree_node;
+    NODETREESYM root;
+    NODETREESYM curr_tree_node;
 } SymbolTree;
 
 typedef struct SymbolTreeNode {
-    NODETREEESYM par;
+    NODETREESYM par;
     HTABLE curr_table;
 } SymbolTreeNode;
 
-typedef SymbolTreeNode* NODETREEESYM;
+typedef SymbolTreeNode* NODETREESYM;
 typedef SymbolTree* TREESYM;
 
-void insert_node_tree(TREESYM tree, NODETREEESYM node);
+void insert_node_tree(TREESYM tree, NODETREESYM node);
 
-void remove_node_tree(TREESYM tree, NODETREEESYM node);
+void remove_node_tree(TREESYM tree, NODETREESYM node);
 
 TREESYM create_tree();
 
-NODETREEESYM create_tree_node();
+NODETREESYM create_tree_node();
 
-NODETREEESYM lookup_id(char* attr);
+node_item * lookup_id(char* attr,TREESYM tree);
 
 
 
