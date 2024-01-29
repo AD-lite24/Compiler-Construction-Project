@@ -1,6 +1,6 @@
 #include "datastructures/linked_list.h"
 #include "test_linked_list.h"
-#include "symbol_table/symboltable.h"
+#include "symbol_table/symbol_table.h"
 #include <unity.h>
 #include <stdlib.h>
 #include <stdio.h>

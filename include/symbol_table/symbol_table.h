@@ -6,15 +6,21 @@
 
 typedef struct LineReferenceList {
     int line;
-    struct LineReferenceList* next;
+    struct LineReferenceList *next;
     int type;
 } ref_list;
 
-typedef ref_list* REFLIST;
+typedef ref_list *REFLIST;
+
+typedef struct ParamItem {
+
+} ParamItem;
+
+typedef ParamItem *PARAM;
 
 typedef struct NodeItem {
 
-    char* name;
+    char *name;
     int size;
     REFLIST ref_head;
     Token token;
@@ -23,22 +29,16 @@ typedef struct NodeItem {
     int int_val;
     double real_val;
 
-    // Record and union type here 
-    
+    // Record and union type here
+
     // function params
-    PARAM* input_params;
-    PARAM* output_params;
+    PARAM *input_params;
+    PARAM *output_params;
     int num_of_inp_params;
     int num_of_out_params;
 
 } node_item;
 
-typedef struct ParamItem {
-
-} ParamItem;
-
-typedef ParamItem* PARAM;
-
-node_item createNewItem(char* val);
+node_item createNewItem(char *name);
 
 #endif

@@ -1,6 +1,6 @@
 #include "datastructures/hashtable.h"
 #include "datastructures/linked_list.h"
-#include "symbol_table/symboltable.h"
+#include "symbol_table/symbol_table.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -25,9 +25,9 @@ HTABLE createTable(){
     return table;
 }
 
-void htInsert(HTABLE table, char* value){
-    int key=hashfunction(value);
-    node_item newItem= createNewItem(value);
+void htInsert(HTABLE table, node_item item){
+    int key=hashfunction(item.name);
+    node_item newItem= createNewItem(item.name);
     NODE newNode=createNewNode(newItem);
     if(!table->items[key])table->items[key]=createNewList();
     insertNodeFirst(newNode,table->items[key]);
