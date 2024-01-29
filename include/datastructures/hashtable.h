@@ -6,11 +6,11 @@
 #define HASHTABLE_SIZE 5000
 
 typedef struct hashtable {
-    LL* items;
+    LL *items;
     int count;
 } htable;
 
-typedef htable* HTABLE;
+typedef htable *HTABLE;
 
 HTABLE createTable();
 
@@ -20,6 +20,6 @@ void freeTable(HTABLE table);
 
 void freeList(LL list);
 
-int hashfunction(char* name);
+int hashfunction(char *name);
 
 #endif
