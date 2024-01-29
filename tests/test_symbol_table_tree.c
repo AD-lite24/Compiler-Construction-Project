@@ -53,14 +53,10 @@ void test_remove_node_tree(void) {
 
     remove_node_tree(tree, node2);
 
-    // Use Unity assertion macros to check if the tree's current node is
-    // correctly updated after removal
     TEST_ASSERT_EQUAL_PTR(node1, tree->curr_tree_node);
 
-    // Add more assertions if needed
 }
 
-// Test case for lookup_id function
 void test_lookup_id(void) {
     TREESYM tree = create_tree();
     NODETREESYM node = create_tree_node();
