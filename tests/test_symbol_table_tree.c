@@ -1,10 +1,7 @@
 #include "test_symbol_table_tree.h"
 #include "symbol_table/symbol_table_tree.h"
+#include "datastructures/hashtable.h"
 #include "unity.h"
-
-void setUp(void) {}
-
-void tearDown(void) {}
 
 // Test case for create_tree_node function
 void test_create_tree_node(void) {
@@ -43,7 +40,7 @@ void test_remove_node_tree(void) {
     insert_node_tree(tree, node1);
     insert_node_tree(tree, node2);
 
-    remove_node_tree(tree, node2);
+    remove_node_tree(tree);
 
     TEST_ASSERT_EQUAL_PTR(node1, tree->curr_tree_node);
 }
@@ -51,24 +48,23 @@ void test_remove_node_tree(void) {
 void test_lookup_id(void) {
     TREESYM tree = create_tree();
     NODETREESYM node = create_tree_node();
+    node_item item = createNewItem("val1");
     insert_node_tree(tree, node);
+    htInsert(tree->curr_tree_node->curr_table, item);
 
-    // Assuming some setup for the hash function and insertions into the symbol
-    // table
+    node_item *result = lookup_id("val1", tree);
+    TEST_ASSERT_NOT_NULL(result); // Modify this based on the expected behavior
 
-    // Use Unity assertion macros to check if the lookup returns the expected
-    // result
-    node_item *result = lookup_id("some_identifier", tree);
-    TEST_ASSERT_NULL(result); // Modify this based on the expected behavior
+    node_item *result1 = lookup_id("val2", tree);
+    TEST_ASSERT_NULL(result1);
 
-    // Add more assertions if needed
 }
 
-int main(void) {
-    UNITY_BEGIN();
+void test_symbol_table_tree() {
+
     RUN_TEST(test_create_tree_node);
     RUN_TEST(test_insert_node_tree);
     RUN_TEST(test_remove_node_tree);
     RUN_TEST(test_lookup_id);
-    return UNITY_END();
+
 }

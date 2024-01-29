@@ -35,13 +35,15 @@ node_item * lookup_id(char* attr,TREESYM tree) {
         HTABLE tab = node->curr_table;
         int key = hashfunction(attr);
         LL list = tab->items[key];
-        if (list->head) {
+
+        if (list) {
             NODE x = list->head;
             while (x != NULL) {
                 if (x->item.name == attr) return &(x->item);
                 x = x->next;
             }
         }
+
         if (!node->par) break;
         node = node->par;
     }

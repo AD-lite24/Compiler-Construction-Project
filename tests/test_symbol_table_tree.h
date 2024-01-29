@@ -9,6 +9,6 @@ void test_remove_node_tree(void);
 
 void test_lookup_id(void);
 
-
+void test_symbol_table_tree();
 
 #endif
