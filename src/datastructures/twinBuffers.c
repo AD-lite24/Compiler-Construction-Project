@@ -2,15 +2,27 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "/home/harsh/Compiler-Construction-Project/include/tokens/tokens.h"
+#include "../../include/datastructures/trie.h"
+#include "../../include/tokens/tokens.h"
+
+//To-Do:
+//1) Buffer Size + 1 vs + 2
+//2) 20 size limit fieldid
+//3) Hardcoded tasks.json for now, need to see how to gcc trie.c while debugging
+//4) getLexeme buffer split
+
 
 
 #define BUFFER_SIZE 1024
 
 char* buf1;
 char* buf2;
+char* lexemeBegin;
+char* forward;
 FILE* fpclean;
 int state;
+int lineNumber;
+
 //Line number functionality yet to be implemented
 Token tk;    
 FILE* removeComments(FILE* fp1){
@@ -46,6 +58,7 @@ FILE* removeComments(FILE* fp1){
         {
             // if comment is in progress and we encounter endline, end the comment
             start = 0;
+            lineNumber++;
             fputc('\n',fp2);
         }
     }
@@ -64,7 +77,7 @@ char* getLexeme(char* begin, char* forward){
     char* res = (char*)malloc(sizeof(char) * (forward - begin));
     memcpy(res, begin, forward - begin-1);
     res[forward-begin-1]='\0';
-    printf("%s \n", res);
+    // printf("%s \n", res);
     return res;
 }
 
@@ -73,8 +86,8 @@ void printToken(Token tk){
 }
 
 void initializeBuffers(){
-    buf1=(char*)calloc(BUFFER_SIZE+1,sizeof(char));
-    buf2=(char*)calloc(BUFFER_SIZE+1,sizeof(char));
+    buf1=(char*)calloc(BUFFER_SIZE+2,sizeof(char));
+    buf2=(char*)calloc(BUFFER_SIZE+2,sizeof(char));
     FILE* fpwcom=fopen("t1.txt","r");
     fpclean=removeComments(fpwcom);
     fclose(fpwcom);
@@ -83,6 +96,7 @@ void initializeBuffers(){
     if(fpclean && !feof(fpclean)){
         readlen=fread(buf1,sizeof(char),BUFFER_SIZE,fpclean);
     }
+    if(feof(fpclean))buf1[readlen++]=' ';
     buf1[readlen++]='\0';
     
 }
@@ -90,25 +104,49 @@ void initializeBuffers(){
 void reloadBuffer(char* buf){
     int readlen;
     if(fpclean && !feof(fpclean)) readlen=fread(buf,sizeof(char),BUFFER_SIZE,fpclean);
+    if(feof(fpclean))buf[readlen++]=' ';
     buf[readlen++]='\0';
 }
 
+void incrementLexemeBegin(int val){
+    for(int i=0;i<val;i++){
+        if(*(lexemeBegin+1)!='\0')lexemeBegin++;
+        else if((lexemeBegin-buf1)< BUFFER_SIZE+2)lexemeBegin=buf2;
+        else lexemeBegin=buf1;
+    }
+}
+
+void decrementForward(int val){
+    if(forward==buf1){
+        forward=buf2+BUFFER_SIZE-val;
+    }else if(forward==buf2){
+        forward=buf1+BUFFER_SIZE-val;
+    }else{
+        forward -= val;
+    }
+}
+
 void traverseBuffer(){
-    char* lexemeBegin=(char*) malloc(sizeof(char));
-    char * forward=(char*) malloc(sizeof(char));
+    lexemeBegin=(char*) malloc(sizeof(char));
+    forward=(char*) malloc(sizeof(char));
     lexemeBegin=buf1;
     forward=buf1;
     state=0;
+    lineNumber=1;
+    TRIE trie = populateTrie();
+    // ind1 ind2 ind3 \0 buf2 buf21 buf22
+    // lB^^         
+    //
     while(1){
         char c=*forward;
         switch(*(forward++)){
             case '\0':
-                if((forward)==(buf1+BUFFER_SIZE+1)){
+                if((forward)==(buf1+BUFFER_SIZE+1) || (forward)==(buf1+BUFFER_SIZE+2)){
                     //reload buffer2
                     reloadBuffer(buf2);
                     //set forward to buffer2
                     forward=buf2;
-                }else if((forward)==(buf2+BUFFER_SIZE+1)){
+                }else if((forward)==(buf2+BUFFER_SIZE+1) || (forward)==(buf2+BUFFER_SIZE+2)){
                     //reload buffer1
                     reloadBuffer(buf1);
                     //set forward to buffer1
@@ -149,8 +187,45 @@ void traverseBuffer(){
                     case '_':
                         state=23;
                         break;
+                    case ',':
+                        state=30;
+                        break;
+                    case ';':
+                        state = 31;
+                        break;
+                    case '[':
+                        state = 32;
+                        break;
+                    case ']':
+                        state = 33;
+                        break;
+                    case '(':
+                        state = 34;
+                        break;
+                    case ')':
+                        state = 35;
+                        break;
+                    case '+':
+                        state = 36;
+                        break;
+                    case '-':
+                        state = 37;
+                        break;
+                    case '*':
+                        state = 38;
+                        break;
+                    case ':':
+                        state = 46;
+                        break;
+                    case '.':
+                        state = 47;
+                        break;
+                    case '/':
+                        state = 39;
+                        break;
                     case '\n':
                         lexemeBegin=forward;
+                        lineNumber++;
                         state=0;
                         break;
                     case '\t':
@@ -164,6 +239,12 @@ void traverseBuffer(){
                     case '\r':
                         lexemeBegin=forward;
                         state=0;
+                        break;
+                    case '@':
+                        state=40;
+                        break;
+                    case '&':
+                        state=43;
                         break;
                     default:
                         if(c>='0' && c<='9'){
@@ -192,8 +273,10 @@ void traverseBuffer(){
                     // char * temp=getLexeme(lexemeBegin,forward);
                     // printf("%s %c \n",tk,temp);
                     // printf("%s ",temp);
-                    lexemeBegin=forward-1;
-                    forward=lexemeBegin;
+                    // lexemeBegin=forward-1;
+                    decrementForward(1);
+                    lexemeBegin=forward;
+                    // forward=lexemeBegin;
                     break;
                     //case 1 ends here
                 case 2:
@@ -207,8 +290,10 @@ void traverseBuffer(){
                         printToken(tk);
                         state = 0;
                         // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
-                        lexemeBegin = forward-1;
-                        forward=lexemeBegin;
+                        // lexemeBegin = forward-1;
+                        // forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin=forward;
                     }
                     break;
                     //case 2 ends here
@@ -228,7 +313,8 @@ void traverseBuffer(){
                         //other condition
                         // failure();
                         state=0;
-                        lexemeBegin++;
+                        // lexemeBegin++;
+                        incrementLexemeBegin(1);
                         forward=lexemeBegin;
                     }
                     break;
@@ -240,7 +326,8 @@ void traverseBuffer(){
                         //other condition
                         // failure();
                         state=0;
-                        lexemeBegin++;
+                        // lexemeBegin++;
+                        incrementLexemeBegin(1);
                         forward=lexemeBegin;
                     }
                     break;
@@ -251,8 +338,10 @@ void traverseBuffer(){
                     printToken(tk);
                     state=0;
                     // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
-                    lexemeBegin = forward-1;
-                    forward=lexemeBegin;
+                    // lexemeBegin = forward-1;
+                    // forward=lexemeBegin;
+                    decrementForward(1);
+                    lexemeBegin=forward;
                     break;
                     //case 6 ends here
                 case 7:
@@ -262,7 +351,9 @@ void traverseBuffer(){
                         //other condition
                         failure();
                         state=0;
-                        lexemeBegin++;
+                        // lexemeBegin++;
+                        // forward=lexemeBegin;
+                        incrementLexemeBegin(1);
                         forward=lexemeBegin;
                     }
                     break;
@@ -273,8 +364,10 @@ void traverseBuffer(){
                     printToken(tk);
                     state=0;
                     // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
-                    lexemeBegin = forward-1;
-                    forward=lexemeBegin;
+                    // lexemeBegin = forward-1;
+                    // forward=lexemeBegin;
+                    decrementForward(1);
+                    lexemeBegin=forward;
                     break;
                     //case 8 ends here
                 case 9:
@@ -286,8 +379,10 @@ void traverseBuffer(){
                         state=0;
                         tk=TK_GT;
                         printToken(tk);
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        // lexemeBegin=forward-1;
+                        // forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin=forward;
                     }
                     break;
                     //case 9 ends here
@@ -296,8 +391,10 @@ void traverseBuffer(){
                     tk=TK_GE;
                     printToken(tk);
                     state=0;
-                    lexemeBegin=forward-1;
-                    forward=lexemeBegin;
+                    // lexemeBegin=forward-1;
+                    // forward=lexemeBegin;
+                    decrementForward(1);
+                    lexemeBegin=forward;
                     break;
                     //case 10 ends here
                 case 11:
@@ -307,7 +404,8 @@ void traverseBuffer(){
                         //other condition
                         failure();
                         state=0;
-                        lexemeBegin++;
+                        // lexemeBegin++;
+                        incrementLexemeBegin(1);
                         forward=lexemeBegin;
                     }
                     break;
@@ -317,8 +415,10 @@ void traverseBuffer(){
                     tk=TK_NE;
                     printToken(tk);
                     state=0;
-                    lexemeBegin=forward-1;
-                    forward=lexemeBegin;
+                    // lexemeBegin=forward-1;
+                    // forward=lexemeBegin;
+                    decrementForward(1);
+                    lexemeBegin=forward;
                     break;
                     //case 12 ends here
                 case 13:
@@ -328,7 +428,8 @@ void traverseBuffer(){
                         //other condition
                         failure();
                         state=0;
-                        lexemeBegin++;
+                        // lexemeBegin++;
+                        incrementLexemeBegin(1);
                         forward=lexemeBegin;
                     }
                     break;
@@ -342,8 +443,10 @@ void traverseBuffer(){
                         tk=TK_RUID;
                         printToken(tk);
                         state=0;
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        // lexemeBegin=forward-1;
+                        // forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin=forward;
                     }
                     break;
                     //case 14 ends here
@@ -358,8 +461,10 @@ void traverseBuffer(){
                         tk=TK_NUM;
                         printToken(tk);
                         state=0;
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        // lexemeBegin=forward-1;
+                        // forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin=forward;
                     }
                     break;
                     //case 15 ends here
@@ -370,7 +475,8 @@ void traverseBuffer(){
                         //other condition
                         // failure();
                         state=0;
-                        lexemeBegin++;
+                        // lexemeBegin++;
+                        incrementLexemeBegin(1);
                         forward=lexemeBegin;
                     }
                     break;
@@ -380,7 +486,7 @@ void traverseBuffer(){
                     else{
                         // failure();
                         state=0;
-                        lexemeBegin++;
+                        incrementLexemeBegin(1);
                         forward=lexemeBegin;
                     }
                     //other condition
@@ -393,8 +499,8 @@ void traverseBuffer(){
                         tk=TK_RNUM;
                         printToken(tk);
                         state=0;
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin = forward;
                     }
                     //final state
                     break;
@@ -408,7 +514,7 @@ void traverseBuffer(){
                         //other condition
                         // failure();
                         state=0;
-                        lexemeBegin+=4;
+                        incrementLexemeBegin(4);
                         forward=lexemeBegin;
                     }
                     break;
@@ -419,7 +525,7 @@ void traverseBuffer(){
                         //other condition
                         // failure();
                         state=0;
-                        lexemeBegin+=4;
+                        incrementLexemeBegin(4);
                         forward=lexemeBegin;
                     }
                     break;
@@ -430,7 +536,7 @@ void traverseBuffer(){
                         //other condition
                         // failure();
                         state=0;
-                        lexemeBegin+=4;
+                        incrementLexemeBegin(4);
                         forward=lexemeBegin;
                     }
                     break;
@@ -440,8 +546,8 @@ void traverseBuffer(){
                     tk=TK_RNUM;
                     printToken(tk);
                     state=0;
-                    lexemeBegin=forward-1;
-                    forward=lexemeBegin;
+                    decrementForward(1);
+                    lexemeBegin = forward;
                     break;
                     //case 22 ends here;
                 case 23:
@@ -451,22 +557,29 @@ void traverseBuffer(){
                         //other condition
                         failure();
                         state=0;
-                        lexemeBegin++;
+                        incrementLexemeBegin(1);
                         forward=lexemeBegin;
                     }
                     break;
                     //case 23 ends here
                 case 24:
-                    if(c>='a' && c<='z') state = 25;
-                    else if(c>='A' && c<='Z') state = 25;
+                    if(c>='a' && c<='z') state = 24;
+                    else if(c>='A' && c<='Z') state = 24;
                     else if(c>='0' && c<= '9') state = 25;
                     else{
                         //other condition
                         tk=TK_FUNID;
+                        char * m = getLexeme(lexemeBegin, forward);
+                        char* m2 = (char*)malloc(sizeof(char)*6);
+                        m2 = "_main";
+                        if(strcmp(m, m2)==0){
+                            tk = TK_MAIN;
+                        }
                         printToken(tk);
+
                         state=0;
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin = forward;
                     }
                     //final state
                     break;
@@ -478,8 +591,8 @@ void traverseBuffer(){
                         tk=TK_FUNID;
                         printToken(tk);
                         state=0;
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin = forward;
                     }
                     //final state
                     break;
@@ -492,10 +605,18 @@ void traverseBuffer(){
                     }else{
                         //other condition
                         tk=TK_FIELDID;
+                        char* str = (char*)malloc(sizeof(char)*(forward - lexemeBegin -1));
+                        // str[forward - lexemeBegin - 1] = '\0';
+                        str = strndup(lexemeBegin, forward - 1- lexemeBegin);
+                        Token tk2 = lookupTrie(trie, str);
+                        printToken(tk);
+                        if(tk2!=0){
+                            tk = tk2;
+                        }
                         printToken(tk);
                         state=0;
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin = forward;
                     }
                     //final state
                     break;
@@ -508,8 +629,8 @@ void traverseBuffer(){
                         tk=TK_ID;
                         printToken(tk);
                         state=0;
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin = forward;
                     }
                     //final state
                     break;
@@ -521,8 +642,8 @@ void traverseBuffer(){
                         tk=TK_ID;
                         printToken(tk);
                         state=0;
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin = forward;
                     }
                     //final state
                     break;
@@ -532,14 +653,226 @@ void traverseBuffer(){
                     else{
                         //other condition
                         tk=TK_FIELDID;
+                        char* str = (char*)malloc(sizeof(char)*(forward - lexemeBegin -1));
+                        // str[forward - lexemeBegin - 1] = '\0';
+                        str = strndup(lexemeBegin, forward - 1- lexemeBegin);
+                        Token tk2 = lookupTrie(trie, str);
+                        if(tk2!=0){
+                            tk = tk2;
+                        }
                         printToken(tk);
                         state=0;
-                        lexemeBegin=forward-1;
-                        forward=lexemeBegin;
+                        decrementForward(1);
+                        lexemeBegin = forward;
                     }
                     //final state
                     break;
                     //case 29 ends here
+                case 30:
+                    //final state
+                    state=0;
+                    tk = TK_COMMA;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 31:
+                    //final state
+                    state=0;
+                    tk = TK_SEM;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 32:
+                    //final state
+                    state=0;
+                    tk = TK_SQL;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 33:
+                    //final state
+                    state=0;
+                    tk = TK_SQR;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 34:
+                    //final state
+                    state=0;
+                    tk = TK_OP;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 35:
+                    //final state
+                    state=0;
+                    tk = TK_CL;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 36:
+                    //final state
+                    state=0;
+                    tk = TK_PLUS;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 37:
+                    //final state
+                    state=0;
+                    tk = TK_MINUS;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 38:
+                    //final state
+                    state=0;
+                    tk = TK_MUL;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 39:
+                    //final state
+                    state=0;
+                    tk = TK_DIV;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;    
+                case 40:
+                    if(c=='@'){
+                        state=41;
+                    }else{
+                        failure();
+                        state=0;
+                        incrementLexemeBegin(1);
+                        forward=lexemeBegin;
+                    }
+                    break;
+                    //case 40 ends here
+                case 41:
+                    if(c=='@'){
+                        state=42;
+                    }else{
+                        //other condition
+                        failure();
+                        state=0;
+                        incrementLexemeBegin(1);
+                        forward=lexemeBegin;
+                    }
+                    break;
+                    //case 41 ends here
+                case 42:
+                    //final state
+                    tk=TK_OR;
+                    printToken(tk);
+                    state=0;
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 43:
+                    if(c=='&'){
+                        state=44;
+                    }else{
+                        //other condition
+                        failure();
+                        state=0;
+                        incrementLexemeBegin(1);
+                        forward=lexemeBegin;
+                    }
+                    break;
+                case 44:
+                    if(c=='&'){
+                        state=45;
+                    }else{
+                        //other condition
+                        failure();
+                        state=0;
+                        incrementLexemeBegin(1);
+                        forward=lexemeBegin;
+                    }
+                    break;
+                case 45:
+                    //final state
+                    tk=TK_AND;
+                    printToken(tk);
+                    state=0;
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 46:
+                    //final state
+                    state=0;
+                    tk = TK_COLON;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
+                case 47:
+                    //final state
+                    state=0;
+                    tk = TK_DOT;
+                    printToken(tk);
+                    // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    // char * temp=getLexeme(lexemeBegin,forward);
+                    // printf("%s %c \n",tk,temp);
+                    // printf("%s ",temp);
+                    decrementForward(1);
+                    lexemeBegin = forward;
+                    break;
                 default:
                     break;
                 }
