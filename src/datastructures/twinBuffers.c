@@ -12,7 +12,6 @@
 //4) getLexeme buffer split
 
 
-
 #define BUFFER_SIZE 1024
 
 char* buf1;
@@ -158,7 +157,7 @@ void traverseBuffer(){
                 }
                 break;
             default:
-                printf("%c", c);
+                // printf("%c", c);
                 //Just changing states as of now 
                 switch (state)
                 {
@@ -281,12 +280,12 @@ void traverseBuffer(){
                     //case 1 ends here
                 case 2:
                     //final state
+                    tk=TK_LT;
                     if(c=='='){
                         state=3;
                     }else if(c=='-'){
                         state=4;
                     }else{
-                        tk=TK_LT;
                         printToken(tk);
                         state = 0;
                         // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
@@ -311,7 +310,8 @@ void traverseBuffer(){
                         state=5;
                     }else{
                         //other condition
-                        // failure();
+                        failure();
+                        printToken(tk);
                         state=0;
                         // lexemeBegin++;
                         incrementLexemeBegin(1);
@@ -324,7 +324,8 @@ void traverseBuffer(){
                         state=6;
                     }else{
                         //other condition
-                        // failure();
+                        failure();
+                        printToken(tk);
                         state=0;
                         // lexemeBegin++;
                         incrementLexemeBegin(1);
@@ -452,13 +453,13 @@ void traverseBuffer(){
                     //case 14 ends here
                 case 15:
                     //final state
+                    tk=TK_NUM;
                     if(c>='0' && c<='9'){
                         state=15;
                     }else if (c=='.'){
                         state=16;
                     }else{
                         //other condition
-                        tk=TK_NUM;
                         printToken(tk);
                         state=0;
                         // lexemeBegin=forward-1;
@@ -474,29 +475,35 @@ void traverseBuffer(){
                     }else{
                         //other condition
                         // failure();
+                        printToken(tk);
+                        failure();
                         state=0;
                         // lexemeBegin++;
-                        incrementLexemeBegin(1);
-                        forward=lexemeBegin;
+                        decrementForward(2);
+                        lexemeBegin=forward;
+                        
                     }
                     break;
                     //case 16 ends here
                 case 17:
                     if(c>='0' && c <= '9') state = 18;
                     else{
-                        // failure();
+                        printToken(tk);
+                        failure();
                         state=0;
-                        incrementLexemeBegin(1);
-                        forward=lexemeBegin;
+                        // incrementLexemeBegin(1);
+                        // forward=lexemeBegin;
+                        decrementForward(3);
+                        lexemeBegin=forward;
                     }
                     //other condition
                     break;
                     //case 17 ends here
                 case 18:
+                    tk=TK_RNUM;
                     if(c=='E') state = 19;
                     else{
                         //other condition
-                        tk=TK_RNUM;
                         printToken(tk);
                         state=0;
                         decrementForward(1);
@@ -512,10 +519,13 @@ void traverseBuffer(){
                         state=21;
                     }else{
                         //other condition
-                        // failure();
+                        printToken(tk);
+                        failure();
                         state=0;
-                        incrementLexemeBegin(4);
-                        forward=lexemeBegin;
+                        decrementForward(2);
+                        lexemeBegin=forward;
+                        // incrementLexemeBegin(4);
+                        // forward=lexemeBegin;
                     }
                     break;
                     //case 19 ends here
@@ -523,10 +533,13 @@ void traverseBuffer(){
                     if(c >= '0' && c<='9') state= 21;
                     else{
                         //other condition
-                        // failure();
+                        printToken(tk);
+                        failure();
                         state=0;
-                        incrementLexemeBegin(4);
-                        forward=lexemeBegin;
+                        decrementForward(3);
+                        lexemeBegin=forward;
+                        // incrementLexemeBegin(4);
+                        // forward=lexemeBegin;
                     }
                     break;
                     //case 20 ends here
@@ -534,10 +547,15 @@ void traverseBuffer(){
                     if(c >= '0' && c<='9') state= 22;
                     else{
                         //other condition
-                        // failure();
+                        printToken(tk);
+                        failure();
                         state=0;
-                        incrementLexemeBegin(4);
-                        forward=lexemeBegin;
+                        while((*(forward))!='E'){
+                            decrementForward(1);
+                        }
+                        lexemeBegin=forward;
+                        // incrementLexemeBegin(4);
+                        // forward=lexemeBegin;
                     }
                     break;
                     //case 21 ends here
