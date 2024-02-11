@@ -522,7 +522,12 @@ void traverseBuffer(){
                         printToken(tk);
                         failure();
                         state=0;
-                        decrementForward(2);
+                        // decrementForward(2);
+                        while (*(forward)!='E')
+                        {
+                            decrementForward(1);
+                        }
+                        
                         lexemeBegin=forward;
                         // incrementLexemeBegin(4);
                         // forward=lexemeBegin;
@@ -536,7 +541,9 @@ void traverseBuffer(){
                         printToken(tk);
                         failure();
                         state=0;
-                        decrementForward(3);
+                        while(*(forward)!='E'){
+                            decrementForward(1);
+                        }
                         lexemeBegin=forward;
                         // incrementLexemeBegin(4);
                         // forward=lexemeBegin;
