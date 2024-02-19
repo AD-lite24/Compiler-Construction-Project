@@ -2,6 +2,11 @@
 #define PARSER_H
 
 #include "grammar.h"
+#include "../datastructures/hashtable.h"
+
+#define 
+
+Terminals* firstSet[51]
 
 Terminals* First(char* nonterm);
 
