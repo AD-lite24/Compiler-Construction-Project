@@ -65,8 +65,55 @@ enum Terminals {
     DOLLAR
 };
 
-enum NonTerminals {
 
+enum NonTerminals {
+    program,
+    mainFunction,
+    otherFunctions,
+    function,
+    input_par,
+    output_par,
+    parameter_list,
+    datatype,
+    primitiveDatatype,
+    constructedDatatype,
+    remaining_list,
+    stmts,
+    typeDefinitions,
+    typeDefinition,
+    fieldDefinitions,
+    fieldDefinition,
+    moreFields,
+    declarations,
+    declaration,
+    global_or_not,
+    otherStmts,
+    assignmentStmt,
+    singleOrRecId,
+    singleOrRecIdLF,
+    funCallStmt,
+    outputParameters,
+    inputParameters,
+    iterativeStmt,
+    conditionalStmt,
+    conditionalStmtLF,
+    ioStmt,
+    arithmeticExpression,
+    plusMinusLF,
+    multDivExpr,
+    multDivLR,
+    multDivLF,
+    outerMost,
+    booleanExpression,
+    var,
+    logicalOp,
+    relationalOp,
+    returnStmt,
+    optionalReturn,
+    idList,
+    more_ids,
+    definetypestmt,
+    A
 };
 
 typedef enum Terminals Terminals;

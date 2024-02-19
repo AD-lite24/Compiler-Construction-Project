@@ -10,10 +10,7 @@ void setUp(void) {}
 void tearDown(void) {}
 
 int main(void) {
-
-    firstSet = createTable();
-    followSet = createTable();
-
+    
     UNITY_BEGIN();
 
     test_linkedlist();
