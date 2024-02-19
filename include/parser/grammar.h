@@ -117,5 +117,6 @@ enum NonTerminals {
 };
 
 typedef enum Terminals Terminals;
+typedef enum NonTerminals NonTerminals;
 
 #endif

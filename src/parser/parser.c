@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-Terminals stringToEnum(char * str) {
+Terminals stringToEnumTerm(char * str) {
     if (strcmp(str,"TK_NULL") == 0) {
         return TK_NULL;
     } 
@@ -186,6 +186,150 @@ Terminals stringToEnum(char * str) {
     }
 }
 
+NonTerminals stringToEnumNonTerm(char * str) {
+    if (strcmp(str,"program") == 0) {
+        return program;
+    }
+    else if (strcmp(str,"mainFunction") == 0) {
+        return mainFunction;
+    }
+    else if (strcmp(str,"otherFunctions") == 0) {
+        return otherFunctions;
+    }
+    else if (strcmp(str,"function") == 0) {
+        return function;
+    }
+    else if (strcmp(str,"input_par") == 0) {
+        return input_par;
+    }
+    else if (strcmp(str,"output_par") == 0) {
+        return output_par;
+    }
+    else if (strcmp(str,"parameter_list") == 0) {
+        return parameter_list;
+    }
+    else if (strcmp(str,"datatype") == 0) {
+        return datatype;
+    }
+    else if (strcmp(str,"primitiveDatatype") == 0) {
+        return primitiveDatatype;
+    }
+    else if (strcmp(str,"constructedDatatype") == 0) {
+        return constructedDatatype;
+    }
+    else if (strcmp(str,"remaining_list") == 0) {
+        return remaining_list;
+    }
+    else if (strcmp(str,"stmts") == 0) {
+        return stmts;
+    }
+    else if (strcmp(str,"typeDefinitions") == 0) {
+        return typeDefinitions;
+    }
+    else if (strcmp(str,"typeDefinition") == 0) {
+        return typeDefinition;
+    }
+    else if (strcmp(str,"fieldDefinitions") == 0) {
+        return fieldDefinitions;
+    }
+    else if (strcmp(str,"fieldDefinition") == 0) {
+        return fieldDefinition;
+    }
+    else if (strcmp(str,"moreFields") == 0) {
+        return moreFields;
+    }
+    else if (strcmp(str,"declarations") == 0) {
+        return declarations;
+    }
+    else if (strcmp(str,"declaration") == 0) {
+        return declaration;
+    }
+    else if (strcmp(str,"global_or_not") == 0) {
+        return global_or_not;
+    }
+    else if (strcmp(str,"otherStmts") == 0) {
+        return otherStmts;
+    }
+    else if (strcmp(str,"assignmentStmt") == 0) {
+        return assignmentStmt;
+    }
+    else if (strcmp(str,"singleOrRecId") == 0) {
+        return singleOrRecId;
+    }
+    else if (strcmp(str,"singleOrRecIdLF") == 0) {
+        return singleOrRecIdLF;
+    }
+    else if (strcmp(str,"funCallStmt") == 0) {
+        return funCallStmt;
+    }
+    else if (strcmp(str,"outputParameters") == 0) {
+        return outputParameters;
+    }
+    else if (strcmp(str,"inputParameters") == 0) {
+        return inputParameters;
+    }
+    else if (strcmp(str,"iterativeStmt") == 0) {
+        return iterativeStmt;
+    }
+    else if (strcmp(str,"conditionalStmt") == 0) {
+        return conditionalStmt;
+    }
+    else if (strcmp(str,"conditionalStmtLF") == 0) {
+        return conditionalStmtLF;
+    }
+    else if (strcmp(str,"ioStmt") == 0) {
+        return ioStmt;
+    }
+    else if (strcmp(str,"arithmeticExpression") == 0) {
+        return arithmeticExpression;
+    }
+    else if (strcmp(str,"plusMinusLF") == 0) {
+        return plusMinusLF;
+    }
+    else if (strcmp(str,"multDivExpr") == 0) {
+        return multDivExpr;
+    }
+    else if (strcmp(str,"multDivLR") == 0) {
+        return multDivLR;
+    }
+    else if (strcmp(str,"multDivLF") == 0) {
+        return multDivLF;
+    }
+    else if (strcmp(str,"outerMost") == 0) {
+        return outerMost;
+    }
+    else if (strcmp(str,"booleanExpression") == 0) {
+        return booleanExpression;
+    }
+    else if (strcmp(str,"var") == 0) {
+        return var;
+    }
+    else if (strcmp(str,"logicalOp") == 0) {
+        return logicalOp;
+    }
+    else if (strcmp(str,"relationalOp") == 0) {
+        return relationalOp;
+    }
+    else if (strcmp(str,"returnStmt") == 0) {
+        return returnStmt;
+    }
+    else if (strcmp(str,"optionalReturn") == 0) {
+        return optionalReturn;
+    }
+    else if (strcmp(str,"idList") == 0) {
+        return idList;
+    }
+    else if (strcmp(str,"more_ids") == 0) {
+        return more_ids;
+    }
+    else if (strcmp(str,"definetypestmt") == 0) {
+        return definetypestmt;
+    }
+    else if (strcmp(str,"A") == 0) {
+        return A;
+    }
+}
+
 void parseFile(char *filename, int table_type) {
 
     FILE *fp = fopen(filename, "r");
@@ -225,10 +369,10 @@ void parseFile(char *filename, int table_type) {
 
             if (token != NULL) {
                 if (!table_type) { // for first
-                    firstSet[line_count][0] = stringToEnum(token);
+                    firstSet[line_count][0] = stringToEnumTerm(token);
                 }
                 else { // for follow
-                    followSet[line_count][0] = stringToEnum(token);
+                    followSet[line_count][0] = stringToEnumTerm(token);
                 }
             }
             
@@ -246,6 +390,10 @@ void parseFile(char *filename, int table_type) {
     }
 }
 
-Terminals *First(char *nonterm) {}
+Terminals* First(char *nonterm) {
+    return firstSet[stringToEnumNonTerm(nonterm)];
+}
 
-Terminals *Follow(char *nonterm) {}
+Terminals* Follow(char *nonterm) {
+    return followSet[stringToEnumNonTerm(nonterm)];
+}
