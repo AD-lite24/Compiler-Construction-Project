@@ -1,9 +1,11 @@
-#include "../include/parser/parser.h"
-#include "../include/datastructures/hashtable.h"
+#include "../../include/parser/parser.h"
+// #include "../include/datastructures/hashtable.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+// #include 
 
-Terminals stringToEnumTerm(char * str) {
+Elements stringToEnumTerm(char * str) {
     if (strcmp(str,"TK_NULL") == 0) {
         return TK_NULL;
     } 
@@ -178,16 +180,13 @@ Terminals stringToEnumTerm(char * str) {
     else if (strcmp(str,"TK_NE") == 0) {
         return TK_NE;
     }
-    else if (strcmp(str,"EPSILON") == 0) {
-        return EPSILON;
+    else if (strcmp(str,"TK_EPSILON") == 0) {
+        return TK_EPSILON;
     }
-    else if (strcmp(str,"DOLLAR") == 0) {
-        return DOLLAR;
+    else if (strcmp(str,"TK_DOLLAR") == 0) {
+        return TK_DOLLAR;
     }
-}
-
-NonTerminals stringToEnumNonTerm(char * str) {
-    if (strcmp(str,"program") == 0) {
+    else if (strcmp(str,"program") == 0) {
         return program;
     }
     else if (strcmp(str,"mainFunction") == 0) {
@@ -209,7 +208,7 @@ NonTerminals stringToEnumNonTerm(char * str) {
         return parameter_list;
     }
     else if (strcmp(str,"datatype") == 0) {
-        return datatype;
+        return dataType;
     }
     else if (strcmp(str,"primitiveDatatype") == 0) {
         return primitiveDatatype;
@@ -226,6 +225,9 @@ NonTerminals stringToEnumNonTerm(char * str) {
     else if (strcmp(str,"typeDefinitions") == 0) {
         return typeDefinitions;
     }
+    else if(strcmp(str, "actualOrRedefined") == 0){
+        return actualOrRedefined;
+    }    
     else if (strcmp(str,"typeDefinition") == 0) {
         return typeDefinition;
     }
@@ -250,14 +252,23 @@ NonTerminals stringToEnumNonTerm(char * str) {
     else if (strcmp(str,"otherStmts") == 0) {
         return otherStmts;
     }
+    else if(strcmp(str, "stmt") == 0){
+        return stmt;
+    }
     else if (strcmp(str,"assignmentStmt") == 0) {
         return assignmentStmt;
     }
     else if (strcmp(str,"singleOrRecId") == 0) {
         return singleOrRecId;
     }
-    else if (strcmp(str,"singleOrRecIdLF") == 0) {
-        return singleOrRecIdLF;
+    else if(strcmp(str, "option_single_constructed") == 0){
+        return option_single_constructed;
+    }
+    else if(strcmp(str, "oneExpansion") == 0){
+        return oneExpansion;
+    }
+    else if (strcmp(str,"moreExpansions") == 0) {
+        return moreExpansions;
     }
     else if (strcmp(str,"funCallStmt") == 0) {
         return funCallStmt;
@@ -274,8 +285,8 @@ NonTerminals stringToEnumNonTerm(char * str) {
     else if (strcmp(str,"conditionalStmt") == 0) {
         return conditionalStmt;
     }
-    else if (strcmp(str,"conditionalStmtLF") == 0) {
-        return conditionalStmtLF;
+    else if (strcmp(str,"elsePart") == 0) {
+        return elsePart;
     }
     else if (strcmp(str,"ioStmt") == 0) {
         return ioStmt;
@@ -283,22 +294,25 @@ NonTerminals stringToEnumNonTerm(char * str) {
     else if (strcmp(str,"arithmeticExpression") == 0) {
         return arithmeticExpression;
     }
-    else if (strcmp(str,"plusMinusLF") == 0) {
-        return plusMinusLF;
+    else if (strcmp(str,"expPrime") == 0) {
+        return expPrime;
     }
-    else if (strcmp(str,"multDivExpr") == 0) {
-        return multDivExpr;
+    else if (strcmp(str,"term") == 0) {
+        return term;
     }
-    else if (strcmp(str,"multDivLR") == 0) {
-        return multDivLR;
+    else if (strcmp(str,"termPrime") == 0) {
+        return termPrime;
     }
-    else if (strcmp(str,"multDivLF") == 0) {
-        return multDivLF;
+    else if (strcmp(str,"factor") == 0) {
+        return factor;
     }
-    else if (strcmp(str,"outerMost") == 0) {
-        return outerMost;
+    else if (strcmp(str,"highPrecedenceOperator") == 0) {
+        return highPrecedenceOperator;
     }
-    else if (strcmp(str,"booleanExpression") == 0) {
+    else if (strcmp(str,"lowPrecedenceOperators") == 0) {
+        return lowPrecedenceOperators;
+    }
+    else if(strcmp(str, "booleanExpression") == 0){
         return booleanExpression;
     }
     else if (strcmp(str,"var") == 0) {
@@ -330,6 +344,7 @@ NonTerminals stringToEnumNonTerm(char * str) {
     }
 }
 
+/*
 void parseFile(char *filename, int table_type) {
 
     FILE *fp = fopen(filename, "r");
@@ -390,6 +405,7 @@ void parseFile(char *filename, int table_type) {
     }
 }
 
+
 Terminals* First(char *nonterm) {
     return firstSet[stringToEnumNonTerm(nonterm)];
 }
@@ -397,3 +413,100 @@ Terminals* First(char *nonterm) {
 Terminals* Follow(char *nonterm) {
     return followSet[stringToEnumNonTerm(nonterm)];
 }
+*/
+
+GRAMMAR parseFile (char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        printf("Error in opening file\n");
+        return NULL;
+    }
+    GRAMMAR G = malloc(sizeof(grammar));
+    for (int i = 0  ; i < NUM_NONTERMS ; i++) {
+        G->rules[i] = createNewList();
+        // G->rules[i]->head;
+    }
+    int line_count = 0;
+    char buff[1024];
+    while (fgets(buff, 1024, fp) != NULL) {
+        printf("%s\n", buff);
+
+        Elements tempArr[15];
+        memset (tempArr, -1, sizeof(tempArr));
+        // read variable name
+        char delim1[] = " ";
+        char delim2[] = "\n";
+
+        char *fullLine = strtok(buff, delim2);
+        char *firstptr = strtok(fullLine, delim1);
+        int LHS_NonTerm = stringToEnumTerm(firstptr);
+        firstptr = strtok (NULL, delim1);
+        int index = 0;
+        firstptr = strtok (NULL, delim1);
+        while (firstptr) {
+            printf("hehe\n");
+            // printf("%s\n", firstptr);
+            // printf("%s\n", firstptr);
+            if (firstptr[0] == ';') {
+                NODE newNode = createNewNode(tempArr);
+                insertNodeLast(newNode, G->rules[LHS_NonTerm]);
+                index = 0;
+                memset (tempArr, -1, sizeof(tempArr));
+                firstptr = strtok (NULL, delim1);
+                continue;
+            }
+            // printf("%s\n", firstptr);
+            tempArr[index++] = stringToEnumTerm(firstptr);
+            firstptr = strtok (NULL, delim1);
+        }
+        NODE newNode = createNewNode(tempArr);
+        insertNodeLast(newNode, G->rules[LHS_NonTerm]);
+        // printf("%d\n", LHS_NonTerm);
+        // printf ("%p\n", G->rules[LHS_NonTerm]);
+
+        // printHEHE(G->rules[LHS_NonTerm]);
+        printf("\n");
+    }
+    return G;
+}
+
+
+
+void printHEHE (LL eqn) {
+    // printf ("%p\n", eqn);
+    if (eqn == NULL)
+        return;
+    NODE ptr = eqn->head;
+    // printf("MY NIGGA U DOPE\n");
+    while (ptr != NULL) {
+        for (int i = 0 ; i < 10 ; i++) {
+            printf("%d ", ptr->item[i]);
+        }
+        printf (" | ");
+        ptr = ptr->next;
+    }
+}
+int main () {
+    GRAMMAR GG = parseFile("Grammar.txt");
+    for (int i = 0 ; i < NUM_NONTERMS ; i++) {
+        printf ("%d -> ", i);
+        // printf("My NIGAA hehe\n");
+        // printf("%p\n", GG);
+        printHEHE(GG->rules[i]);
+        printf("\n");
+    }
+    return 0;
+}
+// FIRSTANDFOLLOW ComputeFirstAndFollowSets (grammar G) {
+//     FIRSTANDFOLLOW fnf = malloc(sizeof(FirstAndFollow));
+//     int firstIndex[NUM_NONTERMS] = {0};
+//     int followIndex[NUM_NONTERMS] =  {0};
+//     for (int i = 0 ; i < NUM_NONTERMS ; i++) {
+//         fnf->firstSet[]
+//     }
+
+// }
+// void computeFirst (NonTerminals lhs, LL rule) {
+
+// }
+// createParseTable(FirstAndFollow F, table T):
