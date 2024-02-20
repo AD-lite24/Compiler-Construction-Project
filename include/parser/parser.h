@@ -2,16 +2,29 @@
 #define PARSER_H
 
 #include "grammar.h"
-#include "../datastructures/hashtable.h"
-#define NUM_NONTERMS 49
+// #include "../datastructures/hashtable.h"
+#include "../datastructures/linked_list.h"
+#define NUM_NONTERMS 53
+#define NUM_EQN 50
 
-Terminals firstSet[NUM_NONTERMS][20];
-Terminals followSet[NUM_NONTERMS][20];
 
-Terminals* First(char* nonterm);
 
-Terminals* Follow(char* nonterm);
+// Terminals* First(char* nonterm);
 
-void parseFile(char *filename, int table_type);
+// Terminals* Follow(char* nonterm);
+
+
+typedef struct grammar {
+    LL rules [NUM_NONTERMS];
+}grammar;
+typedef grammar* GRAMMAR;
+
+typedef struct FirstAndFollow {
+    Elements* firstSet[NUM_NONTERMS];
+    Elements* followSet[NUM_NONTERMS];
+}FirstAndFollow;
+typedef struct FirstAndFollow* FIRSTANDFOLLOW;
+
+GRAMMAR parseFile(char *filename);
 
 #endif

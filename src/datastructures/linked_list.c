@@ -1,5 +1,5 @@
-#include "datastructures/linked_list.h"
-#include "symbol_table/symbol_table.h"
+#include "../../include/datastructures/linked_list.h"
+// #include "symbol_table/symbol_table.h"
 #include <stdlib.h>
 
 LL createNewList(){
@@ -9,7 +9,7 @@ LL createNewList(){
     return list;
 }
 
-NODE createNewNode(node_item data) {
+NODE createNewNode(Elements* data) {
     NODE new_node = malloc(sizeof(node));
     new_node->next = NULL;
     new_node->item = data;

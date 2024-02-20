@@ -1,10 +1,10 @@
 #ifndef LINKED_L
 #define LINKED_L
 
-#include "symbol_table/symbol_table.h"
-
+// #include "symbol_table/symbol_table.h"
+#include "../parser/grammar.h"
 typedef struct Node {
-    node_item item;
+    Elements* item;
     struct Node* next;
 } node;
 
@@ -18,7 +18,7 @@ typedef ll* LL;
 
 LL createNewList();
 
-NODE createNewNode(node_item data);
+NODE createNewNode(Elements* data);
 
 void freeNode(NODE node);
 
