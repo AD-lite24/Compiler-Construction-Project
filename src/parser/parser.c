@@ -357,7 +357,6 @@ void parseFile(char *filename, int table_type) {
         strncpy(variable_name, firstpos, nonterm_len);
         variable_name[nonterm_len] = '\0';
     
-
         if (start_bracket != NULL && end_bracket != NULL) {
 
             int length = end_bracket - start_bracket - 1;
