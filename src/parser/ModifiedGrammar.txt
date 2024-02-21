@@ -17,7 +17,7 @@ typeDefinition - TK_UNION TK_RUID fieldDefinitions TK_ENDUNION
 fieldDefinitions - fieldDefinition fieldDefinition moreFields
 fieldDefinition - TK_TYPE fieldType  TK_COLON TK_FIELDID TK_SEM
 fieldtype - primitiveDatatype ; TK_RUID
-moreFields - fieldDefinitionmoreFields ; TK_EPSILON
+moreFields - fieldDefinition moreFields ; TK_EPSILON
 declarations - declaration declarations ; TK_EPSILON
 declaration - TK_TYPE dataType TK_COLON TK_ID global_or_not TK_SEM
 global_or_not - TK_COLON TK_GLOBAL ; TK_EPSILON
