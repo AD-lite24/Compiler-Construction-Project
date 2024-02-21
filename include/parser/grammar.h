@@ -86,6 +86,7 @@ enum NonTerminals {
     declaration,
     global_or_not,
     otherStmts,
+    stmt,
     assignmentStmt,
     singleOrRecId,
     singleOrRecIdLF,
