@@ -396,3 +396,4 @@ Terminals* First(char *nonterm) {
 Terminals* Follow(char *nonterm) {
     return followSet[stringToEnumNonTerm(nonterm)];
 }
+

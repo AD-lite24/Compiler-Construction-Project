@@ -1,4 +1,3 @@
-
 #ifndef GRAMMAR_H
 #define GRAMMAR_H
 
@@ -65,7 +64,6 @@ enum Terminals {
     DOLLAR
 };
 
-
 enum NonTerminals {
     program,
     mainFunction,
@@ -118,5 +116,17 @@ enum NonTerminals {
 
 typedef enum Terminals Terminals;
 typedef enum NonTerminals NonTerminals;
+
+union ProdUnit {
+    Terminals t;
+    NonTerminals nt;
+};
+
+typedef union ProdUnit ProdUnit;
+
+struct ProdRule {
+    NonTerminals LHS;
+    ProdUnit RHS[10];
+};
 
 #endif
