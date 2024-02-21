@@ -32,7 +32,6 @@ funCallStmt - outputParameters TK_CALL TK_FUNID TK_WITH TK_PARAMETERS inputParam
 outputParameters - TK_SQL idList TK_SQR TK_ASSIGNOP ; TK_EPSILON
 inputParameters - TK_SQL idList TK_SQR
 iterativeStmt - TK_WHILE TK_OP booleanExpression TK_CL stmt otherStmts TK_ENDWHILE
-conditionalStmt - TK_IF booleanExpression TK_THEN stmtotherStmts TK_ELSE otherStmts TK_ENDIF
 conditionalStmt - TK_IF TK_OP booleanExpression TK_CL TK_THEN stmt otherStmts elsePart
 elsePart - TK_ELSE stmt otherStmts TK_ENDIF ; TK_ENDIF
 ioStmt - TK_READ TK_OP var TK_CL TK_SEM ; TK_WRITE TK_OP var TK_CL TK_SEM

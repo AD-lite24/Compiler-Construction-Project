@@ -4,7 +4,8 @@
 #include "grammar.h"
 // #include "../datastructures/hashtable.h"
 #include "../datastructures/linked_list.h"
-#define NUM_NONTERMS 53
+#define NUM_NONTERMS 52
+#define NUM_ELEMENTS 111
 #define NUM_EQN 50
 
 
@@ -15,13 +16,13 @@
 
 
 typedef struct grammar {
-    LL rules [NUM_NONTERMS];
+    LL_LL rules [NUM_NONTERMS];
 }grammar;
 typedef grammar* GRAMMAR;
 
 typedef struct FirstAndFollow {
-    Elements* firstSet[NUM_NONTERMS];
-    Elements* followSet[NUM_NONTERMS];
+    LL_ELE firstSet[NUM_ELEMENTS];
+    LL_ELE followSet[NUM_NONTERMS];
 }FirstAndFollow;
 typedef struct FirstAndFollow* FIRSTANDFOLLOW;
 
