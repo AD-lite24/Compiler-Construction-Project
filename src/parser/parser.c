@@ -125,11 +125,11 @@ Elements stringToEnumTerm(char *str) {
     } else if (strcmp(str, "TK_NE") == 0) {
         return TK_NE;
     }
-    else if (strcmp(str,"TK_EPSILON") == 0) {
-        return TK_EPSILON;
+    else if (strcmp(str,"EPSILON") == 0) {
+        return EPSILON;
     }
     else if (strcmp(str,"TK_DOLLAR") == 0) {
-        return TK_DOLLAR;
+        return DOLLAR;
     }
 }
 
@@ -224,8 +224,7 @@ NonTerminals stringToEnumNonTerm(char *str) {
         return termPrime;
     } else if (strcmp(str, "factor") == 0) {
         return factor;
-    }
-    else if (strcmp(str,"highPrecedenceOperator") == 0) {
+    } else if (strcmp(str,"highPrecedenceOperator") == 0) {
         return highPrecedenceOperator;
     } else if (strcmp(str, "lowPrecedenceOperators") == 0) {
         return lowPrecedenceOperators;
@@ -322,7 +321,7 @@ GRAMMAR parseFile (char *filename) {
 int checkEpsilonInFirst (LL_ELE first) {
     NODE_ELE ptr = first->head;
     while (ptr != NULL) {
-        if (ptr->item == TK_EPSILON)
+        if (ptr->item == EPSILON)
             return 1;
         ptr = ptr->next;
     }
@@ -368,15 +367,15 @@ void ComputeFirst (GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
 
             while (currRHS != NULL) {
                 NODE_ELE currTerm = currRHS->item->head;
-                if (currTerm->item == TK_EPSILON) {
-                    insertNode_EleLast(createNewNode_Ele(TK_EPSILON), firstAndFollowSet->firstSet[lhs]);
+                if (currTerm->item == EPSILON) {
+                    insertNode_EleLast(createNewNode_Ele(EPSILON), firstAndFollowSet->firstSet[lhs]);
                     currRHS = currRHS->next;
                     continue;
                 }
                 while (currTerm != NULL) {
                     NODE_ELE firstTerm = firstAndFollowSet->firstSet[currTerm->item]->head;
                     while (firstTerm != NULL) {
-                        if (firstTerm->item == TK_EPSILON) {
+                        if (firstTerm->item == EPSILON) {
                             firstTerm = firstTerm->next;
                             continue;
                         }
@@ -393,7 +392,7 @@ void ComputeFirst (GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
                         }
                         firstTerm = firstTerm->next;
                     }
-                    if (currTerm->item != TK_EPSILON)
+                    if (currTerm->item != EPSILON)
                     if (!checkEpsilonInFirst(firstAndFollowSet->firstSet[currTerm->item]))
                         break;
                     currTerm = currTerm->next;
