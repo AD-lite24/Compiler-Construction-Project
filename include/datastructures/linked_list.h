@@ -1,36 +1,47 @@
 #ifndef LINKED_L
 #define LINKED_L
 
-#include "symbol_table/symbol_table.h"
-
-typedef struct Node {
-    node_item item;
-    struct Node* next;
-} node;
-
-typedef node* NODE;
-
-typedef struct LinkedList {
-    NODE head;
+// #include "symbol_table/symbol_table.h"
+#include "../parser/grammar.h"
+typedef struct NodeEle {
+    Elements item;
+    struct NodeEle* next;
+} node_Ele;
+typedef node_Ele* NODE_ELE;
+typedef struct LinkedListEle {
+    NODE_ELE head;
     int count;
-} ll;
-typedef ll* LL;
+} ll_ele;
+typedef ll_ele* LL_ELE;
 
-LL createNewList();
+typedef struct NodeLL {
+    LL_ELE item;
+    struct NodeLL* next;
+} node_LL;
+typedef node_LL* NODE_LL;
+typedef struct LinkedListLL {
+    NODE_LL head;
+    int count;
+} ll_ll;
+typedef ll_ll* LL_LL;
 
-NODE createNewNode(node_item data);
+LL_LL createNewList_LL();
+NODE_LL createNewNode_LL(LL_ELE data);
+void freeNode_LL(NODE_LL node);
+void insertNode_LLFirst(NODE_LL node, LL_LL list);
+void insertNode_LLLast(NODE_LL node, LL_LL list);
+void removeNode_LLFirst(LL_LL list);
+void removeNode_LLLast(LL_LL list);
+void freeLL_LL(LL_LL list);
 
-void freeNode(NODE node);
-
-void insertNodeFirst(NODE node, LL list);
-
-void insertNodeLast(NODE node, LL list);
-
-void removeNodeFirst(LL list);
-
-void removeNodeLast(LL list);
-
-void freeLL(LL list);
+LL_ELE createNewList_Ele();
+NODE_ELE createNewNode_Ele(Elements data);
+void freeNode_Ele(NODE_ELE node);
+void insertNode_EleFirst(NODE_ELE node, LL_ELE list);
+void insertNode_EleLast(NODE_ELE node, LL_ELE list);
+void removeNode_EleFirst(LL_ELE list);
+void removeNode_EleLast(LL_ELE list);
+void freeLL_ELE(LL_ELE list);
 
 #endif
 

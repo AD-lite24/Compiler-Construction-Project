@@ -1,0 +1,2 @@
+definetypestmt - TK_DEFINETYPE A TK_RUID TK_AS TK_RUID
+A - TK_RECORD ; TK_UNION
