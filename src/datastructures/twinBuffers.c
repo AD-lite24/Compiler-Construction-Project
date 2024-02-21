@@ -493,7 +493,6 @@ void traverseBuffer(){
                         //other condition
                         failure();
                         state=0;
-                        // lexemeBegin++;
                         incrementLexemeBegin(1);
                         forward=lexemeBegin;
                     }
