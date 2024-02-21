@@ -199,8 +199,7 @@ NonTerminals stringToEnumNonTerm(char *str) {
     }
     else if (strcmp(str,"moreExpansions") == 0) {
         return moreExpansions;
-    }
-    else if (strcmp(str,"funCallStmt") == 0) {
+    } else if (strcmp(str,"funCallStmt") == 0) {
         return funCallStmt;
     } else if (strcmp(str, "outputParameters") == 0) {
         return outputParameters;
