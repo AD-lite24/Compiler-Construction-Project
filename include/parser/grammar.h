@@ -247,7 +247,9 @@ typedef union ProdUnit ProdUnit;
 
 struct ProdRule {
     NonTerminals LHS;
-    ProdUnit RHS[10];
+    Elements RHS[10];
 };
+
+typedef struct ProdRule ProdRule;
 
 #endif
