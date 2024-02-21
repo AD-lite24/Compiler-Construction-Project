@@ -371,6 +371,7 @@ void printFirollow (FIRSTANDFOLLOW fnf, Elements id) {
         }
     printf("}\n");
 }
+
 GRAMMAR parseFile (char *filename) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
@@ -431,6 +432,24 @@ void insertFollow (Elements src, Elements dst, FIRSTANDFOLLOW firstAndFollowSet,
     }
 
 }
+/*
+LL_ELE ComputeDandy (Elements lhs, LL_ELE rule, FIRSTANDFOLLOW firstAndFollowSet) {
+    LL_ELE ans = createNewList_Ele();
+    NODE_ELE firstLhs = firstAndFollowSet->firstSet[lhs]->head;
+    NODE_ELE curr = rule->head;
+    while (curr != NULL) {
+        NODE_ELE firstRhs = firstAndFollowSet->firstSet[curr->item]->head;
+        while (firstRhs != NULL) {
+            NODE_ELE temp = firstLhs;
+            while (temp != NULL) {
+
+            }
+
+        }
+        curr = curr->next;
+    }
+}
+*/
 void ComputeFirst (GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     /*
     1. If X is a terminal, then FIRST(X) = {X}.
@@ -447,12 +466,13 @@ void ComputeFirst (GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     */
 
     int change = 1;
+    Elements lhs = TK_NULL;
+    for (; lhs < NUM_ELEMENTS ; lhs++) {
+        insertNode_EleLast(createNewNode_Ele(lhs), firstAndFollowSet->firstSet[lhs]);
+    }
     while (change) {
         change = 0;
-        Elements lhs = TK_NULL;
-        for (; lhs < NUM_ELEMENTS ; lhs++) {
-            insertNode_EleLast(createNewNode_Ele(lhs), firstAndFollowSet->firstSet[lhs]);
-        }
+        // Elements lhs = TK_NULL;
         lhs = program;
             printFirollow(firstAndFollowSet, 100);
             printf("Hehe\n");
@@ -487,7 +507,9 @@ void ComputeFirst (GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
                         }
                         firstTerm = firstTerm->next;
                     }
-                    if (currTerm->item != TK_EPSILON)
+                    if(!currTerm->next && !checkEpsilonInFirst(firstAndFollowSet->firstSet[currTerm->item])){
+                        insertNode_EleFirst(createNewNode_Ele(TK_EPSILON), firstAndFollowSet->firstSet[lhs]);
+                    }
                     if (!checkEpsilonInFirst(firstAndFollowSet->firstSet[currTerm->item]))
                         break;
                     currTerm = currTerm->next;
@@ -517,7 +539,7 @@ void ComputeFollow (GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
                 NODE_ELE nextTerm;
                 while (currTerm != NULL) {
                     nextTerm = currTerm->next;
-                    if (currTerm->item < NUM_NONTERMS) {
+                    if (currTerm->item >= NUM_NONTERMS) {
                         currRHS = currRHS->next;
                         continue;
                     }
@@ -608,6 +630,7 @@ int main () {
         printf("\n");
     }
     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(GG);
+    printf("fdbfafhoaif\n");
     for (int i = 0 ; i < NUM_ELEMENTS ; i++) {
         printf ("%d\t-> {", i);
         NODE_ELE ptr = fnfset->firstSet[i]->head;
