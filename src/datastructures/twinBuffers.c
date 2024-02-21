@@ -21,6 +21,65 @@ char* forward;
 FILE* fpclean;
 int state;
 int lineNumber;
+char* tokensArr[]={
+    "TK_NULL", 
+    "TK_ASSIGNOP", 
+    "TK_COMMENT", 
+    "TK_FIELDID", 
+    "TK_ID", 
+    "TK_NUM", 
+    "TK_RNUM", 
+    "TK_FUNID", 
+    "TK_RUID", 
+    "TK_WITH", 
+    "TK_PARAMETERS", 
+    "TK_END", 
+    "TK_WHILE", 
+    "TK_UNION", 
+    "TK_ENDUNION", 
+    "TK_DEFINETYPE", 
+    "TK_AS", 
+    "TK_TYPE", 
+    "TK_MAIN", 
+    "TK_GLOBAL", 
+    "TK_PARAMETER", 
+    "TK_LIST", 
+    "TK_SQL", 
+    "TK_SQR", 
+    "TK_INPUT", 
+    "TK_OUTPUT", 
+    "TK_INT", 
+    "TK_REAL", 
+    "TK_COMMA",
+    "TK_SEM", 
+    "TK_COLON", 
+    "TK_DOT", 
+    "TK_ENDWHILE", 
+    "TK_OP", 
+    "TK_CL", 
+    "TK_IF", 
+    "TK_THEN", 
+    "TK_ENDIF", 
+    "TK_READ", 
+    "TK_WRITE", 
+    "TK_RETURN", 
+    "TK_PLUS", 
+    "TK_MINUS", 
+    "TK_MUL", 
+    "TK_DIV", 
+    "TK_CALL",
+    "TK_RECORD", 
+    "TK_ENDRECORD", 
+    "TK_ELSE", 
+    "TK_AND", 
+    "TK_OR", 
+    "TK_NOT", 
+    "TK_LT", 
+    "TK_LE", 
+    "TK_EQ", 
+    "TK_GT", 
+    "TK_GE", 
+    "TK_NE"};
 
 //Line number functionality yet to be implemented
 Token tk;    
@@ -67,10 +126,6 @@ FILE* removeComments(FILE* fp1){
     return fp2;
 }
 
-void failure(){
-    printf("Incorrect syntax!!! ");
-
-}
 
 char* getLexeme(char* begin, char* forward){
     char* res = (char*)malloc(sizeof(char) * (forward - begin));
@@ -80,8 +135,22 @@ char* getLexeme(char* begin, char* forward){
     return res;
 }
 
+void failure(){
+    printf("Line No %d: ",lineNumber);
+    printf("Error : Unknown symbol ");
+    printf("%s",getLexeme(lexemeBegin,forward));
+    printf("\n");
+}
+
 void printToken(Token tk){
-    printf("%d\n", tk);
+    // printf("%d\n", tk);
+    printf("Line no. %d",lineNumber);
+    printf("\t ");
+    printf("Lexeme %s",getLexeme(lexemeBegin,forward));
+    printf("\t\t ");
+    printf("Token ");
+    printf("%s\n",tokensArr[tk]);
+    
 }
 
 void initializeBuffers(){
@@ -125,6 +194,18 @@ void decrementForward(int val){
     }
 }
 
+void incrementForward(){
+    if((forward)==(buf1+BUFFER_SIZE+1) || (forward)==(buf1+BUFFER_SIZE+2)){
+        reloadBuffer(buf2);
+        forward=buf2;
+    }else if((forward)==(buf2+BUFFER_SIZE+1) || (forward)==(buf2+BUFFER_SIZE+2)){
+        reloadBuffer(buf1);
+        forward=buf1;
+    }else{
+        forward++;
+    }
+}
+
 void traverseBuffer(){
     lexemeBegin=(char*) malloc(sizeof(char));
     forward=(char*) malloc(sizeof(char));
@@ -164,6 +245,14 @@ void traverseBuffer(){
                 case 0:
                     switch (c)
                     {
+                    case '%':
+                        while(*forward!='\n'){
+                            incrementForward();
+                        }
+                        lineNumber++;
+                        incrementForward();
+                        lexemeBegin=forward;
+                        break;
                     case '~':
                         state=1;
                         // printf("TK_NOT");
@@ -302,6 +391,7 @@ void traverseBuffer(){
                     printToken(tk);
                     state = 0;
                     // printf("%s %s\n", tk, getLexeme(lexemeBegin, forward));
+                    decrementForward(1);
                     lexemeBegin = forward;
                     break;
                     //case 3 ends here
@@ -392,8 +482,6 @@ void traverseBuffer(){
                     tk=TK_GE;
                     printToken(tk);
                     state=0;
-                    // lexemeBegin=forward-1;
-                    // forward=lexemeBegin;
                     decrementForward(1);
                     lexemeBegin=forward;
                     break;
@@ -473,12 +561,8 @@ void traverseBuffer(){
                     if(c>='0' && c<='9'){
                         state=17;
                     }else{
-                        //other condition
-                        // failure();
-                        printToken(tk);
                         failure();
                         state=0;
-                        // lexemeBegin++;
                         decrementForward(2);
                         lexemeBegin=forward;
                         
@@ -488,11 +572,8 @@ void traverseBuffer(){
                 case 17:
                     if(c>='0' && c <= '9') state = 18;
                     else{
-                        printToken(tk);
                         failure();
                         state=0;
-                        // incrementLexemeBegin(1);
-                        // forward=lexemeBegin;
                         decrementForward(3);
                         lexemeBegin=forward;
                     }
