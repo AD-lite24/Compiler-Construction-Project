@@ -503,8 +503,6 @@ void traverseBuffer(){
                     tk=TK_NE;
                     printToken(tk);
                     state=0;
-                    // lexemeBegin=forward-1;
-                    // forward=lexemeBegin;
                     decrementForward(1);
                     lexemeBegin=forward;
                     break;
