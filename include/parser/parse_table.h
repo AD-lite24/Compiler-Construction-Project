@@ -13,7 +13,7 @@ ProdRule convertLLtoProd(int i, NODE_LL rule);
 
 // FirstAndFollow    ComputeFirstAndFollowSets (grammar G);
 
-ProdRule **createParseTable(FirstAndFollow F, ProdRule **parseTable);
+ProdRule **createParseTable(FIRSTANDFOLLOW F, ProdRule **parseTable);
 
 // void parseInputSourceCode(char *testcaseFile, table T);
 

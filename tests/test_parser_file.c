@@ -1,7 +1,9 @@
 #include "test_parser_file.h"
 #include <unity.h>
 
-void test_parser_file(char *filename) {
+void test_parser_file(void) {
+
+    char *filename = "/Users/adityadandwate/Desktop/acads/codes/coco/Compiler-Construction-Project/tests/Grammar.txt";
 
     GRAMMAR G = parseFile(filename);
     TEST_ASSERT_NOT_NULL(G);
@@ -20,23 +22,21 @@ void test_parser_file(char *filename) {
     TEST_ASSERT_EQUAL(ele->item, dataType);
 
 
-    // moreFields - TK_EPSILON ; TK_DOT declaration TK_WRITE TK_EQ
+    // moreFields - T_EPSILON ; T_DOT declaration T_WRITE T_EQ
 
     var1 = G->rules[moreFields]->head;
     ele = var1->item->head;
-    TEST_ASSERT_EQUAL(ele->item, TK_EPSILON);
+    TEST_ASSERT_EQUAL(ele->item, T_EPSILON);
 
     var1 = var1->next;
     ele = var1->item->head;
 
-    TEST_ASSERT_EQUAL(ele->item, TK_DOT);
+    TEST_ASSERT_EQUAL(ele->item, T_DOT);
     ele = ele->next;
     TEST_ASSERT_EQUAL(ele->item, declaration);
     ele = ele->next;
-    TEST_ASSERT_EQUAL(ele->item, TK_WRITE);
+    TEST_ASSERT_EQUAL(ele->item, T_WRITE);
     ele = ele->next;
-    TEST_ASSERT_EQUAL(ele->item, TK_EQ);
+    TEST_ASSERT_EQUAL(ele->item, T_EQ);
     
-        
-
 }

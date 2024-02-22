@@ -1,4 +1,4 @@
-#include "../../include/parser/parser.h"
+#include "parser/parser.h"
 
 void trim(char *str) {
     int start = 0;
@@ -18,125 +18,125 @@ void trim(char *str) {
 Elements stringToEnum(char *str) {
     trim(str);
     if (strcmp(str, "TK_NULL") == 0) {
-        return TK_NULL;
+        return T_NULL;
     } else if (strcmp(str, "TK_ASSIGNOP") == 0) {
-        return TK_ASSIGNOP;
+        return T_ASSIGNOP;
     } else if (strcmp(str, "TK_COMMENT") == 0) {
-        return TK_COMMENT;
+        return T_COMMENT;
     } else if (strcmp(str, "TK_FIELDID") == 0) {
-        return TK_FIELDID;
+        return T_FIELDID;
     } else if (strcmp(str, "TK_ID") == 0) {
-        return TK_ID;
+        return T_ID;
     } else if (strcmp(str, "TK_NUM") == 0) {
-        return TK_NUM;
+        return T_NUM;
     } else if (strcmp(str, "TK_RNUM") == 0) {
-        return TK_RNUM;
+        return T_RNUM;
     } else if (strcmp(str, "TK_FUNID") == 0) {
-        return TK_FUNID;
+        return T_FUNID;
     } else if (strcmp(str, "TK_RUID") == 0) {
-        return TK_RUID;
+        return T_RUID;
     } else if (strcmp(str, "TK_WITH") == 0) {
-        return TK_WITH;
+        return T_WITH;
     } else if (strcmp(str, "TK_PARAMETERS") == 0) {
-        return TK_PARAMETER;
+        return T_PARAMETER;
     } else if (strcmp(str, "TK_END") == 0) {
-        return TK_END;
+        return T_END;
     } else if (strcmp(str, "TK_WHILE") == 0) {
-        return TK_WHILE;
+        return T_WHILE;
     } else if (strcmp(str, "TK_UNION") == 0) {
-        return TK_UNION;
+        return T_UNION;
     } else if (strcmp(str, "TK_ENDUNION") == 0) {
-        return TK_ENDUNION;
+        return T_ENDUNION;
     } else if (strcmp(str, "TK_DEFINETYPE") == 0) {
-        return TK_DEFINETYPE;
+        return T_DEFINETYPE;
     } else if (strcmp(str, "TK_AS") == 0) {
-        return TK_AS;
+        return T_AS;
     } else if (strcmp(str, "TK_TYPE") == 0) {
-        return TK_TYPE;
+        return T_TYPE;
     } else if (strcmp(str, "TK_MAIN") == 0) {
-        return TK_MAIN;
+        return T_MAIN;
     } else if (strcmp(str, "TK_GLOBAL") == 0) {
-        return TK_GLOBAL;
+        return T_GLOBAL;
     } else if (strcmp(str, "TK_PARAMETER") == 0) {
-        return TK_PARAMETER;
+        return T_PARAMETER;
     } else if (strcmp(str, "TK_LIST") == 0) {
-        return TK_LIST;
+        return T_LIST;
     } else if (strcmp(str, "TK_SQL") == 0) {
-        return TK_SQL;
+        return T_SQL;
     } else if (strcmp(str, "TK_SQR") == 0) {
-        return TK_SQR;
+        return T_SQR;
     } else if (strcmp(str, "TK_INPUT") == 0) {
-        return TK_INPUT;
+        return T_INPUT;
     } else if (strcmp(str, "TK_OUTPUT") == 0) {
-        return TK_OUTPUT;
+        return T_OUTPUT;
     } else if (strcmp(str, "TK_INT") == 0) {
-        return TK_INT;
+        return T_INT;
     } else if (strcmp(str, "TK_REAL") == 0) {
-        return TK_REAL;
+        return T_REAL;
     } else if (strcmp(str, "TK_COMMA") == 0) {
-        return TK_COMMA;
+        return T_COMMA;
     } else if (strcmp(str, "TK_SEM") == 0) {
-        return TK_SEM;
+        return T_SEM;
     } else if (strcmp(str, "TK_COLON") == 0) {
-        return TK_COLON;
+        return T_COLON;
     } else if (strcmp(str, "TK_DOT") == 0) {
-        return TK_DOT;
+        return T_DOT;
     } else if (strcmp(str, "TK_ENDWHILE") == 0) {
-        return TK_ENDWHILE;
+        return T_ENDWHILE;
     } else if (strcmp(str, "TK_OP") == 0) {
-        return TK_OP;
+        return T_OP;
     } else if (strcmp(str, "TK_CL") == 0) {
-        return TK_CL;
+        return T_CL;
     } else if (strcmp(str, "TK_IF") == 0) {
-        return TK_IF;
+        return T_IF;
     } else if (strcmp(str, "TK_THEN") == 0) {
-        return TK_THEN;
+        return T_THEN;
     } else if (strcmp(str, "TK_ENDIF") == 0) {
-        return TK_ENDIF;
+        return T_ENDIF;
     } else if (strcmp(str, "TK_READ") == 0) {
-        return TK_READ;
+        return T_READ;
     } else if (strcmp(str, "TK_WRITE") == 0) {
-        return TK_WRITE;
+        return T_WRITE;
     } else if (strcmp(str, "TK_RETURN") == 0) {
-        return TK_RETURN;
+        return T_RETURN;
     } else if (strcmp(str, "TK_PLUS") == 0) {
-        return TK_PLUS;
+        return T_PLUS;
     } else if (strcmp(str, "TK_MINUS") == 0) {
-        return TK_MINUS;
+        return T_MINUS;
     } else if (strcmp(str, "TK_MUL") == 0) {
-        return TK_MUL;
+        return T_MUL;
     } else if (strcmp(str, "TK_DIV") == 0) {
-        return TK_DIV;
+        return T_DIV;
     } else if (strcmp(str, "TK_CALL") == 0) {
-        return TK_CALL;
+        return T_CALL;
     } else if (strcmp(str, "TK_RECORD") == 0) {
-        return TK_RECORD;
+        return T_RECORD;
     } else if (strcmp(str, "TK_ENDRECORD") == 0) {
-        return TK_ENDRECORD;
+        return T_ENDRECORD;
     } else if (strcmp(str, "TK_ELSE") == 0) {
-        return TK_ELSE;
+        return T_ELSE;
     } else if (strcmp(str, "TK_AND") == 0) {
-        return TK_AND;
+        return T_AND;
     } else if (strcmp(str, "TK_OR") == 0) {
-        return TK_OR;
+        return T_OR;
     } else if (strcmp(str, "TK_NOT") == 0) {
-        return TK_NOT;
+        return T_NOT;
     } else if (strcmp(str, "TK_LT") == 0) {
-        return TK_LT;
+        return T_LT;
     } else if (strcmp(str, "TK_LE") == 0) {
-        return TK_LE;
+        return T_LE;
     } else if (strcmp(str, "TK_EQ") == 0) {
-        return TK_EQ;
+        return T_EQ;
     } else if (strcmp(str, "TK_GT") == 0) {
-        return TK_GT;
+        return T_GT;
     } else if (strcmp(str, "TK_GE") == 0) {
-        return TK_GE;
+        return T_GE;
     } else if (strcmp(str, "TK_NE") == 0) {
-        return TK_NE;
-    } else if (strcmp(str, "EPSILON") == 0) {
-        return TK_EPSILON;
+        return T_NE;
+    } else if (strcmp(str, "TK_EPSILON") == 0) {
+        return T_EPSILON;
     } else if (strcmp(str, "TK_DOLLAR") == 0) {
-        return TK_DOLLAR;
+        return T_DOLLAR;
     } else if (strcmp(str, "program") == 0) {
         return program;
     } else if (strcmp(str, "mainFunction") == 0) {
@@ -316,7 +316,7 @@ GRAMMAR parseFile(char *filename) {
 int checkEpsilonInFirst(LL_ELE first) {
     NODE_ELE ptr = first->head;
     while (ptr != NULL) {
-        if (ptr->item == TK_EPSILON)
+        if (ptr->item == T_EPSILON)
             return 1;
         ptr = ptr->next;
     }
@@ -341,14 +341,14 @@ void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     */
 
     int change = 1;
-    Elements lhs = TK_NULL;
+    Elements lhs = T_NULL;
     for (; lhs < NUM_ELEMENTS; lhs++) {
         insertNode_EleLast(createNewNode_Ele(lhs),
                            firstAndFollowSet->firstSet[lhs]);
     }
     while (change) {
         change = 0;
-        Elements lhs = TK_NULL;
+        Elements lhs = T_NULL;
         for (; lhs < NUM_ELEMENTS; lhs++) {
             insertNode_EleLast(createNewNode_Ele(lhs),
                                firstAndFollowSet->firstSet[lhs]);
@@ -362,8 +362,8 @@ void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
                 NODE_ELE firstLhsHead = firstAndFollowSet->firstSet[lhs]->head;
                 NODE_LL currRHS = G->rules[lhs]->head;
 
-                if (currRHS->item->head->item == TK_EPSILON) {
-                    insertNode_EleLast(createNewNode_Ele(TK_EPSILON),
+                if (currRHS->item->head->item == T_EPSILON) {
+                    insertNode_EleLast(createNewNode_Ele(T_EPSILON),
                                        firstAndFollowSet->firstSet[lhs]);
                     currRHS = currRHS->next;
                     continue;
@@ -374,7 +374,7 @@ void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
                         NODE_ELE firstTerm =
                             firstAndFollowSet->firstSet[currTerm->item]->head;
                         while (firstTerm != NULL) {
-                            if (firstTerm->item == TK_EPSILON) {
+                            if (firstTerm->item == T_EPSILON) {
                                 firstTerm = firstTerm->next;
                                 continue;
                             }
@@ -399,7 +399,7 @@ void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
                             !checkEpsilonInFirst(
                                 firstAndFollowSet->firstSet[lhs]))
                             insertNode_EleLast(
-                                createNewNode_Ele(TK_EPSILON),
+                                createNewNode_Ele(T_EPSILON),
                                 firstAndFollowSet->firstSet[lhs]);
                         if (!checkEpsilonInFirst(
                                 firstAndFollowSet->firstSet[currTerm->item]))
@@ -531,7 +531,7 @@ void ComputeFollow(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
 }
 
 Elements *computeFollowSpecial(ProdRule rule, FIRSTANDFOLLOW firstAndFollowSet){
-    NODE_ELE ptr = firstAndFollowSet->followSet[rule.LHS];
+    NODE_ELE ptr = firstAndFollowSet->followSet[rule.LHS]->head;
     Elements *ret = (Elements *)malloc(10 * sizeof(Elements));
     memset(ret, -1, 10 * sizeof(Elements));
     int index = 0;
@@ -549,7 +549,7 @@ Elements *computeFirstSpecial(Elements lhs, LL_ELE rule,
     while (ptr != NULL) {
         NODE_ELE firstPtr = firstAndFollowSet->firstSet[ptr->item]->head;
         while (firstPtr != NULL) {
-            if (firstPtr->item == TK_EPSILON) {
+            if (firstPtr->item == T_EPSILON) {
                 firstPtr = firstPtr->next;
                 continue;
             }

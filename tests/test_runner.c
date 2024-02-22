@@ -11,16 +11,13 @@ void tearDown(void) {}
 
 int main(void) {
 
-    char* filename = "Grammar.txt";
-    
     UNITY_BEGIN();
 
     // test_linkedlist();
     // test_hash_table();
-    test_trie();
+    // test_trie();
     // test_symbol_table_tree();
-    test_parser_file(filename);
-
+    RUN_TEST(test_parser_file);
 
     return UNITY_END();
 }

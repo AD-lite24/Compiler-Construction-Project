@@ -1,4 +1,4 @@
-#include "include/parser/parse_table.h"
+#include "parser/parse_table.h"
 
 
 // ProdRule **createParseTable(FirstAndFollow F, ProdRule **parseTable) {
@@ -67,16 +67,16 @@ ProdRule convertLLtoProd(int i, NODE_LL rule) {
     return ans;
 }
 
-ProdRule **createParseTable(FirstAndFollow F, ProdRule **ParseTable) {
+ProdRule **createParseTable(FIRSTANDFOLLOW F, ProdRule **ParseTable) {
     for (int i = 0; i < sizeof(grammar_glob) / sizeof(LL_LL); i++) {
         NODE_LL rule = grammar_glob->rules[i]->head;
         Elements *x;
         while (rule != NULL) {
             ProdRule prod_rule = convertLLtoProd(i, rule);
             if (checkEpsilonInFirst(rule->item) == 1) {
-                x = computeFollowSpecial(prod_rule);
+                x = computeFollowSpecial(prod_rule,F);
             } else {
-                x = computeFirstSpecial(prod_rule);
+                x = computeFirstSpecial(i,rule->item,F);
             }
             for (int j = 0; j < sizeof(x) / sizeof(Elements); j++) {
                 ParseTable[i][x[j] - NUM_NONTERMS] = prod_rule;
