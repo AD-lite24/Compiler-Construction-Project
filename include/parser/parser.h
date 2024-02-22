@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "datastructures/linked_list.h"
+#include "datastructures/linked_list_parser.h"
 
 #define NUM_NONTERMS 52
 #define NUM_ELEMENTS 111
