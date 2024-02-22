@@ -1,18 +1,14 @@
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/parser/grammar.h"
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/parser/parser.h"
+#include "../../include/parser/grammar.h"
+#include "../../include/parser/parser.h"
 // #include "parser.c"
 #include<stdlib.h>
 #include<stdio.h>
 #include<string.h>
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/datastructures/linked_list.h"
-#include "/mnt/d/Coco/Compiler-Construction-Project/src/datastructures/linked_list.c"
+#include "../../include/datastructures/linked_list.h"
+// #include "/mnt/d/Coco/Compiler-Construction-Project/src/datastructures/linked_list.c"
 
 // #include "../../include/parser/parser.h"
-// // #include "../include/datastructures/hashtable.h"
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-// #include 
+// #include "../include/datastructures/hashtable.h"]
 
 Elements stringToEnumTerm(char * str) {
     if (strcmp(str,"TK_NULL") == 0) {
