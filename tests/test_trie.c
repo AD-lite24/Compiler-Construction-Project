@@ -14,10 +14,8 @@ void test_populateTrie(void){
 
 void test_lookupTrie(void){
     TRIE r;
-    printf("123456\n");
     r = populateTrie();
     TEST_ASSERT_NOT_NULL(r);
-    printf("123\n");
     enum Token tk1 = lookupTrie(r, "endwhile");
     enum Token tk2 = lookupTrie(r, "parameter");
     enum Token tk3 = lookupTrie(r, "definetype");
@@ -28,7 +26,6 @@ void test_lookupTrie(void){
     TEST_ASSERT_EQUAL(TK_DEFINETYPE, tk3);
     TEST_ASSERT_EQUAL(TK_OUTPUT, tk4);
     TEST_ASSERT_EQUAL(TK_ELSE, tk5);
-    printf("1234\n");
 
     free(r);
 }
