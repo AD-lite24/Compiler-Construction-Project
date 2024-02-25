@@ -1,22 +1,9 @@
-#include "parser/parser.h"
+#include "../../include/parser/parser.h"
+#include "../../include/parser/parse_table.h"
 
-void trim(char *str) {
-    int start = 0;
-    int end = strlen(str) - 1;
 
-    while (str[start] == ' ')
-        start++;
-    while (str[end] == ' ')
-        end--;
-
-    memmove(str, str + start, end - start + 1);
-
-    // Null-terminate the trimmed string
-    str[end - start + 1] = '\0';
-}
 
 Elements stringToEnum(char *str) {
-    trim(str);
     if (strcmp(str, "TK_NULL") == 0) {
         return T_NULL;
     } else if (strcmp(str, "TK_ASSIGNOP") == 0) {
@@ -171,6 +158,8 @@ Elements stringToEnum(char *str) {
         return fieldDefinitions;
     } else if (strcmp(str, "fieldDefinition") == 0) {
         return fieldDefinition;
+    } else if (strcmp(str, "fieldType") == 0) {
+        return fieldType;
     } else if (strcmp(str, "moreFields") == 0) {
         return moreFields;
     } else if (strcmp(str, "declarations") == 0) {
@@ -246,30 +235,6 @@ Elements stringToEnum(char *str) {
     }
 }
 
-void printHEHE(LL_LL eqn) {
-    if (eqn == NULL)
-        return;
-    NODE_LL ptr = eqn->head;
-    while (ptr != NULL) {
-        NODE_ELE hehe = ptr->item->head;
-        while (hehe != NULL) {
-            printf("%d ", hehe->item);
-            hehe = hehe->next;
-        }
-        printf("| ");
-        ptr = ptr->next;
-    }
-}
-
-void printFirollow(FIRSTANDFOLLOW fnf, Elements id) {
-    printf("%d\t-> {", id);
-    NODE_ELE ptr = fnf->firstSet[id]->head;
-    while (ptr != NULL) {
-        printf("%d ", ptr->item);
-        ptr = ptr->next;
-    }
-    printf("}\n");
-}
 
 GRAMMAR parseFile(char *filename) {
     FILE *fp = fopen(filename, "r");
@@ -323,199 +288,163 @@ int checkEpsilonInFirst(LL_ELE first) {
     return 0;
 }
 
-void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
+void ComputeFirst (GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     /*
     1. If X is a terminal, then FIRST(X) = {X}.
-    2. If X is a nonterminal and X -> Y1 Y2 ... Yk is a production for some k >=
-    1, then place a in FIRST(X) if for some i, a is in FIRST(Yi), and eps is in
-    all of      eps. If eps is in FIRST(Y ) FIRST(Y1 ); : : : ; FIRST(Yi,1 );
-    that is, Y1 ... Yi,1 )
+    2. If X is a nonterminal and X -> Y1 Y2 ... Yk is a production for some k >= 1, then place a in FIRST(X) if for some i, a is in FIRST(Yi), and eps is in all of       eps. If eps is in FIRST(Y )
+    FIRST(Y1 ); : : : ; FIRST(Yi,1 ); that is, Y1 ... Yi,1 )
     j
-    for all j = 1; 2; : : : ; k, then add eps to FIRST(X ). For example,
-    everything in FIRST(Y1 ) is surely in FIRST(X ). If Y1 does not derive eps,
-    then we add  eps, then we add FIRST(Y ), and nothing more to FIRST(X ), but
-    if Y1 )
+    for all j = 1; 2; : : : ; k, then add eps to FIRST(X ). For example, everything
+    in FIRST(Y1 ) is surely in FIRST(X ). If Y1 does not derive eps, then we add
+      eps, then we add FIRST(Y ), and
+    nothing more to FIRST(X ), but if Y1 )
     2
     so on.
     3. If X -> eps is a production, then add eps to FIRST(X).
     */
 
     int change = 1;
-    Elements lhs = T_NULL;
-    for (; lhs < NUM_ELEMENTS; lhs++) {
-        insertNode_EleLast(createNewNode_Ele(lhs),
-                           firstAndFollowSet->firstSet[lhs]);
-    }
+        Elements lhs = T_NULL;
+        for (; lhs < NUM_ELEMENTS ; lhs++) {
+            insertNode_EleLast(createNewNode_Ele(lhs), firstAndFollowSet->firstSet[lhs]);
+        }
     while (change) {
         change = 0;
-        Elements lhs = T_NULL;
-        for (; lhs < NUM_ELEMENTS; lhs++) {
-            insertNode_EleLast(createNewNode_Ele(lhs),
-                               firstAndFollowSet->firstSet[lhs]);
-        }
-        while (change) {
-            change = 0;
-            lhs = program;
+        lhs = program;
             // printFirollow(firstAndFollowSet, 100);
-            // printf("Hehe\n");
-            for (; lhs < NUM_NONTERMS; lhs++) {
-                NODE_ELE firstLhsHead = firstAndFollowSet->firstSet[lhs]->head;
-                NODE_LL currRHS = G->rules[lhs]->head;
+            // printf("Hehe\n");   
+        for (; lhs < NUM_NONTERMS ; lhs++) {
+            NODE_ELE firstLhsHead = firstAndFollowSet->firstSet[lhs]->head;
+            NODE_LL currRHS = G->rules[lhs]->head;
 
-                if (currRHS->item->head->item == T_EPSILON) {
-                    insertNode_EleLast(createNewNode_Ele(T_EPSILON),
-                                       firstAndFollowSet->firstSet[lhs]);
-                    currRHS = currRHS->next;
-                    continue;
-                }
-                while (currRHS != NULL) {
-                    NODE_ELE currTerm = currRHS->item->head;
-                    while (currTerm != NULL) {
-                        NODE_ELE firstTerm =
-                            firstAndFollowSet->firstSet[currTerm->item]->head;
-                        while (firstTerm != NULL) {
-                            if (firstTerm->item == T_EPSILON) {
-                                firstTerm = firstTerm->next;
-                                continue;
-                            }
-                            NODE_ELE tempLhs = firstLhsHead;
-                            int visited = 0;
-                            while (tempLhs != NULL) {
-                                if (tempLhs->item == firstTerm->item)
-                                    visited = 1;
-                                tempLhs = tempLhs->next;
-                            }
-                            if (!visited) {
-                                insertNode_EleLast(
-                                    createNewNode_Ele(firstTerm->item),
-                                    firstAndFollowSet->firstSet[lhs]);
-                                change = 1;
-                            }
+            if (currRHS->item->head->item == T_EPSILON && !checkEpsilonInFirst(firstAndFollowSet->firstSet[lhs])) {
+                insertNode_EleLast(createNewNode_Ele(T_EPSILON), firstAndFollowSet->firstSet[lhs]);
+                currRHS = currRHS->next;
+                continue;
+            }
+            while (currRHS != NULL) {
+                NODE_ELE currTerm = currRHS->item->head;
+                while (currTerm != NULL) {
+                    NODE_ELE firstTerm = firstAndFollowSet->firstSet[currTerm->item]->head;
+                    while (firstTerm != NULL) {
+                        if (firstTerm->item == T_EPSILON) {
                             firstTerm = firstTerm->next;
+                            continue;
                         }
-                        if (currTerm->next == NULL &&
-                            checkEpsilonInFirst(
-                                firstAndFollowSet->firstSet[currTerm->item]) &&
-                            !checkEpsilonInFirst(
-                                firstAndFollowSet->firstSet[lhs]))
-                            insertNode_EleLast(
-                                createNewNode_Ele(T_EPSILON),
-                                firstAndFollowSet->firstSet[lhs]);
-                        if (!checkEpsilonInFirst(
-                                firstAndFollowSet->firstSet[currTerm->item]))
-                            break;
-                        // if (currTerm->next == NULL &&
-                        // checkEpsilonInFirst(firstAndFollowSet->firstSet[lhs]))
-                        //     insertNode_EleLast(createNewNode_Ele(TK_EPSILON),
-                        //     firstAndFollowSet->firstSet[lhs]);
-                        currTerm = currTerm->next;
+                        NODE_ELE tempLhs = firstLhsHead;
+                        int visited = 0;
+                        while (tempLhs != NULL) {
+                            if (tempLhs->item == firstTerm->item) 
+                                visited = 1;
+                            tempLhs  = tempLhs->next;
+                        }
+                        if (!visited) {
+                            insertNode_EleLast(createNewNode_Ele(firstTerm->item), firstAndFollowSet->firstSet[lhs]);
+                            change = 1;
+                        }
+                        firstTerm = firstTerm->next;
                     }
-
-                    currRHS = currRHS->next;
+                    if (currTerm->next == NULL && checkEpsilonInFirst(firstAndFollowSet->firstSet[currTerm->item]) && !checkEpsilonInFirst(firstAndFollowSet->firstSet[lhs]))
+                        insertNode_EleLast(createNewNode_Ele(T_EPSILON), firstAndFollowSet->firstSet[lhs]);
+                    if (!checkEpsilonInFirst(firstAndFollowSet->firstSet[currTerm->item]))
+                        break;
+                    // if (currTerm->next == NULL && checkEpsilonInFirst(firstAndFollowSet->firstSet[lhs]))
+                    //     insertNode_EleLast(createNewNode_Ele(TK_EPSILON), firstAndFollowSet->firstSet[lhs]);
+                    currTerm = currTerm->next;
                 }
+
+                currRHS = currRHS->next;
             }
         }
     }
+
+    
 }
 
-void ComputeFollow(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
+void ComputeFollow (GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     /*
-    1. Place $ in FOLLOW(S), where S is the start symbol, and $ is the input
-    right endmarker.
-    2. If there is a production A->aBb , then everything in FIRST(b) except
-    eps is in FOLLOW(B).
-    3. If there is a production A->aB , or a production A->aBb , where
-    FIRST(b) contains eps, then everything in FOLLOW(A) is in FOLLOW(B).
+    1. Place $ in FOLLOW(S), where S is the start symbol, and $ is the input right endmarker.
+    2. If there is a production A->aBb , then everything in FIRST(b) except eps is in FOLLOW(B).
+    3. If there is a production A->aB , or a production A->aBb , where FIRST(b) contains eps, then everything in FOLLOW(A) is in FOLLOW(B).
     */
-    insertNode_EleLast(createNewNode_Ele(stringToEnum("TK_DOLLAR")),
-                       firstAndFollowSet->followSet[0]);
+    insertNode_EleLast(createNewNode_Ele(stringToEnum("TK_DOLLAR")),firstAndFollowSet->followSet[0]);
     int change = 1;
     while (change) {
         change = 0;
         int lhs = 0;
-        for (; lhs < NUM_NONTERMS; lhs++) {
+        for (; lhs < NUM_NONTERMS ; lhs++) {
             NODE_LL currRHS = G->rules[lhs]->head;
             while (currRHS != NULL) {
                 NODE_ELE currTerm = currRHS->item->head;
-                NODE_ELE nextTerm;
+                NODE_ELE nextTerm = currTerm;
                 while (currTerm != NULL) {
                     if (currTerm->item >= NUM_NONTERMS) {
                         currTerm = currTerm->next;
+                        nextTerm = currTerm;
                         continue;
                     }
-
-                    nextTerm = currTerm->next;
-                    // printf("WOOOOO %d %d\n", currTerm->item,
-                    // nextTerm->item); if (currTerm->item < NUM_NONTERMS) {
+                
+                    nextTerm = nextTerm->next;
+                    // printf("WOOOOO %d %d\n", currTerm->item, nextTerm->item);
+                    // if (currTerm->item < NUM_NONTERMS) {
                     //     currRHS = currRHS->next;
                     //     continue;
                     // }
                     if (nextTerm == NULL) {
-                        NODE_ELE lhsPtr =
-                            firstAndFollowSet->followSet[lhs]->head;
+
+                        NODE_ELE lhsPtr = firstAndFollowSet->followSet[lhs]->head;
                         while (lhsPtr != NULL) {
                             Elements term = lhsPtr->item;
-                            NODE_ELE bPtr =
-                                firstAndFollowSet->followSet[currTerm->item]
-                                    ->head;
+                            NODE_ELE bPtr = firstAndFollowSet->followSet[currTerm->item]->head;
                             int visited = 0;
                             while (bPtr != NULL) {
                                 if (bPtr->item == term)
                                     visited = 1;
-                                bPtr = bPtr->next;
+                                bPtr = bPtr->next; 
                             }
                             if (!visited) {
-                                insertNode_EleLast(
-                                    createNewNode_Ele(term),
-                                    firstAndFollowSet
-                                        ->followSet[currTerm->item]);
+                                insertNode_EleLast(createNewNode_Ele(term), firstAndFollowSet->followSet[currTerm->item]);
                                 change = 1;
                             }
                             lhsPtr = lhsPtr->next;
                         }
-                    } else {
-                        NODE_ELE betaPtr =
-                            firstAndFollowSet->firstSet[nextTerm->item]->head;
+                    }
+                    else {
+                        NODE_ELE betaPtr = firstAndFollowSet->firstSet[nextTerm->item]->head;
                         while (betaPtr != NULL) {
                             Elements term = betaPtr->item;
-                            NODE_ELE bPtr =
-                                firstAndFollowSet->followSet[currTerm->item]
-                                    ->head;
+                            if (term == T_EPSILON) {
+                                betaPtr = betaPtr -> next;
+                                continue;
+                            }
+                            NODE_ELE bPtr = firstAndFollowSet->followSet[currTerm->item]->head;
                             int visited = 0;
                             while (bPtr != NULL) {
                                 if (bPtr->item == term)
                                     visited = 1;
-                                bPtr = bPtr->next;
+                                bPtr = bPtr->next; 
                             }
                             if (!visited) {
-                                insertNode_EleLast(
-                                    createNewNode_Ele(term),
-                                    firstAndFollowSet
-                                        ->followSet[currTerm->item]);
+                                insertNode_EleLast(createNewNode_Ele(term), firstAndFollowSet->followSet[currTerm->item]);
                                 change = 1;
                             }
                             betaPtr = betaPtr->next;
                         }
-                        if (checkEpsilonInFirst(
-                                firstAndFollowSet->firstSet[nextTerm->item])) {
-                            NODE_ELE lhsPtr =
-                                firstAndFollowSet->followSet[lhs]->head;
+                        if (checkEpsilonInFirst(firstAndFollowSet->firstSet[nextTerm->item]))
+                            continue;
+                        if (checkEpsilonInFirst(firstAndFollowSet->firstSet[nextTerm->item]) && (nextTerm->next == NULL)) {
+                            NODE_ELE lhsPtr = firstAndFollowSet->followSet[lhs]->head;
                             while (lhsPtr != NULL) {
                                 Elements term = lhsPtr->item;
-                                NODE_ELE bPtr =
-                                    firstAndFollowSet->followSet[currTerm->item]
-                                        ->head;
+                                NODE_ELE bPtr = firstAndFollowSet->followSet[currTerm->item]->head;
                                 int visited = 0;
                                 while (bPtr != NULL) {
                                     if (bPtr->item == term)
                                         visited = 1;
-                                    bPtr = bPtr->next;
+                                    bPtr = bPtr->next; 
                                 }
                                 if (!visited) {
-                                    insertNode_EleLast(
-                                        createNewNode_Ele(term),
-                                        firstAndFollowSet
-                                            ->followSet[currTerm->item]);
+                                    insertNode_EleLast(createNewNode_Ele(term), firstAndFollowSet->followSet[currTerm->item]);
                                     change = 1;
                                 }
                                 lhsPtr = lhsPtr->next;
@@ -523,12 +452,14 @@ void ComputeFollow(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
                         }
                     }
                     currTerm = currTerm->next;
+                    nextTerm = currTerm;
                 }
                 currRHS = currRHS->next;
             }
         }
     }
 }
+
 
 Elements *computeFollowSpecial(ProdRule rule, FIRSTANDFOLLOW firstAndFollowSet){
     NODE_ELE ptr = firstAndFollowSet->followSet[rule.LHS]->head;
@@ -570,6 +501,8 @@ Elements *computeFirstSpecial(Elements lhs, LL_ELE rule,
         }
         ptr = ptr->next;
     }
+    if (ptr == NULL)
+        insertNode_EleFirst(createNewList_Ele(T_EPSILON), ans);
     Elements *ret = (Elements *)malloc(10 * sizeof(Elements));
     memset(ret, -1, 10 * sizeof(Elements));
     ptr = ans->head;
@@ -596,40 +529,101 @@ FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G) {
     return firstAndFollowSet;
 }
 
-// /*
-// int main() {
-//     GRAMMAR GG = parseFile("ModifiedGrammar.txt");
-//     // TODO :
-//     // grammar_glob = *GG;
-//     printf("Grammar Rules : \n");
-//     for (int i = 0; i < NUM_NONTERMS; i++) {
-//         printf("%d  :  ", i);
-//         printHEHE(GG->rules[i]);
-//         printf("\n");
-//     }
-//     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(GG);
-//     printf("/*************************************************\n");
-//     printf("First Sets\n");
-//     for (int i = 0; i < NUM_ELEMENTS; i++) {
-//         printf("{ %d\t-> ", i);
-//         NODE_ELE ptr = fnfset->firstSet[i]->head;
-//         while (ptr != NULL) {
-//             printf("%d ", ptr->item);
-//             ptr = ptr->next;
+ProdRule convertLLtoProd(int i, NODE_LL rule) {
+    ProdRule ans;
+    ans.LHS = i;
+    ans.count_rhs=0;
+    NODE_ELE ptr = rule->item->head;
+    int index = 0;
+    while (ptr != NULL) {
+        ans.RHS[index++] = ptr->item;
+        ans.count_rhs++;
+        ptr = ptr->next;
+    }
+    return ans;
+}
+
+// void createParseTable(FIRSTANDFOLLOW F, ProdRule **ParseTable) {
+//     for (int i = 0; i < sizeof(grammar_glob) / sizeof(LL_LL); i++) {
+//         NODE_LL rule = grammar_glob->rules[i]->head;
+//         Elements *x;
+//         while (rule != NULL) {
+//             ProdRule prod_rule = convertLLtoProd(i, rule);
+//             if (checkEpsilonInFirst(rule->item) == 1) {
+//                 x = computeFollowSpecial(prod_rule,F);
+//             } else {
+//                 x = computeFirstSpecial(i,rule->item,F);
+//             }
+//             for (int j = 0; j < sizeof(x) / sizeof(Elements); j++) {
+//                 ParseTable[i][x[j] - NUM_NONTERMS] = prod_rule;
+//             }
+//             rule = rule->next;
 //         }
-//         printf("}\n");
 //     }
-//     printf("/*************************************************\n");
-//     printf("Follow Sets\n");
-//     for (int i = 0; i < NUM_NONTERMS; i++) {
-//         printf("{ %d  =>  ", i);
-//         NODE_ELE ptr = fnfset->followSet[i]->head;
-//         while (ptr != NULL) {
-//             printf("%d ", ptr->item);
-//             ptr = ptr->next;
-//         }
-//         printf("}\n");
-//     }
-//     return 0;
 // }
-// */
+
+
+int main() {
+    GRAMMAR GG = parseFile("ModifiedGrammar.txt");
+    // TODO :
+    grammar_glob = GG;
+    printf("Grammar Rules : \n");
+    for (int i = 0; i < NUM_NONTERMS; i++) {
+        printf("%-3d  :  ", i);
+        // printHEHE(GG->rules[i]);
+        // printf("\n");
+
+    	NODE_LL ptr = GG->rules[i]->head;
+    	while (ptr != NULL) {
+        	NODE_ELE hehe = ptr->item->head;
+        	while (hehe != NULL) {
+                printf("%-3d ", hehe->item);
+            	hehe = hehe ->next;
+        	}
+        	printf ("| ");
+        	ptr = ptr->next;
+    	}
+        //printHEHE(GG->rules[i]);
+        printf("\n");
+    }
+    
+    FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(GG);
+    printf("/*************************************************\n");
+    printf("First Sets\n");
+    for (int i = 0; i < NUM_ELEMENTS; i++) {
+        printf("{ %-3d\t-> ", i);
+        NODE_ELE ptr = fnfset->firstSet[i]->head;
+        while (ptr != NULL) {
+            printf("%-3d ", ptr->item);
+            ptr = ptr->next;
+        }
+        printf("}\n");
+    }
+    printf("/*************************************************\n");
+    printf("Follow Sets\n");
+    for (int i = 0; i < NUM_NONTERMS; i++) {
+        printf("{ %-3d  =>  ", i);
+        NODE_ELE ptr = fnfset->followSet[i]->head;
+        while (ptr != NULL) {
+            printf("%-3d ", ptr->item);
+            ptr = ptr->next;
+        }
+        printf("}\n");
+    }
+    printf("/*************************************************\n");
+    printf("Checking Prod Rule Conversion\n");
+    for(int i=0;i<NUM_NONTERMS;i++){
+        LL_LL ptr=(LL_LL)malloc(sizeof(ll_ll));
+        ptr=GG->rules[i];
+        NODE_LL ptr_head = ptr->head;
+        ProdRule pr=convertLLtoProd(i,ptr_head);   
+        printf("%-3d -> ",pr.LHS);
+        for(int j=0;j<pr.count_rhs-1;j++){
+            printf("%-3d ",pr.RHS[j]);
+            ptr_head = ptr_head->next;
+            if(ptr_head==NULL)break;
+        }
+           
+    }
+    return 0;
+}

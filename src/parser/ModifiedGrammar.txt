@@ -9,14 +9,14 @@ dataType - primitiveDatatype ; constructedDatatype
 primitiveDatatype - TK_INT ; TK_REAL
 constructedDatatype - TK_RECORD TK_RUID ; TK_UNION TK_RUID ; TK_RUID
 remaining_list - TK_COMMA parameter_list ; TK_EPSILON
-stmts - typeDefinitions declarations otherStmtsreturnStmt
+stmts - typeDefinitions declarations otherStmts returnStmt
 typeDefinitions - actualOrRedefined typeDefinitions ; TK_EPSILON
 actualOrRedefined - typeDefinition ; definetypestmt
 typeDefinition - TK_RECORD TK_RUID fieldDefinitions TK_ENDRECORD
 typeDefinition - TK_UNION TK_RUID fieldDefinitions TK_ENDUNION
 fieldDefinitions - fieldDefinition fieldDefinition moreFields
 fieldDefinition - TK_TYPE fieldType  TK_COLON TK_FIELDID TK_SEM
-fieldtype - primitiveDatatype ; TK_RUID
+fieldType - primitiveDatatype ; constructedDatatype 
 moreFields - fieldDefinition moreFields ; TK_EPSILON
 declarations - declaration declarations ; TK_EPSILON
 declaration - TK_TYPE dataType TK_COLON TK_ID global_or_not TK_SEM
@@ -38,7 +38,7 @@ ioStmt - TK_READ TK_OP var TK_CL TK_SEM ; TK_WRITE TK_OP var TK_CL TK_SEM
 arithmeticExpression - term expPrime
 expPrime - lowPrecedenceOperators term expPrime ; TK_EPSILON
 term - factor termPrime
-termPrime - highPrecedenceOperators factor termPrime ; TK_EPSILON
+termPrime - highPrecedenceOperator factor termPrime ; TK_EPSILON
 factor - TK_OP arithmeticExpression TK_CL ; var
 highPrecedenceOperator - TK_MUL ; TK_DIV
 lowPrecedenceOperators - TK_PLUS ; TK_MINUS

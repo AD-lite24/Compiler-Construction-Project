@@ -5,11 +5,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "datastructures/linked_list_parser.h"
+#include "../../include/datastructures/linked_list_parser.h"
 
-#define NUM_NONTERMS 52
-#define NUM_ELEMENTS 111
-#define NUM_EQN 50
+#define NUM_NONTERMS 53
+#define NUM_ELEMENTS 112
 
 typedef struct grammar {
     LL_LL rules[NUM_NONTERMS];
@@ -31,6 +30,7 @@ FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G);
 struct ProdRule {
     Elements LHS;
     Elements RHS[10];
+    int count_rhs;
 };
 
 typedef struct ProdRule ProdRule;

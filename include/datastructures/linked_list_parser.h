@@ -1,11 +1,6 @@
 #ifndef LINKED_LIST_PARSER
 #define LINKED_LIST_PARSER
 
-// #include "symbol_table/symbol_table.h"
-// #include "parser/parser.h"
-
-
-
 enum Elements {
     program,
     mainFunction,
@@ -24,6 +19,7 @@ enum Elements {
     typeDefinition,
     fieldDefinitions,
     fieldDefinition,
+    fieldType,
     moreFields,
     declarations,
     declaration,
@@ -117,8 +113,8 @@ enum Elements {
     T_GT,
     T_GE,
     T_NE,
-    T_DOLLAR,
-    T_EPSILON
+    T_EPSILON,
+    T_DOLLAR
 };
 
 typedef enum Elements Elements;
