@@ -1,9 +1,8 @@
 #ifndef GRAMMAR_H
 #define GRAMMAR_H
 
-#define NUM_NONTERMS 52
-#define NUM_ELEMENTS 111
-#define NUM_EQN 50
+#define NUM_NONTERMS 53
+#define NUM_ELEMENTS 112
 
 #include "datastructures/linked_list.h"
 #include "parser.h"
