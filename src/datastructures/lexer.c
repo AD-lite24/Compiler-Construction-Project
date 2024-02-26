@@ -249,6 +249,7 @@ char *tokensArr[] = {
     "TK_NE"};
 
 Token tk;
+TRIE trie;
 
 FILE *removeComments(FILE *testcaseFile, FILE *cleanFile)
 {
@@ -451,17 +452,7 @@ void incrementForward()
     }
 }
 
-void traverseBuffer()
-{
-    lexemeBegin = (char *)malloc(sizeof(char));
-    forward = (char *)malloc(sizeof(char));
-    lexemeBegin = buf1;
-    forward = buf1;
-    state = 0;
-    lineNumber = 1;
-    TRIE trie = populateTrie();
-    while (1)
-    {
+Token getNextToken(){
         char c = *forward;
         switch (*(forward++))
         {
@@ -483,7 +474,7 @@ void traverseBuffer()
             else
             {
                 // terminate lexical analysis
-                return;
+                return -2;
             }
             break;
         default:
@@ -601,6 +592,7 @@ void traverseBuffer()
                         failure();
                         lexemeBegin = forward;
                         state = 0;
+                        return -1;
                     }
                     break;
                 }
@@ -613,6 +605,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
                 // case 1 ends here
             case 2:
@@ -632,6 +625,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 break;
                 // case 2 ends here
@@ -642,6 +636,7 @@ void traverseBuffer()
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
                 // case 3 ends here
             case 4:
@@ -656,6 +651,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return -1;
                 }
                 break;
                 // case 4 ends here
@@ -671,6 +667,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return -1;
                 }
                 break;
                 // case 5 ends here
@@ -681,6 +678,7 @@ void traverseBuffer()
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
                 // case 6 ends here
             case 7:
@@ -695,6 +693,7 @@ void traverseBuffer()
                     state = 0;
                     incrementLexemeBegin(1);
                     forward = lexemeBegin;
+                    return -1;
                 }
                 break;
                 // case 7 ends here
@@ -705,6 +704,7 @@ void traverseBuffer()
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
                 // case 8 ends here
             case 9:
@@ -721,6 +721,7 @@ void traverseBuffer()
                     printToken(tk);
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 break;
                 // case 9 ends here
@@ -731,6 +732,7 @@ void traverseBuffer()
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
                 // case 10 ends here
             case 11:
@@ -745,6 +747,7 @@ void traverseBuffer()
                     state = 0;
                     incrementLexemeBegin(1);
                     forward = lexemeBegin;
+                    return -1;
                 }
                 break;
                 // case 11 ends here
@@ -755,6 +758,7 @@ void traverseBuffer()
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
                 // case 12 ends here
             case 13:
@@ -769,6 +773,7 @@ void traverseBuffer()
                     state = 0;
                     incrementLexemeBegin(1);
                     forward = lexemeBegin;
+                    return -1;
                 }
                 break;
                 // case 13 ends here
@@ -786,6 +791,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 break;
                 // case 14 ends here
@@ -807,6 +813,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 break;
                 // case 15 ends here
@@ -821,6 +828,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(2);
                     lexemeBegin = forward;
+                    return -1;
                 }
                 break;
                 // case 16 ends here
@@ -833,6 +841,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return -1;
                 }
                 // other condition
                 break;
@@ -848,6 +857,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 // final state
                 break;
@@ -873,6 +883,7 @@ void traverseBuffer()
                     }
 
                     lexemeBegin = forward;
+                    return tk;
                 }
                 break;
                 // case 19 ends here
@@ -890,6 +901,7 @@ void traverseBuffer()
                         decrementForward(1);
                     }
                     lexemeBegin = forward;
+                    return tk;
                 }
                 break;
                 // case 20 ends here
@@ -907,6 +919,7 @@ void traverseBuffer()
                         decrementForward(1);
                     }
                     lexemeBegin = forward;
+                    return tk;
                 }
                 break;
                 // case 21 ends here
@@ -917,6 +930,7 @@ void traverseBuffer()
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
                 // case 22 ends here;
             case 23:
@@ -931,6 +945,7 @@ void traverseBuffer()
                     state = 0;
                     incrementLexemeBegin(1);
                     forward = lexemeBegin;
+                    return -1;
                 }
                 break;
                 // case 23 ends here
@@ -957,6 +972,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 // final state
                 break;
@@ -972,6 +988,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 // final state
                 break;
@@ -1000,6 +1017,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 // final state
                 break;
@@ -1017,6 +1035,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 // final state
                 break;
@@ -1032,6 +1051,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 // final state
                 break;
@@ -1054,6 +1074,7 @@ void traverseBuffer()
                     state = 0;
                     decrementForward(1);
                     lexemeBegin = forward;
+                    return tk;
                 }
                 // final state
                 break;
@@ -1065,6 +1086,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 31:
                 // final state
@@ -1073,6 +1095,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 32:
                 // final state
@@ -1081,6 +1104,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 33:
                 // final state
@@ -1089,6 +1113,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 34:
                 // final state
@@ -1097,6 +1122,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 35:
                 // final state
@@ -1105,6 +1131,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 36:
                 // final state
@@ -1113,6 +1140,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 37:
                 // final state
@@ -1121,6 +1149,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 38:
                 // final state
@@ -1129,6 +1158,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 39:
                 // final state
@@ -1137,6 +1167,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 40:
                 if (c == '@')
@@ -1149,6 +1180,7 @@ void traverseBuffer()
                     state = 0;
                     incrementLexemeBegin(1);
                     forward = lexemeBegin;
+                    return -1;
                 }
                 break;
                 // case 40 ends here
@@ -1164,6 +1196,7 @@ void traverseBuffer()
                     state = 0;
                     incrementLexemeBegin(1);
                     forward = lexemeBegin;
+                    return -1;
                 }
                 break;
                 // case 41 ends here
@@ -1174,6 +1207,7 @@ void traverseBuffer()
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 43:
                 if (c == '&')
@@ -1187,6 +1221,7 @@ void traverseBuffer()
                     state = 0;
                     incrementLexemeBegin(1);
                     forward = lexemeBegin;
+                    return -1;
                 }
                 break;
             case 44:
@@ -1201,6 +1236,7 @@ void traverseBuffer()
                     state = 0;
                     incrementLexemeBegin(2);
                     forward = lexemeBegin;
+                    return -1;
                 }
                 break;
             case 45:
@@ -1210,6 +1246,7 @@ void traverseBuffer()
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 46:
                 // final state
@@ -1218,6 +1255,7 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             case 47:
                 // final state
@@ -1226,11 +1264,26 @@ void traverseBuffer()
                 printToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
+                return tk;
                 break;
             default:
+                return -1;
                 break;
             }
         }
+}
+
+void printTokens()
+{
+    lexemeBegin = (char *)malloc(sizeof(char));
+    forward = (char *)malloc(sizeof(char));
+    lexemeBegin = buf1;
+    forward = buf1;
+    state = 0;
+    lineNumber = 1;
+    trie = populateTrie();
+    while(1){
+        if(getNextToken()==-2)break;
     }
 }
 
@@ -1244,5 +1297,5 @@ int main()
     fclose(fp1);
     fclose(fp2);
     initializeBuffers();
-    traverseBuffer();
+    printTokens();
 }
