@@ -1,11 +1,6 @@
 #ifndef LINKED_LIST_PARSER
 #define LINKED_LIST_PARSER
 
-// #include "symbol_table/symbol_table.h"
-// #include "parser/parser.h"
-
-
-
 enum Elements {
     program,
     mainFunction,
@@ -24,6 +19,7 @@ enum Elements {
     typeDefinition,
     fieldDefinitions,
     fieldDefinition,
+    fieldType,
     moreFields,
     declarations,
     declaration,
@@ -125,26 +121,26 @@ typedef enum Elements Elements;
 
 typedef struct NodeEle {
     Elements item;
-    struct NodeEle *next;
+    struct NodeEle* next;
 } node_Ele;
 
-typedef node_Ele *NODE_ELE;
+typedef node_Ele* NODE_ELE;
 typedef struct LinkedListEle {
     NODE_ELE head;
     int count;
 } ll_ele;
-typedef ll_ele *LL_ELE;
+typedef ll_ele* LL_ELE;
 
 typedef struct NodeLL {
     LL_ELE item;
-    struct NodeLL *next;
+    struct NodeLL* next;
 } node_LL;
-typedef node_LL *NODE_LL;
+typedef node_LL* NODE_LL;
 typedef struct LinkedListLL {
     NODE_LL head;
     int count;
 } ll_ll;
-typedef ll_ll *LL_LL;
+typedef ll_ll* LL_LL;
 
 LL_LL createNewList_LL();
 NODE_LL createNewNode_LL(LL_ELE data);
