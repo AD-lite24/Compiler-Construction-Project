@@ -1,7 +1,5 @@
-#include "parser/parse_table.h"
-#include "parser/parser.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "include/parser/parse_table.h"
+
 
 // ProdRule **createParseTable(FirstAndFollow F, ProdRule **parseTable) {
 //     FILE *fp = fopen("ModifiedGrammar.txt", "r");
@@ -23,7 +21,7 @@
 //         char *first_part = buff;
 //         char *second_part = dash_position + 1;
 
-//         NonTerminals x = stringToEnumNonTerm(first_part); // non terminal LHS
+//         Elements x = stringToEnum(first_part); // non terminal LHS
 
 //         char *token = strtok(second_part, ";");
 
@@ -35,28 +33,60 @@
 
 //             char *token1 = strtok(token, " ");
 //             int count = 0;
-//             Terminals * x1;
+//             Elements * x1;
 //             while (token1 != NULL) {
-//                 Elements y = stringToEnum(token1);  
+//                 Elements y = stringToEnum(token1);
 //                 p1.RHS[count++] = y;
-                
-//                 if (y !=EPSILON)
-//                     x1 = computeFirstSpecial(p1, grammar G);
+
+//                 if (y != TK_EPSILON)
+//                     x1 = computeFirstSpecial(p1);
 //                 else
-//                     x1 = computeFollowSpecial(p1, grammar G);
+//                     x1 = computeFollowSpecial(p1);
 //                 token1 = strtok(NULL, " ");
 //             }
 //             token = strtok(NULL, ";");
 
-//             for (int i = 0; i < sizeof(x1)/sizeof(Terminals); i++) {
+//             for (int i = 0; i < sizeof(x1)/sizeof(Elements); i++) {
 //                 parseTable[x][x1[i]] = p1;
 //             }
-
-
 //         }
 //     }
 
 //     return parseTable;
 // }
 
+ProdRule convertLLtoProd(int i, NODE_LL rule) {
+    ProdRule ans;
+    ans.LHS = i;
+    NODE_ELE ptr = rule->item->head;
+    int index = 0;
+    while (ptr != NULL) {
+        ans.RHS[index++] = ptr->item;
+        ptr = ptr->next;
+    }
+    return ans;
+}
 
+ProdRule **createParseTable(FirstAndFollow F, ProdRule **ParseTable) {
+    for (int i = 0; i < sizeof(grammar_glob) / sizeof(LL_LL); i++) {
+        NODE_LL rule = grammar_glob->rules[i]->head;
+        Elements *x;
+        while (rule != NULL) {
+            ProdRule prod_rule = convertLLtoProd(i, rule);
+            if (checkEpsilonInFirst(rule->item) == 1) {
+                x = computeFollowSpecial(prod_rule);
+            } else {
+                x = computeFirstSpecial(prod_rule);
+            }
+            for (int j = 0; j < sizeof(x) / sizeof(Elements); j++) {
+                ParseTable[i][x[j] - NUM_NONTERMS] = prod_rule;
+            }
+            rule = rule->next;
+        }
+    }
+    return ParseTable;
+}
+
+void parseInputSourceCode(char *TestCaseFile, ProdRule **ParseTable) {
+
+}

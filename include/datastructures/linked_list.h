@@ -2,11 +2,14 @@
 #define LINKED_L
 
 // #include "symbol_table/symbol_table.h"
-#include "../parser/grammar.h"
+#include "parser/parser.h"
+#include "parser/grammar.h"
+
 typedef struct NodeEle {
     Elements item;
     struct NodeEle* next;
 } node_Ele;
+
 typedef node_Ele* NODE_ELE;
 typedef struct LinkedListEle {
     NODE_ELE head;

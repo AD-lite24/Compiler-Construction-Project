@@ -8,11 +8,7 @@
 // #include "/mnt/d/Coco/Compiler-Construction-Project/src/datastructures/linked_list.c"
 
 // #include "../../include/parser/parser.h"
-// // #include "../include/datastructures/hashtable.h"
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-// #include 
+// #include "../include/datastructures/hashtable.h"]
 
 Elements stringToEnumTerm(char * str) {
     if (strcmp(str,"TK_NULL") == 0) {

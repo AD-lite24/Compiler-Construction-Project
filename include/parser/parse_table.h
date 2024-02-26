@@ -1,21 +1,22 @@
 #ifndef PARSE_TABLE_H
 #define PARSE_TABLE_H
 
-#include "grammar.h"
 #include "parser.h"
 
-ProdRule ParseTable[52][58];
 
-Terminals * computeFirstSpecial(ProdRule rule, grammar G);
-Terminals * computeFollowSpecial(ProdRule rule, grammar G);
+#include <stdio.h>
+#include <stdlib.h>
 
+ProdRule ParseTable[NUM_NONTERMS][NUM_ELEMENTS-NUM_NONTERMS-1];
+
+ProdRule convertLLtoProd(int i, NODE_LL rule);
 
 // FirstAndFollow    ComputeFirstAndFollowSets (grammar G);
 
-ProdRule** createParseTable(FirstAndFollow F, ProdRule** parseTable);
+ProdRule **createParseTable(FirstAndFollow F, ProdRule **parseTable);
 
-// parseInputSourceCode(char *testcaseFile, table T);
+// void parseInputSourceCode(char *testcaseFile, table T);
 
-// printParseTree(parseTree PT, char *outfile); 
+// printParseTree(parseTree PT, char *outfile);
 
 #endif
