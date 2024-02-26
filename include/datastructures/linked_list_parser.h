@@ -113,8 +113,8 @@ enum Elements {
     T_GT,
     T_GE,
     T_NE,
-    T_EPSILON,
-    T_DOLLAR
+    T_DOLLAR,
+    T_EPSILON
 };
 
 typedef enum Elements Elements;

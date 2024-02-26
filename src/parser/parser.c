@@ -495,7 +495,7 @@ void initialiseParseTable(){
     memset(dummy.RHS,-1,10*sizeof(Elements));
     dummy.count_rhs=0;
     for(int i=0;i<53;i++){
-        for(int j=0;j<58;j++){
+        for(int j=0;j<59;j++){
             ParseTable[i][j]=dummy;
         }
     }
@@ -743,7 +743,7 @@ int main() {
     createParseTable(fnfset);
     int cnt=0;
     for(int i=0;i<53;i++){
-        for(int j=0;j<58;j++){
+        for(int j=0;j<59;j++){
             // printf("%-3d ",ParseTable[i][j].count_rhs);
             if(ParseTable[i][j].count_rhs){
                 printf("NT %s, \t",arrElemCauseCheck[i]);
