@@ -14,8 +14,8 @@ void push(Stack* st,Elements element){
     insertNode_EleLast(node,st->list);
 }
 
-Elements* top(Stack* st){
-    return &((st->list)->head)->item;
+Elements top(Stack* st){
+    return ((st->list)->head)->item;
 }
 
 void pop(Stack* st){
