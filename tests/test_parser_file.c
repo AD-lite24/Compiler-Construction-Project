@@ -1,7 +1,7 @@
 #include "test_parser_file.h"
 #include <unity.h>
 
-void test_parser_file(void) {
+void test_parser_file_func(void) {
 
     char *filename = "/Users/adityadandwate/Desktop/acads/codes/coco/Compiler-Construction-Project/tests/Grammar.txt";
 
@@ -39,4 +39,8 @@ void test_parser_file(void) {
     ele = ele->next;
     TEST_ASSERT_EQUAL(ele->item, T_EQ);
     
+}
+
+void test_parser_file() {
+    RUN_TEST(test_parser_file_func);
 }

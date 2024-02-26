@@ -17,7 +17,7 @@ typedef struct LinkedList{
 typedef ll *LL;
 
 LL createNewList();
-NODE createNewNode(LL data);
+NODE createNewNode(node_item data);
 void freeNode(NODE node);
 void insertNodeFirst(NODE node, LL list);
 void insertNodeLast(NODE node, LL list);

@@ -8,6 +8,7 @@
 #include "datastructures/linked_list_parser.h"
 
 #define NUM_NONTERMS 52
+#define NUM_TERMS 58
 #define NUM_ELEMENTS 111
 #define NUM_EQN 50
 
