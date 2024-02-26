@@ -505,8 +505,8 @@ void entryIntoParseTable(FIRSTANDFOLLOW F,Elements lhs,ProdRule rule){
     LL_ELE setToAdd=createNewList_Ele();
     bool flag=false;
     for(int i=0;i<rule.count_rhs;i++){
-        if(!checkEpsilonInFirst(F->firstSet[i])){
-            NODE_ELE temp1=F->firstSet[i]->head;
+        if(!checkEpsilonInFirst(F->firstSet[rule.RHS[i]])){
+            NODE_ELE temp1=F->firstSet[rule.RHS[i]]->head;
             while(temp1){
                 insertNode_EleLast(temp1,setToAdd);
                 temp1=temp1->next;
@@ -515,7 +515,7 @@ void entryIntoParseTable(FIRSTANDFOLLOW F,Elements lhs,ProdRule rule){
             free(temp1);
             break;
         }
-        NODE_ELE temp2=F->firstSet[i]->head;
+        NODE_ELE temp2=F->firstSet[rule.RHS[i]]->head;
         while(temp2){
             insertNode_EleLast(temp2,setToAdd);
             temp2=temp2->next;
