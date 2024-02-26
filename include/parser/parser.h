@@ -39,7 +39,6 @@ struct TreeNode {
     Elements x;
     struct TreeNode * children[10];
     struct TreeNode * parent;
-    struct TreeNode * right_sibling;
     int count_children;
 };
 

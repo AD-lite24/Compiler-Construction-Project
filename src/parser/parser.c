@@ -596,14 +596,60 @@ void createParseTable(FIRSTANDFOLLOW F) {
     }
 }
 
-TREE_NODE createTreeNode(Elements x) {
+TREE_NODE createTreeNode(Elements x,TREE_NODE parent) {
     TREE_NODE y = malloc(sizeof(TreeNode));
     y->x = x;
-    y->parent = NULL;
-    y->right_sibling = NULL;
+    y->parent = parent;
     for (int i = 0; i < 10; i++)
         y->children[i] = NULL;
     return y;
+}
+
+void createParseTree(Stack * st,TREE_NODE root,int flag) {
+    Token k;
+    if (flag == -1) k = getNextToken();
+    else k = flag;
+    Elements a = top(st);
+
+    if (k == -1) {
+        // Error, lexer could not identify token
+    } else if (a != T_DOLLAR && k == -2) {
+        // Error, no tokens left but stack is not empty
+    }
+
+    if (a < NUM_NONTERMS) {
+        ProdRule rule = ParseTable[a][k];
+        if (rule.LHS != -1) {
+            pop(st);
+            root->count_children = rule.count_rhs;
+            for (int i = rule.count_rhs -1;i>=0;i--) {
+                push(st,rule.RHS[i]);
+            }
+            for (int i = 0;i<rule.count_rhs;i++) {
+                root->children[i] = createTreeNode(rule.RHS[i],root);
+                if (rule.RHS[i] >= NUM_NONTERMS) createParseTree(st,root->children[i],rule.RHS[i]-NUM_NONTERMS);
+                else createParseTree(st,root->children[i],-1);
+            }
+        } else {
+            // Error, syntactically incorrect as no production rule found
+        }
+    } else {
+        if (k == a - NUM_NONTERMS) {
+            pop(st);
+            return;
+        } else {
+            // Error, Incorrect terminal found
+        }
+    }
+
+    if (top(st) == T_DOLLAR) {
+        if (getNextToken() == -2) {
+            printf("Code is syntactically correct\n");
+        } else {
+            // Error, Stack empty but leftover tokens found
+        }
+    }
+
 }
 
 TREE_NODE parseInputSourceCode(char *testcase, ProdRule **ParseTable) {
@@ -618,74 +664,9 @@ TREE_NODE parseInputSourceCode(char *testcase, ProdRule **ParseTable) {
     push(st, T_DOLLAR);
     push(st, program);
 
-    Token k;
-    Elements a;
+    TREE_NODE root = createTreeNode(program,NULL);
 
-    TREE_NODE root = createTreeNode(program);
-    TREE_NODE node = root;
-
-    while (T_DOLLAR != top(st)) {
-        k = getNextToken();
-        a = top(st);
-        if (k == -1) {
-            // Error Recovery, Token cannot be assigned
-        } else if (k == -2) {
-            // Error, Inputs are over but stack is not empty
-        }
-
-        if (a < 53) {
-            
-            ProdRule rule = ParseTable[a][k];
-            if (rule.LHS == -1) {
-                printf("You fucked up again");
-            }
-
-            else {
-
-                pop(st);
-                node->count_children = rule.count_rhs;
-                for (int i = rule.count_rhs - 1; i >= 0; i--) {
-                    push(st, rule.RHS[i]);
-                    node->children[i] = createTreeNode(rule.RHS[i]);
-                    node->children[i]->parent = node;
-                    
-                    if (i != rule.count_rhs -1) {
-                        node->children[i]->right_sibling = node->children[i+1];
-                    }
-                }
-
-                if (node->right_sibling == NULL && node->children[0] == NULL) node = node->parent;
-                else if (node->children[0] != NULL){
-                    node = node->children[0];
-                }
-                else{
-                    if (node->right_sibling)
-                        node = node->right_sibling;
-                    else    
-                        node = node->parent;
-                }
-            }
-
-        } else {
-            // check if k == a else error
-            if (k == a - NUM_NONTERMS) {
-                pop(st);
-                
-                continue;
-            } else {
-                // Error R
-                printf("You fucked up");
-            }
-        }
-    }
-
-    k = getNextToken();
-    if (k == -2) {
-        // write case when just one final dollar is left
-        printf("Input source code is syntactically correct\n");
-    } else {
-        // Error
-    }
+    createParseTree(st,root,-1);
     return root;
 }
 
