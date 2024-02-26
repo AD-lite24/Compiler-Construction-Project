@@ -559,6 +559,7 @@ void createParseTable(FIRSTANDFOLLOW F){
     }
 }
 
+
 char* arrElemCauseCheck[]= {
     "program",
     "mainFunction",
@@ -675,90 +676,90 @@ char* arrElemCauseCheck[]= {
     "T_DOLLAR"
 };
 
-int main() {
-    GRAMMAR GG = parseFile("ModifiedGrammar.txt");
-    // TODO :
-    grammar_glob = GG;
-    printf("Grammar Rules : \n");
-    for (int i = 0; i < NUM_NONTERMS; i++) {
-        printf("%-3d  :  ", i);
-        // printHEHE(GG->rules[i]);
-        // printf("\n");
+// int main() {
+//     GRAMMAR GG = parseFile("ModifiedGrammar.txt");
+//     // TODO :
+//     grammar_glob = GG;
+//     printf("Grammar Rules : \n");
+//     for (int i = 0; i < NUM_NONTERMS; i++) {
+//         printf("%-3d  :  ", i);
+//         // printHEHE(GG->rules[i]);
+//         // printf("\n");
 
-    	NODE_LL ptr = GG->rules[i]->head;
-    	while (ptr != NULL) {
-        	NODE_ELE hehe = ptr->item->head;
-        	while (hehe != NULL) {
-                printf("%-3d ", hehe->item);
-            	hehe = hehe ->next;
-        	}
-        	printf ("| ");
-        	ptr = ptr->next;
-    	}
-        //printHEHE(GG->rules[i]);
-        printf("\n");
-    }
+//     	NODE_LL ptr = GG->rules[i]->head;
+//     	while (ptr != NULL) {
+//         	NODE_ELE hehe = ptr->item->head;
+//         	while (hehe != NULL) {
+//                 printf("%-3d ", hehe->item);
+//             	hehe = hehe ->next;
+//         	}
+//         	printf ("| ");
+//         	ptr = ptr->next;
+//     	}
+//         //printHEHE(GG->rules[i]);
+//         printf("\n");
+//     }
     
-    FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(GG);
-    printf("/*************************************************\n");
-    printf("First Sets\n");
-    for (int i = 0; i < NUM_ELEMENTS; i++) {
-        printf("{ %s\t-> ", arrElemCauseCheck[i]);
-        NODE_ELE ptr = fnfset->firstSet[i]->head;
-        while (ptr != NULL) {
-            printf("%s ", arrElemCauseCheck[ptr->item]);
-            ptr = ptr->next;
-        }
-        printf("}\n");
-    }
-    printf("/*************************************************\n");
-    printf("Follow Sets\n");
-    for (int i = 0; i < NUM_NONTERMS; i++) {
-        printf("{ %s  =>  ", arrElemCauseCheck[i]);
-        NODE_ELE ptr = fnfset->followSet[i]->head;
-        while (ptr != NULL) {
-            printf("%s ", arrElemCauseCheck[ptr->item]);
-            ptr = ptr->next;
-        }
-        printf("}\n");
-    }
-    printf("/*************************************************\n");
-    printf("Checking Prod Rule Conversion\n");
-    for(int i=0;i<NUM_NONTERMS;i++){
-        LL_LL rulesForNonTerm=GG->rules[i];
-        NODE_LL currRule=rulesForNonTerm->head;
-        while(currRule){
-            ProdRule temp=convertLLtoProd(i,currRule);
-            printf("%-3d  -> ",i);
-            for(int j=0;j<temp.count_rhs;j++){
-                printf("%-3d ",temp.RHS[j]);
-            }
-            printf("\n");
-            currRule=currRule->next;
-        }
-    }
-    printf("/*************************************************\n");
-    printf("Checking Parse Table Filling\n");   
-    initialiseParseTable();  
-    createParseTable(fnfset);
-    int cnt=0;
-    for(int i=0;i<53;i++){
-        for(int j=0;j<58;j++){
-            // printf("%-3d ",ParseTable[i][j].count_rhs);
-            if(ParseTable[i][j].count_rhs){
-                printf("NT %s, \t",arrElemCauseCheck[i]);
-                printf("Term %s, \t",arrElemCauseCheck[j+53]);
-                printf("Rule \t");
-                printf("%s => ", arrElemCauseCheck[ParseTable[i][j].LHS]);
-                for(int k=0;k<ParseTable[i][j].count_rhs;k++){
-                    printf("%s ",arrElemCauseCheck[ParseTable[i][j].RHS[k]]);
-                }
-                printf("\n");
-                cnt++;
-            }
-        }
-        // printf("\n");
-    }
-    printf("%-3d \n",cnt);
-    return 0;
-}
+//     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(GG);
+//     printf("/*************************************************\n");
+//     printf("First Sets\n");
+//     for (int i = 0; i < NUM_ELEMENTS; i++) {
+//         printf("{ %s\t-> ", arrElemCauseCheck[i]);
+//         NODE_ELE ptr = fnfset->firstSet[i]->head;
+//         while (ptr != NULL) {
+//             printf("%s ", arrElemCauseCheck[ptr->item]);
+//             ptr = ptr->next;
+//         }
+//         printf("}\n");
+//     }
+//     printf("/*************************************************\n");
+//     printf("Follow Sets\n");
+//     for (int i = 0; i < NUM_NONTERMS; i++) {
+//         printf("{ %s  =>  ", arrElemCauseCheck[i]);
+//         NODE_ELE ptr = fnfset->followSet[i]->head;
+//         while (ptr != NULL) {
+//             printf("%s ", arrElemCauseCheck[ptr->item]);
+//             ptr = ptr->next;
+//         }
+//         printf("}\n");
+//     }
+//     printf("/*************************************************\n");
+//     printf("Checking Prod Rule Conversion\n");
+//     for(int i=0;i<NUM_NONTERMS;i++){
+//         LL_LL rulesForNonTerm=GG->rules[i];
+//         NODE_LL currRule=rulesForNonTerm->head;
+//         while(currRule){
+//             ProdRule temp=convertLLtoProd(i,currRule);
+//             printf("%-3d  -> ",i);
+//             for(int j=0;j<temp.count_rhs;j++){
+//                 printf("%-3d ",temp.RHS[j]);
+//             }
+//             printf("\n");
+//             currRule=currRule->next;
+//         }
+//     }
+//     printf("/*************************************************\n");
+//     printf("Checking Parse Table Filling\n");   
+//     initialiseParseTable();  
+//     createParseTable(fnfset);
+//     int cnt=0;
+//     for(int i=0;i<53;i++){
+//         for(int j=0;j<58;j++){
+//             // printf("%-3d ",ParseTable[i][j].count_rhs);
+//             if(ParseTable[i][j].count_rhs){
+//                 printf("NT %s, \t",arrElemCauseCheck[i]);
+//                 printf("Term %s, \t",arrElemCauseCheck[j+53]);
+//                 printf("Rule \t");
+//                 printf("%s => ", arrElemCauseCheck[ParseTable[i][j].LHS]);
+//                 for(int k=0;k<ParseTable[i][j].count_rhs;k++){
+//                     printf("%s ",arrElemCauseCheck[ParseTable[i][j].RHS[k]]);
+//                 }
+//                 printf("\n");
+//                 cnt++;
+//             }
+//         }
+//         // printf("\n");
+//     }
+//     printf("%-3d \n",cnt);
+//     return 0;
+// }

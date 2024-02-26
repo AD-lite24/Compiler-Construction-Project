@@ -7,6 +7,7 @@
 struct Stack{
     LL_ELE list;
 };
+
 typedef struct Stack Stack;
 Stack* createStack();
 void push(Stack* stack,Elements element);
