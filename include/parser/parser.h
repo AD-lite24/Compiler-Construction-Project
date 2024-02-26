@@ -1,142 +1,55 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "grammar.h"
-#include "datastructures/linked_list.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../../include/datastructures/linked_list_parser.h"
+#include "../../include/datastructures/stack_parser.h"
 
-enum Elements {
-    program,
-    mainFunction,
-    otherFunctions,
-    function,
-    input_par,
-    output_par,
-    parameter_list,
-    dataType,
-    primitiveDatatype,
-    constructedDatatype,
-    remaining_list,
-    stmts,
-    typeDefinitions,
-    actualOrRedefined,
-    typeDefinition,
-    fieldDefinitions,
-    fieldDefinition,
-    moreFields,
-    declarations,
-    declaration,
-    global_or_not,
-    otherStmts,
-    stmt,
-    assignmentStmt,
-    singleOrRecId,
-    option_single_constructed,
-    oneExpansion,
-    moreExpansions,
-    funCallStmt,
-    outputParameters,
-    inputParameters,
-    iterativeStmt,
-    conditionalStmt,
-    elsePart,
-    ioStmt,
-    arithmeticExpression,
-    expPrime,
-    term,
-    termPrime,
-    factor,
-    highPrecedenceOperator,
-    lowPrecedenceOperators,
-    booleanExpression,
-    var,
-    logicalOp,
-    relationalOp,
-    returnStmt,
-    optionalReturn,
-    idList,
-    more_ids,
-    definetypestmt,
-    A,
-    TK_NULL,
-    TK_ASSIGNOP,
-    TK_COMMENT,
-    TK_FIELDID,
-    TK_ID,
-    TK_NUM,
-    TK_RNUM,
-    TK_FUNID,
-    TK_RUID,
-    TK_WITH,
-    TK_PARAMETERS,
-    TK_END,
-    TK_WHILE,
-    TK_UNION,
-    TK_ENDUNION,
-    TK_DEFINETYPE,
-    TK_AS,
-    TK_TYPE,
-    TK_MAIN,
-    TK_GLOBAL,
-    TK_PARAMETER,
-    TK_LIST,
-    TK_SQL,
-    TK_SQR,
-    TK_INPUT,
-    TK_OUTPUT,
-    TK_INT,
-    TK_REAL,
-    TK_COMMA,
-    TK_SEM,
-    TK_COLON,
-    TK_DOT,
-    TK_ENDWHILE,
-    TK_OP,
-    TK_CL,
-    TK_IF,
-    TK_THEN,
-    TK_ENDIF,
-    TK_READ,
-    TK_WRITE,
-    TK_RETURN,
-    TK_PLUS,
-    TK_MINUS,
-    TK_MUL,
-    TK_DIV,
-    TK_CALL,
-    TK_RECORD,
-    TK_ENDRECORD,
-    TK_ELSE,
-    TK_AND,
-    TK_OR,
-    TK_NOT,
-    TK_LT,
-    TK_LE,
-    TK_EQ,
-    TK_GT,
-    TK_GE,
-    TK_NE,
-    TK_DOLLAR,
-    TK_EPSILON
+
+#define NUM_NONTERMS 53
+#define NUM_ELEMENTS 112
+
+typedef struct grammar {
+    LL_LL rules[NUM_NONTERMS];
+} grammar;
+typedef grammar* GRAMMAR;
+
+GRAMMAR grammar_glob;
+
+typedef struct FirstAndFollow {
+    LL_ELE firstSet[NUM_ELEMENTS];
+    LL_ELE followSet[NUM_NONTERMS];
+} FirstAndFollow;
+
+typedef struct FirstAndFollow* FIRSTANDFOLLOW;
+
+GRAMMAR parseFile(char* filename);
+FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G);
+
+struct ProdRule {
+    Elements LHS;
+    Elements RHS[10];
+    int count_rhs;
 };
 
-typedef enum Elements Elements;
+typedef struct ProdRule ProdRule;
 
-void trim(char *str);
 Elements stringToEnum(char *str);
-void printHEHE(LL_LL eqn);
-void printFirollow(FIRSTANDFOLLOW fnf, Elements id);
 GRAMMAR parseFile(char *filename);
 int checkEpsilonInFirst(LL_ELE first);
 void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet);
 void ComputeFollow(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet);
 
-Elements *computeFirstSpecial(ProdRule rule);
-Elements *computeFollowSpecial(ProdRule rule);
+// Elements *computeFirstSpecial(ProdRule rule);
+// Elements *computeFollowSpecial(ProdRule rule);
+Elements *computeFollowSpecial(ProdRule rule, FIRSTANDFOLLOW firstAndFollowSet);
+Elements *computeFirstSpecial(Elements lhs, LL_ELE rule, FIRSTANDFOLLOW firstAndFollowSet);
 
 FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G);
+
 
 
 

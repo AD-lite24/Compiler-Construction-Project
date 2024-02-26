@@ -1,2 +1,0 @@
-otherFunctions - input_par function ; dataType
-moreFields - TK_EPSILON ; TK_DOT declaration TK_WRITE TK_EQ
