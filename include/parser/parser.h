@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../../include/datastructures/linked_list_parser.h"
+#include "../../include/datastructures/stack_parser.h"
+
 
 #define NUM_NONTERMS 53
 #define NUM_ELEMENTS 112
@@ -13,7 +15,7 @@
 typedef struct grammar {
     LL_LL rules[NUM_NONTERMS];
 } grammar;
-typedef grammar *GRAMMAR;
+typedef grammar* GRAMMAR;
 
 GRAMMAR grammar_glob;
 
@@ -22,9 +24,9 @@ typedef struct FirstAndFollow {
     LL_ELE followSet[NUM_NONTERMS];
 } FirstAndFollow;
 
-typedef struct FirstAndFollow *FIRSTANDFOLLOW;
+typedef struct FirstAndFollow* FIRSTANDFOLLOW;
 
-GRAMMAR parseFile(char *filename);
+GRAMMAR parseFile(char* filename);
 FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G);
 
 struct ProdRule {
@@ -35,10 +37,7 @@ struct ProdRule {
 
 typedef struct ProdRule ProdRule;
 
-void trim(char *str);
 Elements stringToEnum(char *str);
-void printHEHE(LL_LL eqn);
-void printFirollow(FIRSTANDFOLLOW fnf, Elements id);
 GRAMMAR parseFile(char *filename);
 int checkEpsilonInFirst(LL_ELE first);
 void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet);

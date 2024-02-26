@@ -1,6 +1,6 @@
 #include "../../include/parser/parser.h"
 #include "../../include/parser/parse_table.h"
-
+#include <stdbool.h>
 
 
 Elements stringToEnum(char *str) {
@@ -460,61 +460,6 @@ void ComputeFollow (GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     }
 }
 
-
-Elements *computeFollowSpecial(ProdRule rule, FIRSTANDFOLLOW firstAndFollowSet){
-    NODE_ELE ptr = firstAndFollowSet->followSet[rule.LHS]->head;
-    Elements *ret = (Elements *)malloc(10 * sizeof(Elements));
-    memset(ret, -1, 10 * sizeof(Elements));
-    int index = 0;
-    while (ptr != NULL) {
-        ret[index++] = ptr->item;
-        ptr = ptr ->next;
-    }
-    return ret;
-}
-
-Elements *computeFirstSpecial(Elements lhs, LL_ELE rule,
-                              FIRSTANDFOLLOW firstAndFollowSet) {
-    LL_ELE ans = createNewList_Ele();
-    NODE_ELE ptr = rule->head;
-    while (ptr != NULL) {
-        NODE_ELE firstPtr = firstAndFollowSet->firstSet[ptr->item]->head;
-        while (firstPtr != NULL) {
-            if (firstPtr->item == T_EPSILON) {
-                firstPtr = firstPtr->next;
-                continue;
-            }
-            NODE_ELE temp = ans->head;
-            int visited = 1;
-            while (temp != NULL) {
-                if (temp->item == firstPtr->item)
-                    visited = 1;
-                temp = temp->next;
-            }
-            if (!visited) {
-                insertNode_EleLast(createNewNode_Ele(firstPtr->item), ans);
-            }
-            firstPtr = firstPtr->next;
-        }
-        if (!checkEpsilonInFirst(firstAndFollowSet->firstSet[ptr->item])) {
-            break;
-        }
-        ptr = ptr->next;
-    }
-    if (ptr == NULL)
-        insertNode_EleFirst(createNewList_Ele(T_EPSILON), ans);
-    Elements *ret = (Elements *)malloc(10 * sizeof(Elements));
-    memset(ret, -1, 10 * sizeof(Elements));
-    ptr = ans->head;
-    int index = 0;
-    while (ptr != NULL) {
-        ret[index++] = ptr->item;
-        ptr = ptr ->next;
-    }
-
-    return ret;
-}
-
 FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G) {
     FIRSTANDFOLLOW firstAndFollowSet =
         (FIRSTANDFOLLOW)malloc(sizeof(FirstAndFollow));
@@ -529,39 +474,82 @@ FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G) {
     return firstAndFollowSet;
 }
 
-ProdRule convertLLtoProd(int i, NODE_LL rule) {
+
+ProdRule convertLLtoProd(Elements lhs,NODE_LL rule){
     ProdRule ans;
-    ans.LHS = i;
-    ans.count_rhs=0;
-    NODE_ELE ptr = rule->item->head;
-    int index = 0;
-    while (ptr != NULL) {
-        ans.RHS[index++] = ptr->item;
-        ans.count_rhs++;
-        ptr = ptr->next;
+    ans.LHS=lhs;
+    memset(ans.RHS,-1,10*sizeof(Elements));
+    NODE_ELE ptr=rule->item->head;
+    int cnt=0;
+    while(ptr){
+        ans.RHS[cnt++]=ptr->item;
+        ptr=ptr->next;
     }
+    ans.count_rhs=cnt;
     return ans;
 }
 
-// void createParseTable(FIRSTANDFOLLOW F, ProdRule **ParseTable) {
-//     for (int i = 0; i < sizeof(grammar_glob) / sizeof(LL_LL); i++) {
-//         NODE_LL rule = grammar_glob->rules[i]->head;
-//         Elements *x;
-//         while (rule != NULL) {
-//             ProdRule prod_rule = convertLLtoProd(i, rule);
-//             if (checkEpsilonInFirst(rule->item) == 1) {
-//                 x = computeFollowSpecial(prod_rule,F);
-//             } else {
-//                 x = computeFirstSpecial(i,rule->item,F);
-//             }
-//             for (int j = 0; j < sizeof(x) / sizeof(Elements); j++) {
-//                 ParseTable[i][x[j] - NUM_NONTERMS] = prod_rule;
-//             }
-//             rule = rule->next;
-//         }
-//     }
-// }
+void initialiseParseTable(){
+    ProdRule dummy;
+    dummy.LHS=-1;
+    memset(dummy.RHS,-1,10*sizeof(Elements));
+    dummy.count_rhs=0;
+    for(int i=0;i<53;i++){
+        for(int j=0;j<58;j++){
+            ParseTable[i][j]=dummy;
+        }
+    }
+}
 
+void entryIntoParseTable(FIRSTANDFOLLOW F,Elements lhs,ProdRule rule){
+    LL_ELE setToAdd=createNewList_Ele();
+    bool flag=false;
+    for(int i=0;i<rule.count_rhs;i++){
+        if(!checkEpsilonInFirst(F->firstSet[i])){
+            NODE_ELE temp1=F->firstSet[i]->head;
+            while(temp1){
+                insertNode_EleLast(temp1,setToAdd);
+                temp1=temp1->next;
+            }
+            flag=true;
+            free(temp1);
+            break;
+        }
+        NODE_ELE temp2=F->firstSet[i]->head;
+        while(temp2){
+            insertNode_EleLast(temp2,setToAdd);
+            temp2=temp2->next;
+        }
+        free(temp2);
+    }
+    if(!flag){
+        NODE_ELE temp3=F->followSet[lhs]->head;
+        while(temp3){
+            insertNode_EleLast(temp3,setToAdd);
+            temp3=temp3->next;
+        }
+        free(temp3);
+    }
+    NODE_ELE temp4=setToAdd->head;
+    while(temp4){
+        ParseTable[lhs][temp4->item]=rule;
+        temp4=temp4->next;
+    }
+    free(temp4);
+    free(setToAdd);
+}
+
+void createParseTable(FIRSTANDFOLLOW F){
+    for(int i=0;i<NUM_NONTERMS;i++){
+        LL_LL rulesForNonTerm=grammar_glob->rules[i];
+        NODE_LL currRule=rulesForNonTerm->head;
+        while(currRule){
+            ProdRule temp=convertLLtoProd(i,currRule);
+            entryIntoParseTable(F,i,temp);
+            currRule=currRule->next;
+        }
+    }
+}
 
 int main() {
     GRAMMAR GG = parseFile("ModifiedGrammar.txt");
@@ -613,17 +601,30 @@ int main() {
     printf("/*************************************************\n");
     printf("Checking Prod Rule Conversion\n");
     for(int i=0;i<NUM_NONTERMS;i++){
-        LL_LL ptr=(LL_LL)malloc(sizeof(ll_ll));
-        ptr=GG->rules[i];
-        NODE_LL ptr_head = ptr->head;
-        ProdRule pr=convertLLtoProd(i,ptr_head);   
-        printf("%-3d -> ",pr.LHS);
-        for(int j=0;j<pr.count_rhs-1;j++){
-            printf("%-3d ",pr.RHS[j]);
-            ptr_head = ptr_head->next;
-            if(ptr_head==NULL)break;
+        LL_LL rulesForNonTerm=GG->rules[i];
+        NODE_LL currRule=rulesForNonTerm->head;
+        while(currRule){
+            ProdRule temp=convertLLtoProd(i,currRule);
+            printf("%-3d  -> ",i);
+            for(int j=0;j<temp.count_rhs;j++){
+                printf("%-3d ",temp.RHS[j]);
+            }
+            printf("\n");
+            currRule=currRule->next;
         }
-           
     }
+    printf("/*************************************************\n");
+    printf("Checking Parse Table Filling\n");   
+    initialiseParseTable();  
+    createParseTable(fnfset);
+    int cnt=0;
+    for(int i=0;i<53;i++){
+        for(int j=0;j<58;j++){
+            // printf("%-3d ",ParseTable[i][j].count_rhs);
+            if(ParseTable[i][j].count_rhs)cnt++;
+        }
+        // printf("\n");
+    }
+    printf("%-3d \n",cnt);
     return 0;
 }
