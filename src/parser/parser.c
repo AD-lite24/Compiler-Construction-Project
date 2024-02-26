@@ -333,13 +333,14 @@ int checkEpsilonInFirst(LL_ELE first) {
     }
     return 0;
 }
-void insertFollow(Elements src, Elements dst, FIRSTANDFOLLOW firstAndFollowSet,
-                  int isFirst) {
+
+void insertFollow(Elements src, Elements dst, FIRSTANDFOLLOW firstAndFollowSet, int isFirst) {
     if (isFirst == 0) {
 
     } else {
     }
 }
+
 void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     /*
     1. If X is a terminal, then FIRST(X) = {X}.
@@ -414,6 +415,7 @@ void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
         }
     }
 }
+
 void ComputeFollow(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     /*
     1. Place $ in FOLLOW(S), where S is the start symbol, and $ is the input
