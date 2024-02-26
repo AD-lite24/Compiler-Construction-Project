@@ -508,35 +508,43 @@ void entryIntoParseTable(FIRSTANDFOLLOW F,Elements lhs,ProdRule rule){
         if(!checkEpsilonInFirst(F->firstSet[rule.RHS[i]])){
             NODE_ELE temp1=F->firstSet[rule.RHS[i]]->head;
             while(temp1){
-                insertNode_EleLast(temp1,setToAdd);
+                NODE_ELE insert1=createNewNode_Ele(temp1->item);
+                insertNode_EleLast(insert1,setToAdd);
                 temp1=temp1->next;
             }
             flag=true;
-            free(temp1);
             break;
         }
-        NODE_ELE temp2=F->firstSet[rule.RHS[i]]->head;
-        while(temp2){
-            insertNode_EleLast(temp2,setToAdd);
-            temp2=temp2->next;
+        if(rule.RHS[i]!=T_EPSILON){
+            NODE_ELE temp2=F->firstSet[rule.RHS[i]]->head;
+            while(temp2){
+                if(temp2->item == T_EPSILON){
+                    temp2=temp2->next;
+                    continue;
+                }
+                NODE_ELE insert2=createNewNode_Ele(temp2->item);
+                insertNode_EleLast(insert2,setToAdd);
+                temp2=temp2->next;
+            }
         }
-        free(temp2);
     }
     if(!flag){
         NODE_ELE temp3=F->followSet[lhs]->head;
         while(temp3){
-            insertNode_EleLast(temp3,setToAdd);
+            if(temp3->item == T_EPSILON){
+                temp3=temp3->next;
+                continue;
+            }
+            NODE_ELE insert3=createNewNode_Ele(temp3->item);
+            insertNode_EleLast(insert3,setToAdd);
             temp3=temp3->next;
         }
-        free(temp3);
     }
     NODE_ELE temp4=setToAdd->head;
     while(temp4){
-        ParseTable[lhs][temp4->item]=rule;
+        if(temp4->item != T_EPSILON)ParseTable[lhs][temp4->item - 53]=rule;
         temp4=temp4->next;
     }
-    free(temp4);
-    free(setToAdd);
 }
 
 void createParseTable(FIRSTANDFOLLOW F){
@@ -550,6 +558,122 @@ void createParseTable(FIRSTANDFOLLOW F){
         }
     }
 }
+
+char* arrElemCauseCheck[]= {
+    "program",
+    "mainFunction",
+    "otherFunctions",
+    "function",
+    "input_par",
+    "output_par",
+    "parameter_list",
+    "dataType",
+    "primitiveDatatype",
+    "constructedDatatype",
+    "remaining_list",
+    "stmts",
+    "typeDefinitions",
+    "actualOrRedefined",
+    "typeDefinition",
+    "fieldDefinitions",
+    "fieldDefinition",
+    "fieldType",
+    "moreFields",
+    "declarations",
+    "declaration",
+    "global_or_not",
+    "otherStmts",
+    "stmt",
+    "assignmentStmt",
+    "singleOrRecId",
+    "option_single_constructed",
+    "oneExpansion",
+    "moreExpansions",
+    "funCallStmt",
+    "outputParameters",
+    "inputParameters",
+    "iterativeStmt",
+    "conditionalStmt",
+    "elsePart",
+    "ioStmt",
+    "arithmeticExpression",
+    "expPrime",
+    "term",
+    "termPrime",
+    "factor",
+    "highPrecedenceOperator",
+    "lowPrecedenceOperators",
+    "booleanExpression",
+    "var",
+    "logicalOp",
+    "relationalOp",
+    "returnStmt",
+    "optionalReturn",
+    "idList",
+    "more_ids",
+    "definetypestmt",
+    "A",
+    "T_NULL",
+    "T_ASSIGNOP",
+    "T_COMMENT",
+    "T_FIELDID",
+    "T_ID",
+    "T_NUM",
+    "T_RNUM",
+    "T_FUNID",
+    "T_RUID",
+    "T_WITH",
+    "T_PARAMETERS",
+    "T_END",
+    "T_WHILE",
+    "T_UNION",
+    "T_ENDUNION",
+    "T_DEFINETYPE",
+    "T_AS",
+    "T_TYPE",
+    "T_MAIN",
+    "T_GLOBAL",
+    "T_PARAMETER",
+    "T_LIST",
+    "T_SQL",
+    "T_SQR",
+    "T_INPUT",
+    "T_OUTPUT",
+    "T_INT",
+    "T_REAL",
+    "T_COMMA",
+    "T_SEM",
+    "T_COLON",
+    "T_DOT",
+    "T_ENDWHILE",
+    "T_OP",
+    "T_CL",
+    "T_IF",
+    "T_THEN",
+    "T_ENDIF",
+    "T_READ",
+    "T_WRITE",
+    "T_RETURN",
+    "T_PLUS",
+    "T_MINUS",
+    "T_MUL",
+    "T_DIV",
+    "T_CALL",
+    "T_RECORD",
+    "T_ENDRECORD",
+    "T_ELSE",
+    "T_AND",
+    "T_OR",
+    "T_NOT",
+    "T_LT",
+    "T_LE",
+    "T_EQ",
+    "T_GT",
+    "T_GE",
+    "T_NE",
+    "T_EPSILON",
+    "T_DOLLAR"
+};
 
 int main() {
     GRAMMAR GG = parseFile("ModifiedGrammar.txt");
@@ -579,10 +703,10 @@ int main() {
     printf("/*************************************************\n");
     printf("First Sets\n");
     for (int i = 0; i < NUM_ELEMENTS; i++) {
-        printf("{ %-3d\t-> ", i);
+        printf("{ %s\t-> ", arrElemCauseCheck[i]);
         NODE_ELE ptr = fnfset->firstSet[i]->head;
         while (ptr != NULL) {
-            printf("%-3d ", ptr->item);
+            printf("%s ", arrElemCauseCheck[ptr->item]);
             ptr = ptr->next;
         }
         printf("}\n");
@@ -590,10 +714,10 @@ int main() {
     printf("/*************************************************\n");
     printf("Follow Sets\n");
     for (int i = 0; i < NUM_NONTERMS; i++) {
-        printf("{ %-3d  =>  ", i);
+        printf("{ %s  =>  ", arrElemCauseCheck[i]);
         NODE_ELE ptr = fnfset->followSet[i]->head;
         while (ptr != NULL) {
-            printf("%-3d ", ptr->item);
+            printf("%s ", arrElemCauseCheck[ptr->item]);
             ptr = ptr->next;
         }
         printf("}\n");
@@ -621,7 +745,17 @@ int main() {
     for(int i=0;i<53;i++){
         for(int j=0;j<58;j++){
             // printf("%-3d ",ParseTable[i][j].count_rhs);
-            if(ParseTable[i][j].count_rhs)cnt++;
+            if(ParseTable[i][j].count_rhs){
+                printf("NT %s, \t",arrElemCauseCheck[i]);
+                printf("Term %s, \t",arrElemCauseCheck[j+53]);
+                printf("Rule \t");
+                printf("%s => ", arrElemCauseCheck[ParseTable[i][j].LHS]);
+                for(int k=0;k<ParseTable[i][j].count_rhs;k++){
+                    printf("%s ",arrElemCauseCheck[ParseTable[i][j].RHS[k]]);
+                }
+                printf("\n");
+                cnt++;
+            }
         }
         // printf("\n");
     }
