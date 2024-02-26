@@ -1,8 +1,8 @@
 #ifndef LINKED_L
 #define LINKED_L
 
-// #include "symbol_table/symbol_table.h"
-// #include "parser/parser.h"
+#include "symbol_table/symbol_table.h"
+#include "parser/parser.h"
 
 typedef struct Node {
     node_item item;
@@ -25,4 +25,4 @@ void removeNodeFirst(LL list);
 void removeNodeLast(LL list);
 void freeLL(LL list);
 
-// #endif
+#endif
