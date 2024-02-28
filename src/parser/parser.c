@@ -1,6 +1,6 @@
-#include "../../include/parser/parser.h"
-#include "../../include/parser/parse_table.h"
-#include "../../include/tokens/tokens.h"
+#include "include/parser/parser.h"
+#include "include/parser/parse_table.h"
+#include "include/tokens/tokens.h"
 
 #include <stdbool.h>
 
@@ -275,6 +275,7 @@ GRAMMAR parseFile(char *filename) {
         }
         insertNode_LLLast(createNewNode_LL(curr), G->rules[LHS_NonTerm]);
     }
+    fclose(fp);
     return G;
 }
 
@@ -607,7 +608,7 @@ TREE_NODE createTreeNode(Elements x,TREE_NODE parent) {
 
 void createParseTree(Stack * st,TREE_NODE root,int flag) {
     Token k;
-    if (flag == -1) k = getNextToken();
+    if (flag == -1) k = getNextToken(); // has to return line number of code and value if number and lexeme 
     else k = flag;
     Elements a = top(st);
 
@@ -667,124 +668,44 @@ TREE_NODE parseInputSourceCode(char *testcase, ProdRule **ParseTable) {
     TREE_NODE root = createTreeNode(program,NULL);
 
     createParseTree(st,root,-1);
+    fclose(fp);
     return root;
 }
 
-void printParseTree(TREE_NODE root, char *outfile) {}
+void inOrderTraversal(FILE * fp,TREE_NODE root) {
+    char * lexeme = root->lexeme;
+    int lineNumber = root->lineNumber;
+    char * tokenName = arrElemCauseCheck[root->x];
+    char value[10];
+    char * nodeSymbol = "----";
+    char * isLeafNode = "Yes";
+    char * parent = "ROOT";
 
-char *arrElemCauseCheck[] = {"program",
-                             "mainFunction",
-                             "otherFunctions",
-                             "function",
-                             "input_par",
-                             "output_par",
-                             "parameter_list",
-                             "dataType",
-                             "primitiveDatatype",
-                             "constructedDatatype",
-                             "remaining_list",
-                             "stmts",
-                             "typeDefinitions",
-                             "actualOrRedefined",
-                             "typeDefinition",
-                             "fieldDefinitions",
-                             "fieldDefinition",
-                             "fieldType",
-                             "moreFields",
-                             "declarations",
-                             "declaration",
-                             "global_or_not",
-                             "otherStmts",
-                             "stmt",
-                             "assignmentStmt",
-                             "singleOrRecId",
-                             "option_single_constructed",
-                             "oneExpansion",
-                             "moreExpansions",
-                             "funCallStmt",
-                             "outputParameters",
-                             "inputParameters",
-                             "iterativeStmt",
-                             "conditionalStmt",
-                             "elsePart",
-                             "ioStmt",
-                             "arithmeticExpression",
-                             "expPrime",
-                             "term",
-                             "termPrime",
-                             "factor",
-                             "highPrecedenceOperator",
-                             "lowPrecedenceOperators",
-                             "booleanExpression",
-                             "var",
-                             "logicalOp",
-                             "relationalOp",
-                             "returnStmt",
-                             "optionalReturn",
-                             "idList",
-                             "more_ids",
-                             "definetypestmt",
-                             "A",
-                             "T_NULL",
-                             "T_ASSIGNOP",
-                             "T_COMMENT",
-                             "T_FIELDID",
-                             "T_ID",
-                             "T_NUM",
-                             "T_RNUM",
-                             "T_FUNID",
-                             "T_RUID",
-                             "T_WITH",
-                             "T_PARAMETERS",
-                             "T_END",
-                             "T_WHILE",
-                             "T_UNION",
-                             "T_ENDUNION",
-                             "T_DEFINETYPE",
-                             "T_AS",
-                             "T_TYPE",
-                             "T_MAIN",
-                             "T_GLOBAL",
-                             "T_PARAMETER",
-                             "T_LIST",
-                             "T_SQL",
-                             "T_SQR",
-                             "T_INPUT",
-                             "T_OUTPUT",
-                             "T_INT",
-                             "T_REAL",
-                             "T_COMMA",
-                             "T_SEM",
-                             "T_COLON",
-                             "T_DOT",
-                             "T_ENDWHILE",
-                             "T_OP",
-                             "T_CL",
-                             "T_IF",
-                             "T_THEN",
-                             "T_ENDIF",
-                             "T_READ",
-                             "T_WRITE",
-                             "T_RETURN",
-                             "T_PLUS",
-                             "T_MINUS",
-                             "T_MUL",
-                             "T_DIV",
-                             "T_CALL",
-                             "T_RECORD",
-                             "T_ENDRECORD",
-                             "T_ELSE",
-                             "T_AND",
-                             "T_OR",
-                             "T_NOT",
-                             "T_LT",
-                             "T_LE",
-                             "T_EQ",
-                             "T_GT",
-                             "T_GE",
-                             "T_NE",
-                             "T_EPSILON",
-                             "T_DOLLAR"};
+    if (root->x == T_INT || root->x == T_REAL) sprintf(value,"%.2f\n",root->value); 
+    if (root->parent) parent = arrElemCauseCheck[root->parent->x];
+
+    if (root->count_children) {
+        lexeme = "----";
+        inOrderTraversal(fp,root->children[0]);
+        tokenName = "----";
+        nodeSymbol = arrElemCauseCheck[root->x];
+        isLeafNode = "No";
+    }
+
+    fprintf(fp,"%s\t%d\t%s\t%s\t%s\t%s\n",tokenName,lineNumber,value,parent,isLeafNode,nodeSymbol);
+    for (int i = 1;i<root->count_children-1;i++)
+        inOrderTraversal(fp,root->children[i]);
+    
+    return;
+}
+
+void printParseTree(TREE_NODE root, char *outfile) {
+    FILE * fp = fopen(outfile,"w");
+    inOrderTraversal(fp,root);
+    fclose(fp);
+    return;
+}
+
 
 int main() {
     GRAMMAR GG = parseFile("src/parser/ModifiedGrammar.txt");
