@@ -1,8 +1,80 @@
+#include "lexer/lexer.h"
+#include "lexer/lexerDef.h"
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include "datastructures/trie.h"
-#include "lexer/lexer.h"
+void insertIntoTrie(TRIE root, char *word, enum Token tk) {
+    TRIE current = root;
+
+    for (int i = 0; i < strlen(word); i++) {
+        if (current->next[word[i] - 'a'] == NULL) {
+            current->next[word[i] - 'a'] = (TRIE)malloc(sizeof(struct Trie));
+            current->next[word[i] - 'a']->c = word[i];
+            for (int j = 0; j < 26; j++) {
+                current->next[word[i] - 'a']->next[j] = NULL;
+            }
+        }
+
+        current = current->next[word[i] - 'a'];
+        if (i == strlen(word) - 1) {
+            current->tk = tk;
+        }
+    }
+}
+
+TRIE populateTrie() {
+    TRIE root = (TRIE)malloc(sizeof(struct Trie));
+    root->c = '`';
+    for (int i = 0; i < 26; i++) {
+        root->next[i] = NULL;
+    }
+    insertIntoTrie(root, "with", TK_WITH);
+    insertIntoTrie(root, "parameters", TK_PARAMETERS);
+    insertIntoTrie(root, "end", TK_END);
+    insertIntoTrie(root, "while", TK_WHILE);
+    insertIntoTrie(root, "union", TK_UNION);
+    insertIntoTrie(root, "endunion", TK_ENDUNION);
+    insertIntoTrie(root, "definetype", TK_DEFINETYPE);
+    insertIntoTrie(root, "as", TK_AS);
+    insertIntoTrie(root, "type", TK_TYPE);
+    insertIntoTrie(root, "global", TK_GLOBAL);
+    insertIntoTrie(root, "parameter", TK_PARAMETER);
+    insertIntoTrie(root, "list", TK_LIST);
+    insertIntoTrie(root, "input", TK_INPUT);
+    insertIntoTrie(root, "output", TK_OUTPUT);
+    insertIntoTrie(root, "real", TK_REAL);
+    insertIntoTrie(root, "int", TK_INT);
+    insertIntoTrie(root, "endwhile", TK_ENDWHILE);
+    insertIntoTrie(root, "if", TK_IF);
+    insertIntoTrie(root, "then", TK_THEN);
+    insertIntoTrie(root, "endif", TK_ENDIF);
+    insertIntoTrie(root, "read", TK_READ);
+    insertIntoTrie(root, "write", TK_WRITE);
+    insertIntoTrie(root, "return", TK_RETURN);
+    insertIntoTrie(root, "call", TK_CALL);
+    insertIntoTrie(root, "record", TK_RECORD);
+    insertIntoTrie(root, "endrecord", TK_ENDRECORD);
+    insertIntoTrie(root, "else", TK_ELSE);
+
+    return root;
+}
+
+enum Token lookupTrie(TRIE root, char *word) {
+    TRIE current = root;
+    for (int i = 0; i < strlen(word); i++) {
+        if (current->next[word[i] - 'a'] == NULL) {
+            return TK_NULL;
+        } else
+            current = current->next[word[i] - 'a'];
+        if (i == strlen(word) - 1) {
+            return current->tk;
+        }
+    }
+}
+
+#define BUFFER_SIZE 1024
 
 char *buf1;
 char *buf2;
@@ -11,7 +83,6 @@ char *forward;
 FILE *fpwcom;
 int state;
 int lineNumber;
-
 char *tokensArr[] = {
     "TK_NULL",       "TK_ASSIGNOP", "TK_COMMENT",   "TK_FIELDID", "TK_ID",
     "TK_NUM",        "TK_RNUM",     "TK_FUNID",     "TK_RUID",    "TK_WITH",
@@ -144,10 +215,34 @@ void printToken(Token tk) {
     }
 }
 
+returnToken makeReturnToken(int flag) {
+    returnToken r;
+    if (flag < 0) {
+        r.flag = flag;
+        return r;
+    }
+    r.t = flag;
+    r.line = lineNumber;
+    char *lex = getLexeme(lexemeBegin, forward);
+    if (tk != TK_ID || strlen(lex) <= 20) {
+        r.lexeme = lex;
+    } else {
+        printf("Line No. %d\t Error :Variable Identifier is longer than the "
+               "prescribed length of 20 characters %s\n",
+               lineNumber, lex);
+        r.lexeme = lex;
+        r.t = -1;
+    }
+    printf("line %d\t token %d\t lexeme %s\n", r.line, r.t, r.lexeme);
+    return r;
+}
+
 void initializeBuffers() {
     buf1 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
     buf2 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
-    fpwcom = fopen("t1.txt", "r");
+    fpwcom = fopen("/Users/adityadandwate/Desktop/acads/codes/coco/"
+                   "Compiler-Construction-Project/tests/t2.txt",
+                   "r");
     fseek(fpwcom, 0, SEEK_SET);
     int readlen;
     if (fpwcom && !feof(fpwcom)) {
@@ -202,7 +297,8 @@ void incrementForward() {
     }
 }
 
-Token getNextToken() {
+returnToken getNextToken() {
+    returnToken r;
     char c = *forward;
     switch (*(forward++)) {
     case '\0':
@@ -220,7 +316,9 @@ Token getNextToken() {
             forward = buf1;
         } else {
             // terminate lexical analysis
-            return -2;
+            r = makeReturnToken(-2);
+            ;
+            return r;
         }
         break;
     default:
@@ -326,9 +424,10 @@ Token getNextToken() {
                     // This should give the failure state
                     // Since none of the recognizable characters are taken
                     failure();
+                    r = makeReturnToken(-1);
                     lexemeBegin = forward;
                     state = 0;
-                    return -1;
+                    return r;
                 }
                 break;
             }
@@ -338,10 +437,11 @@ Token getNextToken() {
             // final state
             state = 0;
             tk = TK_NOT;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
             // case 1 ends here
         case 2:
@@ -352,22 +452,24 @@ Token getNextToken() {
             } else if (c == '-') {
                 state = 4;
             } else {
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             break;
             // case 2 ends here
         case 3:
             // final state
             tk = TK_LE;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             state = 0;
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
             // case 3 ends here
         case 4:
@@ -376,10 +478,11 @@ Token getNextToken() {
             } else {
                 // other condition
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return -1;
+                return r;
             }
             break;
             // case 4 ends here
@@ -392,18 +495,19 @@ Token getNextToken() {
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return -1;
+                return makeReturnToken(-1);
             }
             break;
             // case 5 ends here
         case 6:
             // final state
             tk = TK_ASSIGNOP;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             state = 0;
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
             // case 6 ends here
         case 7:
@@ -412,21 +516,23 @@ Token getNextToken() {
             } else {
                 // other condition
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 incrementLexemeBegin(1);
                 forward = lexemeBegin;
-                return -1;
+                return r;
             }
             break;
             // case 7 ends here
         case 8:
             // final state
             tk = TK_EQ;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             state = 0;
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
             // case 8 ends here
         case 9:
@@ -437,21 +543,23 @@ Token getNextToken() {
                 // other condition
                 state = 0;
                 tk = TK_GT;
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             break;
             // case 9 ends here
         case 10:
             // final state
             tk = TK_GE;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             state = 0;
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
             // case 10 ends here
         case 11:
@@ -460,21 +568,23 @@ Token getNextToken() {
             } else {
                 // other condition
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 incrementLexemeBegin(1);
                 forward = lexemeBegin;
-                return -1;
+                return r;
             }
             break;
             // case 11 ends here
         case 12:
             // final
             tk = TK_NE;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             state = 0;
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
             // case 12 ends here
         case 13:
@@ -483,10 +593,11 @@ Token getNextToken() {
             } else {
                 // other condition
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 incrementLexemeBegin(1);
                 forward = lexemeBegin;
-                return -1;
+                return r;
             }
             break;
             // case 13 ends here
@@ -497,11 +608,12 @@ Token getNextToken() {
             } else {
                 // other condition
                 tk = TK_RUID;
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             break;
             // case 14 ends here
@@ -514,11 +626,12 @@ Token getNextToken() {
                 state = 16;
             } else {
                 // other condition
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             break;
             // case 15 ends here
@@ -527,10 +640,11 @@ Token getNextToken() {
                 state = 17;
             } else {
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 decrementForward(2);
                 lexemeBegin = forward;
-                return -1;
+                return r;
             }
             break;
             // case 16 ends here
@@ -539,10 +653,11 @@ Token getNextToken() {
                 state = 18;
             else {
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return -1;
+                return r;
             }
             // other condition
             break;
@@ -553,11 +668,12 @@ Token getNextToken() {
                 state = 19;
             else {
                 // other condition
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             // final state
             break;
@@ -569,7 +685,8 @@ Token getNextToken() {
                 state = 21;
             } else {
                 // other condition
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 failure();
                 state = 0;
                 while (*(forward) != 'E') {
@@ -577,7 +694,7 @@ Token getNextToken() {
                 }
 
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             break;
             // case 19 ends here
@@ -586,14 +703,15 @@ Token getNextToken() {
                 state = 21;
             else {
                 // other condition
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 failure();
                 state = 0;
                 while (*(forward) != 'E') {
                     decrementForward(1);
                 }
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             break;
             // case 20 ends here
@@ -602,25 +720,27 @@ Token getNextToken() {
                 state = 22;
             else {
                 // other condition
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 failure();
                 state = 0;
                 while ((*(forward)) != 'E') {
                     decrementForward(1);
                 }
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             break;
             // case 21 ends here
         case 22:
             // final state
             tk = TK_RNUM;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             state = 0;
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
             // case 22 ends here;
         case 23:
@@ -631,10 +751,11 @@ Token getNextToken() {
             else {
                 // other condition
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 incrementLexemeBegin(1);
                 forward = lexemeBegin;
-                return -1;
+                return r;
             }
             break;
             // case 23 ends here
@@ -654,12 +775,12 @@ Token getNextToken() {
                 if (strcmp(m, m2) == 0) {
                     tk = TK_MAIN;
                 }
-                printToken(tk);
-
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             // final state
             break;
@@ -670,11 +791,12 @@ Token getNextToken() {
             else {
                 // other condition
                 tk = TK_FUNID;
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             // final state
             break;
@@ -695,11 +817,12 @@ Token getNextToken() {
                 if (tk2 != 0) {
                     tk = tk2;
                 }
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             // final state
             break;
@@ -712,11 +835,12 @@ Token getNextToken() {
             else {
                 // other condition
                 tk = TK_ID;
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             // final state
             break;
@@ -727,11 +851,12 @@ Token getNextToken() {
             else {
                 // other condition
                 tk = TK_ID;
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             // final state
             break;
@@ -750,11 +875,12 @@ Token getNextToken() {
                 if (tk2 != 0) {
                     tk = tk2;
                 }
-                printToken(tk);
+                // printToken(tk);
+                r = makeReturnToken(tk);
                 state = 0;
                 decrementForward(1);
                 lexemeBegin = forward;
-                return tk;
+                return r;
             }
             // final state
             break;
@@ -763,101 +889,112 @@ Token getNextToken() {
             // final state
             state = 0;
             tk = TK_COMMA;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 31:
             // final state
             state = 0;
             tk = TK_SEM;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 32:
             // final state
             state = 0;
             tk = TK_SQL;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 33:
             // final state
             state = 0;
             tk = TK_SQR;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 34:
             // final state
             state = 0;
             tk = TK_OP;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 35:
             // final state
             state = 0;
             tk = TK_CL;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 36:
             // final state
             state = 0;
             tk = TK_PLUS;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 37:
             // final state
             state = 0;
             tk = TK_MINUS;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 38:
             // final state
             state = 0;
             tk = TK_MUL;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 39:
             // final state
             state = 0;
             tk = TK_DIV;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 40:
             if (c == '@') {
                 state = 41;
             } else {
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 incrementLexemeBegin(1);
                 forward = lexemeBegin;
-                return -1;
+                return r;
             }
             break;
             // case 40 ends here
@@ -867,21 +1004,23 @@ Token getNextToken() {
             } else {
                 // other condition
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 incrementLexemeBegin(1);
                 forward = lexemeBegin;
-                return -1;
+                return r;
             }
             break;
             // case 41 ends here
         case 42:
             // final state
             tk = TK_OR;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             state = 0;
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 43:
             if (c == '&') {
@@ -889,10 +1028,11 @@ Token getNextToken() {
             } else {
                 // other condition
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 incrementLexemeBegin(1);
                 forward = lexemeBegin;
-                return -1;
+                return r;
             }
             break;
         case 44:
@@ -901,44 +1041,59 @@ Token getNextToken() {
             } else {
                 // other condition
                 failure();
+                r = makeReturnToken(-1);
                 state = 0;
                 incrementLexemeBegin(2);
                 forward = lexemeBegin;
-                return -1;
+                return r;
             }
             break;
         case 45:
             // final state
             tk = TK_AND;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             state = 0;
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 46:
             // final state
             state = 0;
             tk = TK_COLON;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         case 47:
             // final state
             state = 0;
             tk = TK_DOT;
-            printToken(tk);
+            // printToken(tk);
+            r = makeReturnToken(tk);
             decrementForward(1);
             lexemeBegin = forward;
-            return tk;
+            return r;
             break;
         default:
-            return -1;
+            return makeReturnToken(-1);
             break;
         }
     }
+}
+
+void initLexer() {
+    initializeBuffers();
+    lexemeBegin = (char *)malloc(sizeof(char));
+    forward = (char *)malloc(sizeof(char));
+    lexemeBegin = buf1;
+    forward = buf1;
+    state = 0;
+    lineNumber = 1;
+    trie = populateTrie();
 }
 
 void printTokens() {
@@ -950,7 +1105,22 @@ void printTokens() {
     lineNumber = 1;
     trie = populateTrie();
     while (1) {
-        if (getNextToken() == -2)
+        returnToken r = getNextToken();
+        // printf("token %d\t lexeme %s\t line %d\n", r.t, r.lexeme, r.line);
+        if (r.t == -2)
             break;
     }
 }
+
+// int main()
+// {
+//     FILE *fp1 = (FILE *)malloc(sizeof(FILE));
+//     fp1 = fopen("t1.txt", "r");
+//     FILE *fp2 = (FILE *)malloc(sizeof(FILE));
+//     fp2 = fopen("WithoutComments.txt", "w+");
+//     removeComments(fp1, fp2);
+//     fclose(fp1);
+//     fclose(fp2);
+//     initializeBuffers();
+//     printTokens();
+// }

@@ -37,6 +37,7 @@ $(OBJDIR)/%.o: $(TESTDIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJDIR)/*.o $(EXECUTABLE) $(TEST_EXECUTABLE)
+	rm -f $(OBJDIR)/*.o $(EXECUTABLE) $(TEST_EXECUTABLE) $(OBJDIR)/datastructures/*.o $(OBJDIR)/parser/*.o $(OBJDIR)/symbol_table/*.o $(OBJDIR)/unity/*.o
+
 
 .PHONY: tests

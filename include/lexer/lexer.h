@@ -1,11 +1,17 @@
 #ifndef LEXER_H
 #define LEXER_H
-
 #include <stdio.h>
 #include <stdlib.h>
-#include "tokens/tokens.h"
+#include <string.h>
+#include <stdbool.h>
+#include "lexerDef.h"
 
-#define BUFFER_SIZE 1024
+
+void insertIntoTrie(TRIE root, char *word, enum Token tk);
+
+enum Token lookupTrie(TRIE root, char *word);
+
+TRIE populateTrie();
 
 FILE *removeComments(FILE *testcaseFile, FILE *cleanFile);
 
@@ -14,6 +20,8 @@ char *getLexeme(char *begin, char *forward);
 void failure();
 
 void printToken(Token tk);
+
+returnToken makeReturnToken(Token t);
 
 void initializeBuffers();
 
@@ -25,9 +33,10 @@ void decrementForward(int val);
 
 void incrementForward();
 
-Token getNextToken();
+returnToken getNextToken();
+
+void initLexer();
 
 void printTokens();
-
 
 #endif

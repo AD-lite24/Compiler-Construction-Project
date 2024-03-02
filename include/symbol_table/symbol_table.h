@@ -1,6 +1,6 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
-#include "tokens/tokens.h"
+#include "lexer/lexerDef.h"
 
 #define MAXLEN 1024
 

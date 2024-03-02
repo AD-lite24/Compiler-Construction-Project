@@ -3,6 +3,120 @@
 
 #include <stdbool.h>
 
+char *enumToString[] = {"program",
+                             "mainFunction",
+                             "otherFunctions",
+                             "function",
+                             "input_par",
+                             "output_par",
+                             "parameter_list",
+                             "dataType",
+                             "primitiveDatatype",
+                             "constructedDatatype",
+                             "remaining_list",
+                             "stmts",
+                             "typeDefinitions",
+                             "actualOrRedefined",
+                             "typeDefinition",
+                             "fieldDefinitions",
+                             "fieldDefinition",
+                             "fieldType",
+                             "moreFields",
+                             "declarations",
+                             "declaration",
+                             "global_or_not",
+                             "otherStmts",
+                             "stmt",
+                             "assignmentStmt",
+                             "singleOrRecId",
+                             "option_single_constructed",
+                             "oneExpansion",
+                             "moreExpansions",
+                             "funCallStmt",
+                             "outputParameters",
+                             "inputParameters",
+                             "iterativeStmt",
+                             "conditionalStmt",
+                             "elsePart",
+                             "ioStmt",
+                             "arithmeticExpression",
+                             "expPrime",
+                             "term",
+                             "termPrime",
+                             "factor",
+                             "highPrecedenceOperator",
+                             "lowPrecedenceOperators",
+                             "booleanExpression",
+                             "var",
+                             "logicalOp",
+                             "relationalOp",
+                             "returnStmt",
+                             "optionalReturn",
+                             "idList",
+                             "more_ids",
+                             "definetypestmt",
+                             "A",
+                             "TK_NULL",
+                             "TK_ASSIGNOP",
+                             "TK_COMMENT",
+                             "TK_FIELDID",
+                             "TK_ID",
+                             "TK_NUM",
+                             "TK_RNUM",
+                             "TK_FUNID",
+                             "TK_RUID",
+                             "TK_WITH",
+                             "TK_PARAMETERS",
+                             "TK_END",
+                             "TK_WHILE",
+                             "TK_UNION",
+                             "TK_ENDUNION",
+                             "TK_DEFINETYPE",
+                             "TK_AS",
+                             "TK_TYPE",
+                             "TK_MAIN",
+                             "TK_GLOBAL",
+                             "TK_PARAMETER",
+                             "TK_LIST",
+                             "TK_SQL",
+                             "TK_SQR",
+                             "TK_INPUT",
+                             "TK_OUTPUT",
+                             "TK_INT",
+                             "TK_REAL",
+                             "TK_COMMA",
+                             "TK_SEM",
+                             "TK_COLON",
+                             "TK_DOT",
+                             "TK_ENDWHILE",
+                             "TK_OP",
+                             "TK_CL",
+                             "TK_IF",
+                             "TK_THEN",
+                             "TK_ENDIF",
+                             "TK_READ",
+                             "TK_WRITE",
+                             "TK_RETURN",
+                             "TK_PLUS",
+                             "TK_MINUS",
+                             "TK_MUL",
+                             "TK_DIV",
+                             "TK_CALL",
+                             "TK_RECORD",
+                             "TK_ENDRECORD",
+                             "TK_ELSE",
+                             "TK_AND",
+                             "TK_OR",
+                             "TK_NOT",
+                             "TK_LT",
+                             "TK_LE",
+                             "TK_EQ",
+                             "TK_GT",
+                             "TK_GE",
+                             "TK_NE",
+                             "TK_DOLLAR",
+                             "TK_EPSILON"};
+
 Elements stringToEnum(char *str) {
     if (strcmp(str, "TK_NULL") == 0) {
         return T_NULL;
@@ -239,7 +353,7 @@ void parseFile(char *filename) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
         printf("Error in opening file\n");
-        return ;
+        return;
     }
     grammar_glob = malloc(sizeof(grammar));
     for (int i = 0; i < NUM_NONTERMS; i++) {
@@ -271,7 +385,8 @@ void parseFile(char *filename) {
             insertNode_EleLast(one, curr);
             firstptr = strtok(NULL, delim1);
         }
-        insertNode_LLLast(createNewNode_LL(curr), grammar_glob->rules[LHS_NonTerm]);
+        insertNode_LLLast(createNewNode_LL(curr),
+                          grammar_glob->rules[LHS_NonTerm]);
     }
     fclose(fp);
     return;
@@ -584,7 +699,6 @@ void entryIntoParseTable(FIRSTANDFOLLOW F, Elements lhs, ProdRule rule) {
 }
 
 void createParseTable(FIRSTANDFOLLOW F) {
-    FILE * fp = fopen("parsetable.txt","w");
     for (int i = 0; i < NUM_NONTERMS; i++) {
         LL_LL rulesForNonTerm = grammar_glob->rules[i];
         NODE_LL currRule = rulesForNonTerm->head;
@@ -594,10 +708,9 @@ void createParseTable(FIRSTANDFOLLOW F) {
             currRule = currRule->next;
         }
     }
-    fclose(fp);
 }
 
-TREE_NODE createTreeNode(Elements x,TREE_NODE parent) {
+TREE_NODE createTreeNode(Elements x, TREE_NODE parent) {
     TREE_NODE y = malloc(sizeof(TreeNode));
     y->x = x;
     y->parent = parent;
@@ -606,36 +719,38 @@ TREE_NODE createTreeNode(Elements x,TREE_NODE parent) {
     return y;
 }
 
-void createParseTree(Stack * st,TREE_NODE root,int flag) {
-    Token k;
-    if (flag == -1) k = getNextToken(); // has to return line number of code and value if number and lexeme 
-    else k = flag;
+void createParseTree(Stack *st, TREE_NODE root, returnToken flag) {
+    returnToken k;
+    if (flag.flag == -1)
+        k = getNextToken(); // has to return line number of code and value if
+                            // number and lexeme
+    else
+        k = flag;
     Elements a = top(st);
 
-    if (k == -1) {
+    if (k.flag == -1) {
         // Error, lexer could not identify token
-    } else if (a != T_DOLLAR && k == -2) {
+    } else if (a != T_DOLLAR && k.flag == -2) {
         // Error, no tokens left but stack is not empty
     }
 
     if (a < NUM_NONTERMS) {
-        ProdRule rule = ParseTable[a][k];
+        ProdRule rule = ParseTable[a][k.t];
         if (rule.LHS != -1) {
             pop(st);
             root->count_children = rule.count_rhs;
-            for (int i = rule.count_rhs -1;i>=0;i--) {
-                push(st,rule.RHS[i]);
+            for (int i = rule.count_rhs - 1; i >= 0; i--) {
+                push(st, rule.RHS[i]);
             }
-            for (int i = 0;i<rule.count_rhs;i++) {
-                root->children[i] = createTreeNode(rule.RHS[i],root);
-                if (rule.RHS[i] >= NUM_NONTERMS) createParseTree(st,root->children[i],rule.RHS[i]-NUM_NONTERMS);
-                else createParseTree(st,root->children[i],-1);
+            for (int i = 0; i < rule.count_rhs; i++) {
+                root->children[i] = createTreeNode(rule.RHS[i], root);
+                createParseTree(st,root->children[i],k);
             }
         } else {
             // Error, syntactically incorrect as no production rule found
         }
     } else {
-        if (k == a - NUM_NONTERMS) {
+        if (k.t == a - NUM_NONTERMS) {
             pop(st);
             return;
         } else {
@@ -644,13 +759,12 @@ void createParseTree(Stack * st,TREE_NODE root,int flag) {
     }
 
     if (top(st) == T_DOLLAR) {
-        if (getNextToken() == -2) {
+        if (getNextToken().flag == -2) {
             printf("Code is syntactically correct\n");
         } else {
             // Error, Stack empty but leftover tokens found
         }
     }
-
 }
 
 TREE_NODE parseInputSourceCode() {
@@ -659,46 +773,49 @@ TREE_NODE parseInputSourceCode() {
     push(st, T_DOLLAR);
     push(st, program);
 
-    TREE_NODE root = createTreeNode(program,NULL);
-
-    createParseTree(st,root,-1);
+    TREE_NODE root = createTreeNode(program, NULL);
+    returnToken r;
+    r.flag = -1;
+    createParseTree(st, root, r);
     return root;
 }
 
-void inOrderTraversal(FILE * fp,TREE_NODE root) {
-    char * lexeme = root->lexeme;
+void inOrderTraversal(FILE *fp, TREE_NODE root) {
+    char *lexeme = root->lexeme;
     int lineNumber = root->lineNumber;
-    char * tokenName = arrElemCauseCheck[root->x];
+    char *tokenName = enumToString[root->x];
     char value[10];
-    char * nodeSymbol = "----";
-    char * isLeafNode = "Yes";
-    char * parent = "ROOT";
+    char *nodeSymbol = "----";
+    char *isLeafNode = "Yes";
+    char *parent = "ROOT";
 
-    if (root->x == T_INT || root->x == T_REAL) sprintf(value,"%.2f\n",root->value); 
-    if (root->parent) parent = arrElemCauseCheck[root->parent->x];
+    if (root->x == T_INT || root->x == T_REAL)
+        sprintf(value, "%.2f\n", root->value);
+    if (root->parent)
+        parent = enumToString[root->parent->x];
 
     if (root->count_children) {
         lexeme = "----";
-        inOrderTraversal(fp,root->children[0]);
+        inOrderTraversal(fp, root->children[0]);
         tokenName = "----";
-        nodeSymbol = arrElemCauseCheck[root->x];
+        nodeSymbol = enumToString[root->x];
         isLeafNode = "No";
     }
 
-    fprintf(fp,"%s\t%d\t%s\t%s\t%s\t%s\n",tokenName,lineNumber,value,parent,isLeafNode,nodeSymbol);
-    for (int i = 1;i<root->count_children-1;i++)
-        inOrderTraversal(fp,root->children[i]);
-    
+    fprintf(fp, "%s\t%d\t%s\t%s\t%s\t%s\n", tokenName, lineNumber, value,
+            parent, isLeafNode, nodeSymbol);
+    for (int i = 1; i < root->count_children - 1; i++)
+        inOrderTraversal(fp, root->children[i]);
+
     return;
 }
 
 void printParseTree(TREE_NODE root, char *outfile) {
-    FILE * fp = fopen(outfile,"w");
-    inOrderTraversal(fp,root);
+    FILE *fp = fopen(outfile, "w");
+    inOrderTraversal(fp, root);
     fclose(fp);
     return;
 }
-
 
 // int main() {
 //     parseFile("src/parser/ModifiedGrammar.txt");
@@ -726,10 +843,10 @@ void printParseTree(TREE_NODE root, char *outfile) {
 //     printf("/*************************************************\n");
 //     printf("First Sets\n");
 //     for (int i = 0; i < NUM_ELEMENTS; i++) {
-//         printf("{ %s\t-> ", arrElemCauseCheck[i]);
+//         printf("{ %s\t-> ", enumToString[i]);
 //         NODE_ELE ptr = fnfset->firstSet[i]->head;
 //         while (ptr != NULL) {
-//             printf("%s ", arrElemCauseCheck[ptr->item]);
+//             printf("%s ", enumToString[ptr->item]);
 //             ptr = ptr->next;
 //         }
 //         printf("}\n");
@@ -737,10 +854,10 @@ void printParseTree(TREE_NODE root, char *outfile) {
 //     printf("/*************************************************\n");
 //     printf("Follow Sets\n");
 //     for (int i = 0; i < NUM_NONTERMS; i++) {
-//         printf("{ %s  =>  ", arrElemCauseCheck[i]);
+//         printf("{ %s  =>  ", enumToString[i]);
 //         NODE_ELE ptr = fnfset->followSet[i]->head;
 //         while (ptr != NULL) {
-//             printf("%s ", arrElemCauseCheck[ptr->item]);
+//             printf("%s ", enumToString[ptr->item]);
 //             ptr = ptr->next;
 //         }
 //         printf("}\n");
@@ -769,12 +886,13 @@ void printParseTree(TREE_NODE root, char *outfile) {
 //         for (int j = 0; j < 59; j++) {
 //             // printf("%-3d ",ParseTable[i][j].count_rhs);
 //             if (ParseTable[i][j].count_rhs) {
-//                 printf("NT %s, \t", arrElemCauseCheck[i]);
-//                 printf("Term %s, \t", arrElemCauseCheck[j + 53]);
+//                 printf("NT %s, \t", enumToString[i]);
+//                 printf("Term %s, \t", enumToString[j + 53]);
 //                 printf("Rule \t");
-//                 printf("%s => ", arrElemCauseCheck[ParseTable[i][j].LHS]);
+//                 printf("%s => ", enumToString[ParseTable[i][j].LHS]);
 //                 for (int k = 0; k < ParseTable[i][j].count_rhs; k++) {
-//                     printf("%s ", arrElemCauseCheck[ParseTable[i][j].RHS[k]]);
+//                     printf("%s ",
+//                     enumToString[ParseTable[i][j].RHS[k]]);
 //                 }
 //                 printf("\n");
 //                 cnt++;

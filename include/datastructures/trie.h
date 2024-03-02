@@ -1,19 +1,19 @@
-#ifndef TRIE_H
-#define TRIE_H
+// #ifndef TRIE_H
+// #define TRIE_H
 
-#include "tokens/tokens.h"
-typedef struct Trie * TRIE;
+// #include "tokens/tokens.h"
+// typedef struct Trie * TRIE;
 
-struct Trie{
-    char c;
-    TRIE next[26];
-    enum Token tk;
-};
+// struct Trie{
+//     char c;
+//     TRIE next[26];
+//     enum Token tk;
+// };
 
-void insertIntoTrie(TRIE root, char* word, enum Token tk);
+// void insertIntoTrie(TRIE root, char* word, enum Token tk);
 
-enum Token lookupTrie(TRIE root, char* word);
+// enum Token lookupTrie(TRIE root, char* word);
 
-TRIE populateTrie();
+// TRIE populateTrie();
 
-#endif
+// #endif
