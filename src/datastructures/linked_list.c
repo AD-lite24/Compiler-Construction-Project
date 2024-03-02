@@ -1,4 +1,4 @@
-#include "include/datastructures/linked_list.h"
+#include "datastructures/linked_list.h"
 // #include "symbol_table/symbol_table.h"
 #include <stdlib.h>
 

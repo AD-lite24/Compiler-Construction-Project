@@ -1,6 +1,5 @@
-#include "include/parser/parser.h"
-#include "include/parser/parse_table.h"
-#include "include/tokens/tokens.h"
+#include "parser/parser.h"
+#include "tokens/tokens.h"
 
 #include <stdbool.h>
 
@@ -236,15 +235,15 @@ Elements stringToEnum(char *str) {
     }
 }
 
-GRAMMAR parseFile(char *filename) {
+void parseFile(char *filename) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
         printf("Error in opening file\n");
-        return NULL;
+        return ;
     }
-    GRAMMAR G = malloc(sizeof(grammar));
+    grammar_glob = malloc(sizeof(grammar));
     for (int i = 0; i < NUM_NONTERMS; i++) {
-        G->rules[i] = createNewList_LL();
+        grammar_glob->rules[i] = createNewList_LL();
     }
     int line_count = 0;
     char buff[1024];
@@ -258,13 +257,12 @@ GRAMMAR parseFile(char *filename) {
         char *firstptr = strtok(fullLine, delim1);
         int LHS_NonTerm = stringToEnum(firstptr);
         firstptr = strtok(NULL, delim1);
-        int index = 0;
         firstptr = strtok(NULL, delim1);
         LL_ELE curr = createNewList_Ele();
         while (firstptr) {
             if (firstptr[0] == ';') {
                 insertNode_LLLast(createNewNode_LL(curr),
-                                  G->rules[LHS_NonTerm]);
+                                  grammar_glob->rules[LHS_NonTerm]);
                 curr = createNewList_Ele();
                 firstptr = strtok(NULL, delim1);
                 continue;
@@ -273,10 +271,10 @@ GRAMMAR parseFile(char *filename) {
             insertNode_EleLast(one, curr);
             firstptr = strtok(NULL, delim1);
         }
-        insertNode_LLLast(createNewNode_LL(curr), G->rules[LHS_NonTerm]);
+        insertNode_LLLast(createNewNode_LL(curr), grammar_glob->rules[LHS_NonTerm]);
     }
     fclose(fp);
-    return G;
+    return;
 }
 
 int checkEpsilonInFirst(LL_ELE first) {
@@ -289,7 +287,7 @@ int checkEpsilonInFirst(LL_ELE first) {
     return 0;
 }
 
-void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
+void ComputeFirst(FIRSTANDFOLLOW firstAndFollowSet) {
     /*
     1. If X is a terminal, then FIRST(X) = {X}.
     2. If X is a nonterminal and X -> Y1 Y2 ... Yk is a production for some k >=
@@ -319,7 +317,7 @@ void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
         // printf("Hehe\n");
         for (; lhs < NUM_NONTERMS; lhs++) {
             NODE_ELE firstLhsHead = firstAndFollowSet->firstSet[lhs]->head;
-            NODE_LL currRHS = G->rules[lhs]->head;
+            NODE_LL currRHS = grammar_glob->rules[lhs]->head;
 
             if (currRHS->item->head->item == T_EPSILON &&
                 !checkEpsilonInFirst(firstAndFollowSet->firstSet[lhs])) {
@@ -375,7 +373,7 @@ void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     }
 }
 
-void ComputeFollow(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
+void ComputeFollow(FIRSTANDFOLLOW firstAndFollowSet) {
     /*
     1. Place $ in FOLLOW(S), where S is the start symbol, and $ is the input
     right endmarker.
@@ -391,7 +389,7 @@ void ComputeFollow(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
         change = 0;
         int lhs = 0;
         for (; lhs < NUM_NONTERMS; lhs++) {
-            NODE_LL currRHS = G->rules[lhs]->head;
+            NODE_LL currRHS = grammar_glob->rules[lhs]->head;
             while (currRHS != NULL) {
                 NODE_ELE currTerm = currRHS->item->head;
                 NODE_ELE nextTerm = currTerm;
@@ -498,7 +496,7 @@ void ComputeFollow(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet) {
     }
 }
 
-FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G) {
+FIRSTANDFOLLOW ComputeFirstAndFollowSets() {
     FIRSTANDFOLLOW firstAndFollowSet =
         (FIRSTANDFOLLOW)malloc(sizeof(FirstAndFollow));
     for (int i = 0; i < NUM_NONTERMS; i++) {
@@ -507,8 +505,8 @@ FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G) {
     }
     for (int i = NUM_NONTERMS; i < NUM_ELEMENTS; i++)
         firstAndFollowSet->firstSet[i] = createNewList_Ele();
-    ComputeFirst(G, firstAndFollowSet);
-    ComputeFollow(G, firstAndFollowSet);
+    ComputeFirst(firstAndFollowSet);
+    ComputeFollow(firstAndFollowSet);
     return firstAndFollowSet;
 }
 
@@ -586,6 +584,7 @@ void entryIntoParseTable(FIRSTANDFOLLOW F, Elements lhs, ProdRule rule) {
 }
 
 void createParseTable(FIRSTANDFOLLOW F) {
+    FILE * fp = fopen("parsetable.txt","w");
     for (int i = 0; i < NUM_NONTERMS; i++) {
         LL_LL rulesForNonTerm = grammar_glob->rules[i];
         NODE_LL currRule = rulesForNonTerm->head;
@@ -595,6 +594,7 @@ void createParseTable(FIRSTANDFOLLOW F) {
             currRule = currRule->next;
         }
     }
+    fclose(fp);
 }
 
 TREE_NODE createTreeNode(Elements x,TREE_NODE parent) {
@@ -653,13 +653,7 @@ void createParseTree(Stack * st,TREE_NODE root,int flag) {
 
 }
 
-TREE_NODE parseInputSourceCode(char *testcase, ProdRule **ParseTable) {
-    FILE *fp = fopen(testcase, "r");
-
-    if (!fp) {
-        printf("Error in opening file\n");
-        return;
-    }
+TREE_NODE parseInputSourceCode() {
 
     Stack *st = createStack();
     push(st, T_DOLLAR);
@@ -668,7 +662,6 @@ TREE_NODE parseInputSourceCode(char *testcase, ProdRule **ParseTable) {
     TREE_NODE root = createTreeNode(program,NULL);
 
     createParseTree(st,root,-1);
-    fclose(fp);
     return root;
 }
 
@@ -707,90 +700,88 @@ void printParseTree(TREE_NODE root, char *outfile) {
 }
 
 
-int main() {
-    GRAMMAR GG = parseFile("src/parser/ModifiedGrammar.txt");
-    // TODO :
-    grammar_glob = GG;
-    printf("Grammar Rules : \n");
-    for (int i = 0; i < NUM_NONTERMS; i++) {
-        printf("%-3d  :  ", i);
-        // printHEHE(GG->rules[i]);
-        // printf("\n");
+// int main() {
+//     parseFile("src/parser/ModifiedGrammar.txt");
+//     printf("Grammar Rules : \n");
+//     for (int i = 0; i < NUM_NONTERMS; i++) {
+//         printf("%-3d  :  ", i);
+//         // printHEHE(grammar_glob->rules[i]);
+//         // printf("\n");
 
-        NODE_LL ptr = GG->rules[i]->head;
-        while (ptr != NULL) {
-            NODE_ELE hehe = ptr->item->head;
-            while (hehe != NULL) {
-                printf("%-3d ", hehe->item);
-                hehe = hehe->next;
-            }
-            printf("| ");
-            ptr = ptr->next;
-        }
-        // printHEHE(GG->rules[i]);
-        printf("\n");
-    }
-    printf("----\n");
-    FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(GG);
-    printf("/*************************************************\n");
-    printf("First Sets\n");
-    for (int i = 0; i < NUM_ELEMENTS; i++) {
-        printf("{ %s\t-> ", arrElemCauseCheck[i]);
-        NODE_ELE ptr = fnfset->firstSet[i]->head;
-        while (ptr != NULL) {
-            printf("%s ", arrElemCauseCheck[ptr->item]);
-            ptr = ptr->next;
-        }
-        printf("}\n");
-    }
-    printf("/*************************************************\n");
-    printf("Follow Sets\n");
-    for (int i = 0; i < NUM_NONTERMS; i++) {
-        printf("{ %s  =>  ", arrElemCauseCheck[i]);
-        NODE_ELE ptr = fnfset->followSet[i]->head;
-        while (ptr != NULL) {
-            printf("%s ", arrElemCauseCheck[ptr->item]);
-            ptr = ptr->next;
-        }
-        printf("}\n");
-    }
-    printf("/*************************************************\n");
-    printf("Checking Prod Rule Conversion\n");
-    for (int i = 0; i < NUM_NONTERMS; i++) {
-        LL_LL rulesForNonTerm = GG->rules[i];
-        NODE_LL currRule = rulesForNonTerm->head;
-        while (currRule) {
-            ProdRule temp = convertLLtoProd(i, currRule);
-            printf("%-3d  -> ", i);
-            for (int j = 0; j < temp.count_rhs; j++) {
-                printf("%-3d ", temp.RHS[j]);
-            }
-            printf("\n");
-            currRule = currRule->next;
-        }
-    }
-    printf("/*************************************************\n");
-    printf("Checking Parse Table Filling\n");
-    initialiseParseTable();
-    createParseTable(fnfset);
-    int cnt = 0;
-    for (int i = 0; i < 53; i++) {
-        for (int j = 0; j < 59; j++) {
-            // printf("%-3d ",ParseTable[i][j].count_rhs);
-            if (ParseTable[i][j].count_rhs) {
-                printf("NT %s, \t", arrElemCauseCheck[i]);
-                printf("Term %s, \t", arrElemCauseCheck[j + 53]);
-                printf("Rule \t");
-                printf("%s => ", arrElemCauseCheck[ParseTable[i][j].LHS]);
-                for (int k = 0; k < ParseTable[i][j].count_rhs; k++) {
-                    printf("%s ", arrElemCauseCheck[ParseTable[i][j].RHS[k]]);
-                }
-                printf("\n");
-                cnt++;
-            }
-        }
-        // printf("\n");
-    }
-    printf("%-3d \n", cnt);
-    return 0;
-}
+//         NODE_LL ptr =grammar_glob->rules[i]->head;
+//         while (ptr != NULL) {
+//             NODE_ELE hehe = ptr->item->head;
+//             while (hehe != NULL) {
+//                 printf("%-3d ", hehe->item);
+//                 hehe = hehe->next;
+//             }
+//             printf("| ");
+//             ptr = ptr->next;
+//         }
+//         // printHEHE(GG->rules[i]);
+//         printf("\n");
+//     }
+//     printf("----\n");
+//     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
+//     printf("/*************************************************\n");
+//     printf("First Sets\n");
+//     for (int i = 0; i < NUM_ELEMENTS; i++) {
+//         printf("{ %s\t-> ", arrElemCauseCheck[i]);
+//         NODE_ELE ptr = fnfset->firstSet[i]->head;
+//         while (ptr != NULL) {
+//             printf("%s ", arrElemCauseCheck[ptr->item]);
+//             ptr = ptr->next;
+//         }
+//         printf("}\n");
+//     }
+//     printf("/*************************************************\n");
+//     printf("Follow Sets\n");
+//     for (int i = 0; i < NUM_NONTERMS; i++) {
+//         printf("{ %s  =>  ", arrElemCauseCheck[i]);
+//         NODE_ELE ptr = fnfset->followSet[i]->head;
+//         while (ptr != NULL) {
+//             printf("%s ", arrElemCauseCheck[ptr->item]);
+//             ptr = ptr->next;
+//         }
+//         printf("}\n");
+//     }
+//     printf("/*************************************************\n");
+//     printf("Checking Prod Rule Conversion\n");
+//     for (int i = 0; i < NUM_NONTERMS; i++) {
+//         LL_LL rulesForNonTerm = grammar_glob->rules[i];
+//         NODE_LL currRule = rulesForNonTerm->head;
+//         while (currRule) {
+//             ProdRule temp = convertLLtoProd(i, currRule);
+//             printf("%-3d  -> ", i);
+//             for (int j = 0; j < temp.count_rhs; j++) {
+//                 printf("%-3d ", temp.RHS[j]);
+//             }
+//             printf("\n");
+//             currRule = currRule->next;
+//         }
+//     }
+//     printf("/*************************************************\n");
+//     printf("Checking Parse Table Filling\n");
+//     initialiseParseTable();
+//     createParseTable(fnfset);
+//     int cnt = 0;
+//     for (int i = 0; i < 53; i++) {
+//         for (int j = 0; j < 59; j++) {
+//             // printf("%-3d ",ParseTable[i][j].count_rhs);
+//             if (ParseTable[i][j].count_rhs) {
+//                 printf("NT %s, \t", arrElemCauseCheck[i]);
+//                 printf("Term %s, \t", arrElemCauseCheck[j + 53]);
+//                 printf("Rule \t");
+//                 printf("%s => ", arrElemCauseCheck[ParseTable[i][j].LHS]);
+//                 for (int k = 0; k < ParseTable[i][j].count_rhs; k++) {
+//                     printf("%s ", arrElemCauseCheck[ParseTable[i][j].RHS[k]]);
+//                 }
+//                 printf("\n");
+//                 cnt++;
+//             }
+//         }
+//         // printf("\n");
+//     }
+//     printf("%-3d \n", cnt);
+//     return 0;
+// }

@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "../../include/datastructures/trie.h"
-#include "../../include/tokens/tokens.h"
+#include "datastructures/trie.h"
+#include "tokens/tokens.h"
 
 #define BUFFER_SIZE 1024
 
@@ -918,9 +918,4 @@ void traverseBuffer(){
         }
     }
     
-}
-
-int main(){
-    initializeBuffers();
-    traverseBuffer();
 }

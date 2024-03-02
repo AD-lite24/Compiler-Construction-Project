@@ -1,9 +1,9 @@
-#include "../../include/datastructures/stack_parser.h"
+#include "datastructures/stack_parser.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
 
-Stack* createnewStack(){
+Stack* createStack(){
     Stack* st=(Stack*)malloc(sizeof(Stack));
     st->list=createNewList_Ele();
     return st;

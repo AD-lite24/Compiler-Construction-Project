@@ -5,11 +5,11 @@ void test_parser_file_func(void) {
 
     char *filename = "/Users/adityadandwate/Desktop/acads/codes/coco/Compiler-Construction-Project/tests/Grammar.txt";
 
-    GRAMMAR G = parseFile(filename);
-    TEST_ASSERT_NOT_NULL(G);
+    parseFile(filename);
+    TEST_ASSERT_NOT_NULL(grammar_glob);
 
     // otherFunctions - input_par function ; dataType
-    NODE_LL var1 = G->rules[otherFunctions]->head;
+    NODE_LL var1 = grammar_glob->rules[otherFunctions]->head;
     NODE_ELE ele = var1->item->head;
 
     TEST_ASSERT_EQUAL(ele->item, input_par);
@@ -24,7 +24,7 @@ void test_parser_file_func(void) {
 
     // moreFields - T_EPSILON ; T_DOT declaration T_WRITE T_EQ
 
-    var1 = G->rules[moreFields]->head;
+    var1 = grammar_glob->rules[moreFields]->head;
     ele = var1->item->head;
     TEST_ASSERT_EQUAL(ele->item, T_EPSILON);
 

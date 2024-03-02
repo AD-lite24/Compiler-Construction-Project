@@ -1,14 +1,17 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "include/datastructures/linked_list_parser.h"
-#include "include/datastructures/stack_parser.h"
+#include "datastructures/linked_list_parser.h"
+#include "datastructures/stack_parser.h"
+#include "lexer/lexer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#define NUM_TERMS 58
 #define NUM_NONTERMS 53
 #define NUM_ELEMENTS 113
+
 
 typedef struct grammar {
     LL_LL rules[NUM_NONTERMS];
@@ -32,6 +35,7 @@ struct ProdRule {
 
 typedef struct ProdRule ProdRule;
 
+ProdRule ParseTable[NUM_NONTERMS][NUM_TERMS+1];
 struct TreeNode {
     Elements x; //NodeSymbol
     int lineNumber; // lineno
@@ -162,12 +166,12 @@ char *arrElemCauseCheck[] = {"program",
 };
 
 Elements stringToEnum(char *str);
-GRAMMAR parseFile(char *filename);
+void parseFile(char *filename);
 int checkEpsilonInFirst(LL_ELE first);
-void ComputeFirst(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet);
-void ComputeFollow(GRAMMAR G, FIRSTANDFOLLOW firstAndFollowSet);
+void ComputeFirst(FIRSTANDFOLLOW firstAndFollowSet);
+void ComputeFollow(FIRSTANDFOLLOW firstAndFollowSet);
 
-FIRSTANDFOLLOW ComputeFirstAndFollowSets(GRAMMAR G);
+FIRSTANDFOLLOW ComputeFirstAndFollowSets();
 
 ProdRule convertLLtoProd(Elements lhs, NODE_LL rule);
 void initialiseParseTable();
@@ -175,7 +179,7 @@ void entryIntoParseTable(FIRSTANDFOLLOW F, Elements lhs, ProdRule rule);
 void createParseTable(FIRSTANDFOLLOW F);
 TREE_NODE createTreeNode(Elements x,TREE_NODE parent);
 void createParseTree(Stack * st,TREE_NODE root,int flag);
-TREE_NODE parseInputSourceCode(char *testcase, ProdRule **ParseTable);
+TREE_NODE parseInputSourceCode();
 void printParseTree(TREE_NODE root, char *outfile);
 
 #endif
