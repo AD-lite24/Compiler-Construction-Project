@@ -1,10 +1,10 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "datastructures/linked_list_parser.h"
-#include "datastructures/stack_parser.h"
-#include "lexer/lexer.h"
-#include "lexer/lexerDef.h"
+#include "/mnt/d/Coco/Compiler-Construction-Project/include/datastructures/linked_list_parser.h"
+#include "/mnt/d/Coco/Compiler-Construction-Project/include/datastructures/stack_parser.h"
+#include "/mnt/d/Coco/Compiler-Construction-Project/include/lexer/lexer.h"
+#include "/mnt/d/Coco/Compiler-Construction-Project/include/lexer/lexerDef.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -64,9 +64,11 @@ ProdRule convertLLtoProd(Elements lhs, NODE_LL rule);
 void initialiseParseTable();
 void entryIntoParseTable(FIRSTANDFOLLOW F, Elements lhs, ProdRule rule);
 void createParseTable(FIRSTANDFOLLOW F);
-TREE_NODE createTreeNode(Elements x,TREE_NODE parent);
-void createParseTree(Stack * st,TREE_NODE root,returnToken flag);
+TREE_NODE createTreeNode(Elements x,TREE_NODE parent,returnToken k);
+int createParseTree(Stack * st,TREE_NODE root,returnToken flag);
 TREE_NODE parseInputSourceCode();
 void printParseTree(TREE_NODE root, char *outfile);
+
+Elements SynchSet [NUM_NONTERMS][25];
 
 #endif

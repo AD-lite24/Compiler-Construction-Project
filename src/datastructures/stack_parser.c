@@ -1,4 +1,4 @@
-#include "datastructures/stack_parser.h"
+#include "/mnt/d/Coco/Compiler-Construction-Project/include/datastructures/stack_parser.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>

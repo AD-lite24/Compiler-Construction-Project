@@ -1,6 +1,6 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
-#include "lexer/lexerDef.h"
+#include "/mnt/d/Coco/Compiler-Construction-Project/include/lexer/lexerDef.h"
 
 #define MAXLEN 1024
 

@@ -1,5 +1,5 @@
-#include "lexer/lexer.h"
-#include "lexer/lexerDef.h"
+#include "/mnt/d/Coco/Compiler-Construction-Project/include/lexer/lexer.h"
+#include "/mnt/d/Coco/Compiler-Construction-Project/include/lexer/lexerDef.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -219,6 +219,9 @@ returnToken makeReturnToken(int flag) {
     returnToken r;
     if (flag < 0) {
         r.flag = flag;
+        r.lexeme = getLexeme(lexemeBegin, forward);
+        r.line = lineNumber;
+        r.t = flag;
         return r;
     }
     r.t = flag;
@@ -240,8 +243,7 @@ returnToken makeReturnToken(int flag) {
 void initializeBuffers() {
     buf1 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
     buf2 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
-    fpwcom = fopen("/Users/adityadandwate/Desktop/acads/codes/coco/"
-                   "Compiler-Construction-Project/tests/t2.txt",
+    fpwcom = fopen("/mnt/d/Coco/Compiler-Construction-Project/tests/t2.txt",
                    "r");
     fseek(fpwcom, 0, SEEK_SET);
     int readlen;

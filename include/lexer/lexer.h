@@ -21,7 +21,7 @@ void failure();
 
 void printToken(Token tk);
 
-returnToken makeReturnToken(Token t);
+returnToken makeReturnToken(int flag);
 
 void initializeBuffers();
 
