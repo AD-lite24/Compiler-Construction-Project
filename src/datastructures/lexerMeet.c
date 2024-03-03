@@ -75,7 +75,7 @@ enum Token lookupTrie(TRIE root, char *word)
     {
         if (current->next[word[i] - 'a'] == NULL)
         {
-            return TK_NULL;
+            return TK_NULL; 
         }
         else
             current = current->next[word[i] - 'a'];
@@ -298,6 +298,7 @@ returnToken makeReturnToken(int t)
         r.line = lineNumber;
         return r;
     }
+    r.flag = 1;
     r.t = t;
     r.line = lineNumber;
     char *lex = getLexeme(lexemeBegin, forward);
@@ -312,7 +313,7 @@ returnToken makeReturnToken(int t)
         // r.t = -1;
         r.flag = -1;
     }
-    printf("line %d\t token %d\t lexeme %s\n", r.line, r.t, r.lexeme);
+    // printf("line %d\t token %d\t lexeme %s\n", r.line, r.t, r.lexeme);
     return r;
 }
 
@@ -320,7 +321,7 @@ void initializeBuffers()
 {
     buf1 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
     buf2 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
-    fpwcom = fopen("/home/rakshit/Gen/BITS/Sem3-2/CoCo/Compiler-Construction-Project/tests/t2.txt", "r");
+    fpwcom = fopen("/home/harsh/Compiler-Construction-Project/tests/t2.txt", "r");
     fseek(fpwcom, 0, SEEK_SET);
     int readlen;
     if (fpwcom && !feof(fpwcom))
@@ -392,6 +393,7 @@ void incrementForward()
 returnToken getNextToken()
 {
     returnToken r;
+    while(1){
     char c = *forward;
     switch (*(forward++))
     {
@@ -414,7 +416,7 @@ returnToken getNextToken()
         {
             // terminate lexical analysis
             r = makeReturnToken(-2);
-            ;
+            
             return r;
         }
         break;
@@ -873,6 +875,7 @@ returnToken getNextToken()
             {
                 // other condition
                 // printToken(tk);
+                // r = NULL;
                 r = makeReturnToken(tk);
                 failure();
                 state = 0;
@@ -881,6 +884,7 @@ returnToken getNextToken()
                     decrementForward(1);
                 }
                 lexemeBegin = forward;
+                // if (r !=)
                 return r;
             }
             break;
@@ -1257,6 +1261,9 @@ returnToken getNextToken()
             return makeReturnToken(-1);
             break;
         }
+    }
+    // r.flag = -1;
+    // return r;
     }
 }
 

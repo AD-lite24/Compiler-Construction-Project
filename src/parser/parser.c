@@ -185,7 +185,7 @@ Elements stringToEnum(char *str) {
     } else if (strcmp(str, "TK_WITH") == 0) {
         return T_WITH;
     } else if (strcmp(str, "TK_PARAMETERS") == 0) {
-        return T_PARAMETER;
+        return T_PARAMETERS;
     } else if (strcmp(str, "TK_END") == 0) {
         return T_END;
     } else if (strcmp(str, "TK_WHILE") == 0) {
@@ -415,6 +415,7 @@ void parseFile(char *filename) {
 
         char *fullLine = strtok(buff, delim2);
         char *firstptr = strtok(fullLine, delim1);
+        // printf("%s\n", firstptr);
         int LHS_NonTerm = stringToEnum(firstptr);
         firstptr = strtok(NULL, delim1);
         firstptr = strtok(NULL, delim1);
@@ -764,11 +765,11 @@ void createParseTable(FIRSTANDFOLLOW F) {
     }
 }
 
-TREE_NODE createTreeNode(Elements x, TREE_NODE parent,returnToken k) {
+TREE_NODE createTreeNode(Elements x, TREE_NODE parent,returnToken * k) {
     TREE_NODE y = malloc(sizeof(TreeNode));
     if (x >= NUM_NONTERMS) {
-        y->lexeme = k.lexeme;
-        y->lineNumber = k.line;
+        y->lexeme = k->lexeme;
+        y->lineNumber = k->line;
         // if (x == TK_INT || x == TK_REAL) 
         //     // y->value = strtod(k.lexeme,);
         // else
@@ -784,7 +785,7 @@ TREE_NODE createTreeNode(Elements x, TREE_NODE parent,returnToken k) {
     return y;
 }
 
-int createParseTree(Stack *st, TREE_NODE root, returnToken k) {
+int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
 
 
     /*
@@ -800,68 +801,73 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken k) {
         : Unknown Symbol <lexeme>
     */
     // returnToken k;
-    if (k.flag == -1) {
+    if (k->flag == -1) {
         // printf("%d\n", k.lexeme[2]);
-        if (k.lexeme == NULL) {
+        if (k->lexeme == NULL) {
             printf("123\n");
-            k = getNextToken();
-            printf("%d %d\n",k.t,k.flag);
+            *k = getNextToken();
+            printf("%d %d\n",k->t,k->flag);
             return createParseTree(st, root, k);
         }
-        printf ("Line %d Error : Unknown pattern <%s> \n", k.line, k.lexeme);
-        k = getNextToken();
+        printf ("Line %d Error : Unknown pattern <%s> %d\n", k->line, k->lexeme,k->t);
+        *k = getNextToken();
         return createParseTree(st, root, k);
         // k = getNextToken(); // has to return line number of code and value if
                             // number and lexeme
     }
 
-    printf("%s, %s, %s, %s\n", enumToString[top(st)], enumToString[root->x], enumToString[k.t+NUM_NONTERMS], k.lexeme);
+    printf("%s, %s, %s, %s\n", enumToString[top(st)], enumToString[root->x], enumToString[k->t+NUM_NONTERMS], k->lexeme);
 
-    printf("hehe\n");
+    // printf("hehe\n");
     Elements a = top(st);
 
     // if (k.flag == -1) {
     //     // Error, lexer could not identify token
     // } else 
 
-    if (a != T_DOLLAR && k.flag == -2) {
-        printf("Line %d Error : Some token expected but file abrupty ended\n", k.line);
-        printf("Line %d Error : Input file ended before complete parsing\n", k.line);
+    if (a != T_DOLLAR && k->flag == -2) {
+        printf("Line %d Error : Some token expected but file abrupty ended\n", k->line);
+        printf("Line %d Error : Input file ended before complete parsing\n", k->line);
         return 0;
         // Error, no tokens left but stack is not empty
     }
 
     if (a < NUM_NONTERMS) {
-        ProdRule rule = ParseTable[a][k.t];
+        ProdRule rule = ParseTable[a][k->t];
         // printRule(rule);
         if (rule.LHS >= 0) {
             pop(st);
             root->count_children = rule.count_rhs;
             for (int i = rule.count_rhs - 1; i >= 0; i--) {
-                push(st, rule.RHS[i]);
+                if (rule.RHS[i] != T_EPSILON)
+                    push(st, rule.RHS[i]);
             }
             for (int i = 0; i < rule.count_rhs; i++) {
+                if (rule.RHS[i] == T_EPSILON) {
+                    root->count_children--;
+                    continue;
+                }
                 root->children[i] = createTreeNode(rule.RHS[i], root,k);
                 int y = createParseTree(st,root->children[i],k);
                 if (y == -1) {
-                    k = getNextToken();
-                    printf ("usaahfpouwfho;%s %s %d\n", enumToString[k.t+NUM_NONTERMS], k.lexeme,k.flag);
+                    *k = getNextToken();
+                    // printf ("usaahfpouwfho;%s %s %d\n", enumToString[k->t+NUM_NONTERMS], k->lexeme,k->flag);
                 }
             }
         } else {
             printf("Line %d Error : Invalid Token %s encountered with value %s stack top %s\n", 
-                    k.line, enumToString[k.t+NUM_NONTERMS], k.lexeme, enumToString[a]);
+                    k->line, enumToString[k->t+NUM_NONTERMS], k->lexeme, enumToString[a]);
             if (rule.LHS == -1) {
                 do {
-                    k = getNextToken();
-                    if (k.flag == -1) {
-                        printf ("Line %d Error : Unknown pattern <%s> \n", k.line, k.lexeme);
+                    *k = getNextToken();
+                    if (k->flag == -1) {
+                        printf ("Line %d Error : Unknown pattern <%s> \n", k->line, k->lexeme);
                         continue;
-                    } else if (k.flag == -2) {
+                    } else if (k->flag == -2) {
                         printf("File has ended\n");
                         return 0;
                     }
-                    rule = ParseTable[a][k.t];
+                    rule = ParseTable[a][k->t];
                 } while (rule.LHS == -1);
             }
             if (rule.LHS == -2) {
@@ -878,7 +884,7 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken k) {
                         printf("Stack be empty, tokens left\n");
                         return 0;
                     }
-                    rule = ParseTable[a][k.t];
+                    rule = ParseTable[a][k->t];
 
                 } while (rule.LHS < 0);
             }
@@ -899,14 +905,14 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken k) {
             // Error, syntactically incorrect as no production rule found
         }
     } else {
-        if (k.t == a - NUM_NONTERMS) {
+        if (k->t == a - NUM_NONTERMS) {
             pop(st);
             return -1;
         } else {
             // Error, Incorrect terminal found
 
             // TODO : See prints
-            printf("Line %d Error : The token %s for %s does not match with the expected token %s\n", k.line, enumToString[k.t+NUM_NONTERMS], k.lexeme, enumToString[a]);
+            printf("Line %d Error : The token %s for %s does not match with the expected token %s\n", k->line, enumToString[k->t+NUM_NONTERMS], k->lexeme, enumToString[a]);
             printf("                Token was automatically inserted, resuming parsing\n");
             // k = getNextToken();
             pop(st);
@@ -918,7 +924,7 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken k) {
         if (getNextToken().flag == -2) {
             printf("Code is syntactically correct\n");
         } else {
-            printf("Line %d Error : Extra content in input file\n", k.line);
+            printf("Line %d Error : Extra content in input file\n", k->line);
             // Error, Stack empty but leftover tokens found
         }
     }
@@ -931,10 +937,10 @@ TREE_NODE parseInputSourceCode() {
     push(st, T_DOLLAR);
     push(st, program);
     
-    returnToken r;
-    r.t = -1;
-    r.lexeme = NULL;
-    r.flag = -1;
+    returnToken * r = malloc(sizeof(returnToken));
+    r->t = -1;
+    r->lexeme = NULL;
+    r->flag = -1;
     TREE_NODE root = createTreeNode(program, NULL,r);
     createParseTree(st, root, r);
     return root;
@@ -945,6 +951,7 @@ void inOrderTraversal(FILE *fp, TREE_NODE root) {
     int lineNumber = root->lineNumber;
     char *tokenName = enumToString[root->x];
     char value[10];
+
     char *nodeSymbol = "----";
     char *isLeafNode = "Yes";
     char *parent = "ROOT";
@@ -964,46 +971,35 @@ void inOrderTraversal(FILE *fp, TREE_NODE root) {
 
     fprintf(fp, "%s\t%d\t%s\t%s\t%s\t%s\n", tokenName, lineNumber, value,
             parent, isLeafNode, nodeSymbol);
-    for (int i = 1; i < root->count_children - 1; i++)
+    
+    for (int i = 1; i < root->count_children; i++)
         inOrderTraversal(fp, root->children[i]);
 
     return;
 }
 
 void printParseTree(TREE_NODE root, char *outfile) {
-    FILE *fp = fopen(outfile, "w");
+    FILE *fp = fopen(outfile, "w+");
     inOrderTraversal(fp, root);
     fclose(fp);
     return;
 }
 
-void nonon () {
-    returnToken popo = getNextToken();
-    printf("%s %d\n", popo.lexeme,popo.t);
-    printf("%s\n", enumToString[popo.t+NUM_NONTERMS]);;
-    // printf("NONONO : %s %s\n", enumToString[popo.t], popo.lexeme);
-    while (popo.flag != -2) {
-        if (popo.flag != -1)
-        printf("NONONO : %s %s\n", enumToString[popo.t+NUM_NONTERMS], popo.lexeme);
-        popo = getNextToken();
-    }
-}
 int main(){
-    parseFile("/home/rakshit/Gen/BITS/Sem3-2/CoCo/Compiler-Construction-Project/src/parser/ModifiedGrammar.txt");
+    parseFile("/home/harsh/Compiler-Construction-Project/src/parser/ModifiedGrammar.txt");
     printf("here1\n");
     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
     printf("here2\n");
     initLexer();
-    nonon();
-    // initialiseParseTable();
-    // printf("here3\n");
-    // createParseTable(fnfset);
-    // printf("here4\n");
-    // synchPopulateParseTable(fnfset);
-    // printf("here5\n");
-    // TREE_NODE one = parseInputSourceCode();
-    // printf("here6\n");
-    // printParseTree(one, "hehe.txt");
+    initialiseParseTable();
+    printf("here3\n");
+    createParseTable(fnfset);
+    printf("here4\n");
+    synchPopulateParseTable(fnfset);
+    printf("here5\n");
+    TREE_NODE one = parseInputSourceCode();
+    printf("here6\n");
+    printParseTree(one, "/home/harsh/Compiler-Construction-Project/src/hehe.txt");
     return 0;
 }
 // int main() {

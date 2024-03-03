@@ -64,8 +64,8 @@ ProdRule convertLLtoProd(Elements lhs, NODE_LL rule);
 void initialiseParseTable();
 void entryIntoParseTable(FIRSTANDFOLLOW F, Elements lhs, ProdRule rule);
 void createParseTable(FIRSTANDFOLLOW F);
-TREE_NODE createTreeNode(Elements x,TREE_NODE parent,returnToken k);
-int createParseTree(Stack * st,TREE_NODE root,returnToken flag);
+TREE_NODE createTreeNode(Elements x,TREE_NODE parent,returnToken * k);
+int createParseTree(Stack * st,TREE_NODE root,returnToken * flag);
 TREE_NODE parseInputSourceCode();
 void printParseTree(TREE_NODE root, char *outfile);
 
