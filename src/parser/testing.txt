@@ -1,0 +1,353 @@
+here1
+here2
+MY NIGA
+TK_NULL -> 
+here3
+here4
+here5
+program, program, TK_FUNID, _sumN
+otherFunctions, otherFunctions, TK_FUNID, _sumN
+function, function, TK_FUNID, _sumN
+TK_FUNID, TK_FUNID, TK_FUNID, _sumN
+input_par, input_par, TK_INPUT, input
+TK_INPUT, TK_INPUT, TK_INPUT, input
+TK_PARAMETER, TK_PARAMETER, TK_PARAMETER, parameter
+TK_LIST, TK_LIST, TK_LIST, list
+TK_SQL, TK_SQL, TK_SQL, [
+parameter_list, parameter_list, TK_INT, int
+dataType, dataType, TK_INT, int
+primitiveDatatype, primitiveDatatype, TK_INT, int
+TK_INT, TK_INT, TK_INT, int
+TK_ID, TK_ID, TK_ID, d5cc34
+remaining_list, remaining_list, TK_SQR, ]
+TK_SQR, TK_SQR, TK_SQR, ]
+output_par, output_par, TK_OUTPUT, output
+TK_OUTPUT, TK_OUTPUT, TK_OUTPUT, output
+TK_PARAMETER, TK_PARAMETER, TK_PARAMETER, parameter
+TK_LIST, TK_LIST, TK_LIST, list
+TK_SQL, TK_SQL, TK_SQL, [
+parameter_list, parameter_list, TK_REAL, real
+dataType, dataType, TK_REAL, real
+primitiveDatatype, primitiveDatatype, TK_REAL, real
+TK_REAL, TK_REAL, TK_REAL, real
+TK_ID, TK_ID, TK_ID, d3
+remaining_list, remaining_list, TK_SQR, ]
+TK_SQR, TK_SQR, TK_SQR, ]
+TK_SEM, TK_SEM, TK_SEM, ;
+stmts, stmts, TK_TYPE, type
+typeDefinitions, typeDefinitions, TK_TYPE, type
+declarations, declarations, TK_TYPE, type
+declaration, declaration, TK_TYPE, type
+TK_TYPE, TK_TYPE, TK_TYPE, type
+dataType, dataType, TK_INT, int
+primitiveDatatype, primitiveDatatype, TK_INT, int
+TK_INT, TK_INT, TK_INT, int
+TK_COLON, TK_COLON, TK_COLON, :
+TK_ID, TK_ID, TK_ID, b5b567
+global_or_not, global_or_not, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+declarations, declarations, TK_ID, b5b567
+otherStmts, otherStmts, TK_ID, b5b567
+stmt, stmt, TK_ID, b5b567
+assignmentStmt, assignmentStmt, TK_ID, b5b567
+singleOrRecId, singleOrRecId, TK_ID, b5b567
+TK_ID, TK_ID, TK_ID, b5b567
+option_single_constructed, option_single_constructed, TK_ASSIGNOP, <---
+TK_ASSIGNOP, TK_ASSIGNOP, TK_ASSIGNOP, <---
+arithmeticExpression, arithmeticExpression, TK_NUM, 1
+term, term, TK_NUM, 1
+factor, factor, TK_NUM, 1
+var, var, TK_NUM, 1
+TK_NUM, TK_NUM, TK_NUM, 1
+termPrime, termPrime, TK_SEM, ;
+expPrime, expPrime, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+otherStmts, otherStmts, TK_ID, d3
+stmt, stmt, TK_ID, d3
+assignmentStmt, assignmentStmt, TK_ID, d3
+singleOrRecId, singleOrRecId, TK_ID, d3
+TK_ID, TK_ID, TK_ID, d3
+option_single_constructed, option_single_constructed, TK_ASSIGNOP, <---
+TK_ASSIGNOP, TK_ASSIGNOP, TK_ASSIGNOP, <---
+Line No 8: Error : Unknown pattern <0.0>
+Line 8 Error : Unknown pattern <0.0> 0
+arithmeticExpression, arithmeticExpression, TK_WHILE, while
+Line 9 Error : Invalid Token TK_WHILE encountered with value while stack top arithmeticExpression
+otherStmts, TK_SEM, TK_WHILE, while
+stmt, stmt, TK_WHILE, while
+iterativeStmt, iterativeStmt, TK_WHILE, while
+TK_WHILE, TK_WHILE, TK_WHILE, while
+TK_OP, TK_OP, TK_OP, (
+booleanExpression, booleanExpression, TK_ID, b5b567
+var, var, TK_ID, b5b567
+singleOrRecId, singleOrRecId, TK_ID, b5b567
+TK_ID, TK_ID, TK_ID, b5b567
+option_single_constructed, option_single_constructed, TK_LE, <=
+relationalOp, relationalOp, TK_LE, <=
+TK_LE, TK_LE, TK_LE, <=
+var, var, TK_ID, d5cc34
+singleOrRecId, singleOrRecId, TK_ID, d5cc34
+TK_ID, TK_ID, TK_ID, d5cc34
+option_single_constructed, option_single_constructed, TK_CL, )
+TK_CL, TK_CL, TK_CL, )
+stmt, stmt, TK_READ, read
+ioStmt, ioStmt, TK_READ, read
+TK_READ, TK_READ, TK_READ, read
+TK_OP, TK_OP, TK_OP, (
+var, var, TK_ID, c3bd
+singleOrRecId, singleOrRecId, TK_ID, c3bd
+TK_ID, TK_ID, TK_ID, c3bd
+option_single_constructed, option_single_constructed, TK_CL, )
+TK_CL, TK_CL, TK_CL, )
+TK_SEM, TK_SEM, TK_SEM, ;
+otherStmts, otherStmts, TK_ID, d3
+stmt, stmt, TK_ID, d3
+assignmentStmt, assignmentStmt, TK_ID, d3
+singleOrRecId, singleOrRecId, TK_ID, d3
+TK_ID, TK_ID, TK_ID, d3
+option_single_constructed, option_single_constructed, TK_ASSIGNOP, <---
+TK_ASSIGNOP, TK_ASSIGNOP, TK_ASSIGNOP, <---
+arithmeticExpression, arithmeticExpression, TK_ID, d3
+term, term, TK_ID, d3
+factor, factor, TK_ID, d3
+var, var, TK_ID, d3
+singleOrRecId, singleOrRecId, TK_ID, d3
+TK_ID, TK_ID, TK_ID, d3
+option_single_constructed, option_single_constructed, TK_PLUS, +
+termPrime, termPrime, TK_PLUS, +
+expPrime, expPrime, TK_PLUS, +
+lowPrecedenceOperators, lowPrecedenceOperators, TK_PLUS, +
+TK_PLUS, TK_PLUS, TK_PLUS, +
+term, term, TK_ID, c3bd
+factor, factor, TK_ID, c3bd
+var, var, TK_ID, c3bd
+singleOrRecId, singleOrRecId, TK_ID, c3bd
+TK_ID, TK_ID, TK_ID, c3bd
+option_single_constructed, option_single_constructed, TK_SEM, ;
+termPrime, termPrime, TK_SEM, ;
+expPrime, expPrime, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+otherStmts, otherStmts, TK_ID, b5b567
+stmt, stmt, TK_ID, b5b567
+assignmentStmt, assignmentStmt, TK_ID, b5b567
+singleOrRecId, singleOrRecId, TK_ID, b5b567
+TK_ID, TK_ID, TK_ID, b5b567
+option_single_constructed, option_single_constructed, TK_ASSIGNOP, <---
+TK_ASSIGNOP, TK_ASSIGNOP, TK_ASSIGNOP, <---
+arithmeticExpression, arithmeticExpression, TK_ID, b5b567
+term, term, TK_ID, b5b567
+factor, factor, TK_ID, b5b567
+var, var, TK_ID, b5b567
+singleOrRecId, singleOrRecId, TK_ID, b5b567
+TK_ID, TK_ID, TK_ID, b5b567
+option_single_constructed, option_single_constructed, TK_PLUS, +
+termPrime, termPrime, TK_PLUS, +
+expPrime, expPrime, TK_PLUS, +
+lowPrecedenceOperators, lowPrecedenceOperators, TK_PLUS, +
+TK_PLUS, TK_PLUS, TK_PLUS, +
+Line No 12: Error : Unknown pattern <1.0>
+Line 12 Error : Unknown pattern <1.0> 0
+term, term, TK_RETURN, return
+Line 14 Error : Invalid Token TK_RETURN encountered with value return stack top term
+otherStmts, expPrime, TK_RETURN, return
+TK_ENDWHILE, TK_SEM, TK_RETURN, return
+Line 14 Error : The token TK_RETURN for return does not match with the expected token TK_ENDWHILE
+                Token was automatically inserted, resuming parsing
+otherStmts, TK_SEM, TK_RETURN, return
+returnStmt, otherStmts, TK_RETURN, return
+TK_RETURN, TK_RETURN, TK_RETURN, return
+optionalReturn, optionalReturn, TK_SQL, [
+TK_SQL, TK_SQL, TK_SQL, [
+idList, idList, TK_ID, d3
+TK_ID, TK_ID, TK_ID, d3
+more_ids, more_ids, TK_SQR, ]
+TK_SQR, TK_SQR, TK_SQR, ]
+TK_SEM, TK_SEM, TK_SEM, ;
+TK_END, TK_ENDWHILE, TK_END, end
+otherFunctions, otherStmts, TK_FUNID, _rask
+function, function, TK_FUNID, _rask
+TK_FUNID, TK_FUNID, TK_FUNID, _rask
+input_par, input_par, TK_TYPE, type
+Line 18 Error : Invalid Token TK_TYPE encountered with value type stack top input_par
+stmts, output_par, TK_TYPE, type
+typeDefinitions, typeDefinitions, TK_TYPE, type
+declarations, declarations, TK_TYPE, type
+declaration, declaration, TK_TYPE, type
+TK_TYPE, TK_TYPE, TK_TYPE, type
+dataType, dataType, TK_INT, int
+primitiveDatatype, primitiveDatatype, TK_INT, int
+TK_INT, TK_INT, TK_INT, int
+TK_COLON, TK_COLON, TK_COLON, :
+TK_ID, TK_ID, TK_ID, b3
+global_or_not, global_or_not, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+declarations, declarations, TK_TYPE, type
+declaration, declaration, TK_TYPE, type
+TK_TYPE, TK_TYPE, TK_TYPE, type
+dataType, dataType, TK_REAL, real
+primitiveDatatype, primitiveDatatype, TK_REAL, real
+TK_REAL, TK_REAL, TK_REAL, real
+TK_COLON, TK_COLON, TK_COLON, :
+TK_ID, TK_ID, TK_ID, c4bd56
+global_or_not, global_or_not, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+declarations, declarations, TK_ID, b3
+otherStmts, otherStmts, TK_ID, b3
+stmt, stmt, TK_ID, b3
+assignmentStmt, assignmentStmt, TK_ID, b3
+singleOrRecId, singleOrRecId, TK_ID, b3
+TK_ID, TK_ID, TK_ID, b3
+option_single_constructed, option_single_constructed, TK_ASSIGNOP, <---
+TK_ASSIGNOP, TK_ASSIGNOP, TK_ASSIGNOP, <---
+arithmeticExpression, arithmeticExpression, TK_NUM, 7
+term, term, TK_NUM, 7
+factor, factor, TK_NUM, 7
+var, var, TK_NUM, 7
+TK_NUM, TK_NUM, TK_NUM, 7
+termPrime, termPrime, TK_SEM, ;
+expPrime, expPrime, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+otherStmts, otherStmts, TK_SQL, [
+stmt, stmt, TK_SQL, [
+funCallStmt, funCallStmt, TK_SQL, [
+outputParameters, outputParameters, TK_SQL, [
+TK_SQL, TK_SQL, TK_SQL, [
+idList, idList, TK_ID, c4bd56
+TK_ID, TK_ID, TK_ID, c4bd56
+more_ids, more_ids, TK_SQR, ]
+TK_SQR, TK_SQR, TK_SQR, ]
+TK_ASSIGNOP, TK_ASSIGNOP, TK_ASSIGNOP, <---
+TK_CALL, TK_CALL, TK_CALL, call
+TK_FUNID, TK_FUNID, TK_FUNID, _sumN
+TK_WITH, TK_WITH, TK_WITH, with
+TK_PARAMETERS, TK_PARAMETERS, TK_PARAMETERS, parameters
+inputParameters, inputParameters, TK_SQL, [
+TK_SQL, TK_SQL, TK_SQL, [
+idList, idList, TK_ID, b3
+TK_ID, TK_ID, TK_ID, b3
+more_ids, more_ids, TK_SQR, ]
+TK_SQR, TK_SQR, TK_SQR, ]
+TK_SEM, TK_SEM, TK_SEM, ;
+otherStmts, otherStmts, TK_WRITE, write
+stmt, stmt, TK_WRITE, write
+ioStmt, ioStmt, TK_WRITE, write
+TK_WRITE, TK_WRITE, TK_WRITE, write
+TK_OP, TK_OP, TK_OP, (
+var, var, TK_ID, c4bd56
+singleOrRecId, singleOrRecId, TK_ID, c4bd56
+TK_ID, TK_ID, TK_ID, c4bd56
+option_single_constructed, option_single_constructed, TK_CL, )
+TK_CL, TK_CL, TK_CL, )
+TK_SEM, TK_SEM, TK_SEM, ;
+otherStmts, otherStmts, TK_RETURN, return
+returnStmt, returnStmt, TK_RETURN, return
+TK_RETURN, TK_RETURN, TK_RETURN, return
+optionalReturn, optionalReturn, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+TK_END, TK_SEM, TK_END, end
+otherFunctions, stmts, TK_MAIN, _main
+mainFunction, TK_END, TK_MAIN, _main
+TK_MAIN, TK_MAIN, TK_MAIN, _main
+stmts, stmts, TK_TYPE, type
+typeDefinitions, typeDefinitions, TK_TYPE, type
+declarations, declarations, TK_TYPE, type
+declaration, declaration, TK_TYPE, type
+TK_TYPE, TK_TYPE, TK_TYPE, type
+dataType, dataType, TK_INT, int
+primitiveDatatype, primitiveDatatype, TK_INT, int
+TK_INT, TK_INT, TK_INT, int
+TK_COLON, TK_COLON, TK_COLON, :
+TK_ID, TK_ID, TK_ID, b3
+global_or_not, global_or_not, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+declarations, declarations, TK_TYPE, type
+declaration, declaration, TK_TYPE, type
+TK_TYPE, TK_TYPE, TK_TYPE, type
+dataType, dataType, TK_REAL, real
+primitiveDatatype, primitiveDatatype, TK_REAL, real
+TK_REAL, TK_REAL, TK_REAL, real
+TK_COLON, TK_COLON, TK_COLON, :
+TK_ID, TK_ID, TK_ID, c4bd56
+global_or_not, global_or_not, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+declarations, declarations, TK_ID, b3
+otherStmts, otherStmts, TK_ID, b3
+stmt, stmt, TK_ID, b3
+assignmentStmt, assignmentStmt, TK_ID, b3
+singleOrRecId, singleOrRecId, TK_ID, b3
+TK_ID, TK_ID, TK_ID, b3
+option_single_constructed, option_single_constructed, TK_ASSIGNOP, <---
+TK_ASSIGNOP, TK_ASSIGNOP, TK_ASSIGNOP, <---
+arithmeticExpression, arithmeticExpression, TK_NUM, 7
+term, term, TK_NUM, 7
+factor, factor, TK_NUM, 7
+var, var, TK_NUM, 7
+TK_NUM, TK_NUM, TK_NUM, 7
+termPrime, termPrime, TK_SEM, ;
+expPrime, expPrime, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+otherStmts, otherStmts, TK_SQL, [
+stmt, stmt, TK_SQL, [
+funCallStmt, funCallStmt, TK_SQL, [
+outputParameters, outputParameters, TK_SQL, [
+TK_SQL, TK_SQL, TK_SQL, [
+idList, idList, TK_ID, c4bd56
+TK_ID, TK_ID, TK_ID, c4bd56
+more_ids, more_ids, TK_SQR, ]
+TK_SQR, TK_SQR, TK_SQR, ]
+TK_ASSIGNOP, TK_ASSIGNOP, TK_ASSIGNOP, <---
+TK_CALL, TK_CALL, TK_CALL, call
+TK_FUNID, TK_FUNID, TK_FUNID, _sumN
+TK_WITH, TK_WITH, TK_WITH, with
+TK_PARAMETERS, TK_PARAMETERS, TK_PARAMETERS, parameters
+inputParameters, inputParameters, TK_SQL, [
+TK_SQL, TK_SQL, TK_SQL, [
+idList, idList, TK_ID, b3
+TK_ID, TK_ID, TK_ID, b3
+more_ids, more_ids, TK_SQR, ]
+TK_SQR, TK_SQR, TK_SQR, ]
+TK_SEM, TK_SEM, TK_SEM, ;
+otherStmts, otherStmts, TK_WRITE, write
+stmt, stmt, TK_WRITE, write
+ioStmt, ioStmt, TK_WRITE, write
+TK_WRITE, TK_WRITE, TK_WRITE, write
+TK_OP, TK_OP, TK_OP, (
+var, var, TK_ID, c4bd56
+singleOrRecId, singleOrRecId, TK_ID, c4bd56
+TK_ID, TK_ID, TK_ID, c4bd56
+option_single_constructed, option_single_constructed, TK_CL, )
+TK_CL, TK_CL, TK_CL, )
+TK_SEM, TK_SEM, TK_SEM, ;
+otherStmts, otherStmts, TK_RETURN, return
+returnStmt, returnStmt, TK_RETURN, return
+TK_RETURN, TK_RETURN, TK_RETURN, return
+optionalReturn, optionalReturn, TK_SEM, ;
+TK_SEM, TK_SEM, TK_SEM, ;
+TK_END, TK_END, TK_END, end
+TK_DOLLAR, otherFunctions, TK_NULL, 
+Line 33 Error : The token TK_NULL for  does not match with the expected token TK_DOLLAR
+                Token was automatically inserted, resuming parsing
+Stack is now Empty
+TK_DOLLAR, otherStmts, TK_NULL, 
+Line 33 Error : The token TK_NULL for  does not match with the expected token TK_DOLLAR
+                Token was automatically inserted, resuming parsing
+Stack is now Empty
+TK_DOLLAR, returnStmt, TK_NULL, 
+Line 33 Error : The token TK_NULL for  does not match with the expected token TK_DOLLAR
+                Token was automatically inserted, resuming parsing
+Stack is now Empty
+TK_DOLLAR, TK_END, TK_NULL, 
+Line 33 Error : The token TK_NULL for  does not match with the expected token TK_DOLLAR
+                Token was automatically inserted, resuming parsing
+Stack is now Empty
+TK_DOLLAR, otherFunctions, TK_NULL, 
+Line 33 Error : The token TK_NULL for  does not match with the expected token TK_DOLLAR
+                Token was automatically inserted, resuming parsing
+Stack is now Empty
+TK_DOLLAR, mainFunction, TK_NULL, 
+Line 33 Error : The token TK_NULL for  does not match with the expected token TK_DOLLAR
+                Token was automatically inserted, resuming parsing
+Stack is now Empty
+Code is syntactically correct
+here6
+here7

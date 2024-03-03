@@ -25,19 +25,20 @@ void synchPopulateParseTable(FIRSTANDFOLLOW Fnf){
     // FIRSTANDFOLLOW->fir
     Elements arr[] = {T_ID, T_FUNID, T_RUID, T_WHILE, T_UNION, T_DEFINETYPE, T_TYPE, T_MAIN, T_IF, T_READ, T_WRITE, T_RETURN, T_CALL, T_RECORD, T_THEN, T_ELSE};
     for(int i = 0; i<NUM_NONTERMS; i++){
-        NODE_ELE fol = Fnf->followSet[i]->head;
+        // NODE_ELE fol = Fnf->followSet[i]->head;
     
-        while (fol != NULL) {
-            if (ParseTable[i][fol->item].LHS == -1)
-                ParseTable[i][fol->item].LHS = -2;
-            fol = fol->next;
-        }
+        // while (fol != NULL) {
+        //     if (ParseTable[i][fol->item].LHS == -1)
+        //         ParseTable[i][fol->item].LHS = -2;
+        //     fol = fol->next;
+        // }
         for (int j = 0 ; j < 16 ; j++) {
-            if (ParseTable[i][arr[j]].LHS == -1)
-                ParseTable[i][arr[j]].LHS = -3;
+            if (ParseTable[i][arr[j]-NUM_NONTERMS].LHS == T_NULL)
+                ParseTable[i][arr[j]-NUM_NONTERMS].count_rhs = -1;
         }
         
     }
+    // for (int i = 0 ; )
 }
 // bool terminalBelongsSynchSet(Elements a, Token t){
 //     Elements synchSeta[] = SynchSet[a];
@@ -162,6 +163,14 @@ char *enumToString[] = {"program",
                              "TK_NE",
                              "TK_DOLLAR",
                              "TK_EPSILON"};
+
+void printStack(Stack * st) {
+    NODE_ELE x = st->list->head;
+    while (x) {
+        printf("%s\n",enumToString[x->item]);
+        x = x->next;
+    }
+}
 
 Elements stringToEnum(char *str) {
     if (strcmp(str, "TK_NULL") == 0) {
@@ -409,7 +418,8 @@ void parseFile(char *filename) {
     char buff[1024];
     while (fgets(buff, 1024, fp) != NULL) {
         Elements tempArr[15];
-        memset(tempArr, -1, sizeof(tempArr));
+        for (int i = 0;i<15;i++) tempArr[i] = T_NULL;
+        // memset(tempArr, -1, sizeof(tempArr));
         char delim1[] = " ";
         char delim2[] = "\n";
 
@@ -675,7 +685,9 @@ FIRSTANDFOLLOW ComputeFirstAndFollowSets() {
 ProdRule convertLLtoProd(Elements lhs, NODE_LL rule) {
     ProdRule ans;
     ans.LHS = lhs;
-    memset(ans.RHS, -1, 10 * sizeof(Elements));
+    for (int i = 0 ; i < 10 ; i++)
+        ans.RHS[i] = T_NULL;
+    // memset(ans.RHS, -1, 10 * sizeof(Elements));
     NODE_ELE ptr = rule->item->head;
     int cnt = 0;
     while (ptr) {
@@ -685,17 +697,30 @@ ProdRule convertLLtoProd(Elements lhs, NODE_LL rule) {
     ans.count_rhs = cnt;
     return ans;
 }
+void printRule (ProdRule r) {
+    printf("%s -> ", enumToString[r.LHS]);
+    for (int i = 0;i<r.count_rhs;i++) {
+        printf("%s\t",enumToString[r.RHS[i]]);
+    }
+    printf("\n");
+}
 
 void initialiseParseTable() {
     ProdRule dummy;
-    dummy.LHS = -1;
-    memset(dummy.RHS, -1, 10 * sizeof(Elements));
-    dummy.count_rhs = 0;
-    for (int i = 0; i < 53; i++) {
-        for (int j = 0; j < 59; j++) {
-            ParseTable[i][j] = dummy;
+    // dummy.LHS = -1;
+    // memset(dummy.RHS, -1, 10 * sizeof(Elements));
+    // dummy.count_rhs = 0;
+    for (int i = 0; i < NUM_NONTERMS; i++) {
+        for (int j = 0; j < NUM_TERMS+1; j++) {
+            ParseTable[i][j].LHS = T_NULL;
+            for(int k=0;k<10;k++){
+                ParseTable[i][j].RHS[k]=T_NULL;
+            }
+            ParseTable[i][j].count_rhs = 0;
         }
     }
+    printf("MY NIGA\n");
+    printRule(ParseTable[4][70]);
 }
 
 void entryIntoParseTable(FIRSTANDFOLLOW F, Elements lhs, ProdRule rule) {
@@ -740,19 +765,13 @@ void entryIntoParseTable(FIRSTANDFOLLOW F, Elements lhs, ProdRule rule) {
     NODE_ELE temp4 = setToAdd->head;
     while (temp4) {
         if (temp4->item != T_EPSILON)
-            ParseTable[lhs][temp4->item - 53] = rule;
+            ParseTable[lhs][temp4->item - NUM_NONTERMS] = rule;
         temp4 = temp4->next;
     }
 }
 
 
-void printRule (ProdRule r) {
-    printf("%s -> ", enumToString[r.LHS]);
-    for (int i = 0;i<r.count_rhs;i++) {
-        printf("%s\t",enumToString[r.RHS[i]]);
-    }
-    printf("\n");
-}
+
 void createParseTable(FIRSTANDFOLLOW F) {
     for (int i = 0; i < NUM_NONTERMS; i++) {
         LL_LL rulesForNonTerm = grammar_glob->rules[i];
@@ -810,12 +829,20 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
         }
         printf ("Line %d Error : Unknown pattern <%s> %d\n", k->line, k->lexeme,k->t);
         *k = getNextToken();
+        while (1) {
+            if (ParseTable[0][k->t].LHS == T_NULL && ParseTable[0][k->t].count_rhs == -1)
+                break;
+            *k = getNextToken();
+        }
+
+
         return createParseTree(st, root, k);
         // k = getNextToken(); // has to return line number of code and value if
                             // number and lexeme
     }
     if (root->x == T_EPSILON) return 0;
     // printf("%s, %s, %s, %s\n", enumToString[top(st)], enumToString[root->x], enumToString[k->t+NUM_NONTERMS], k->lexeme);
+            // printStack(st);
 
     // printf("hehe\n");
     Elements a = top(st);
@@ -834,7 +861,7 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
     if (a < NUM_NONTERMS) {
         ProdRule rule = ParseTable[a][k->t];
         // printRule(rule);
-        if (rule.LHS >= 0) {
+        if (rule.LHS != T_NULL) {
             pop(st);
             root->count_children = rule.count_rhs;
             for (int i = rule.count_rhs - 1; i >= 0; i--) {
@@ -854,7 +881,7 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
         } else {
             printf("Line %d Error : Invalid Token %s encountered with value %s stack top %s\n", 
                     k->line, enumToString[k->t+NUM_NONTERMS], k->lexeme, enumToString[a]);
-            if (rule.LHS == -1) {
+            if (rule.LHS == T_NULL && rule.count_rhs==0) {
                 do {
                     *k = getNextToken();
                     if (k->flag == -1) {
@@ -865,14 +892,14 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
                         return 0;
                     }
                     rule = ParseTable[a][k->t];
-                } while (rule.LHS == -1);
+                } while (rule.LHS == T_NULL);
             }
-            if (rule.LHS == -2) {
-                pop(st);
-                int y = createParseTree (st, root, k);
-                return y;
-            }
-            if (rule.LHS == -3) {
+            // if (rule.LHS == -2) {
+            //     pop(st);
+            //     int y = createParseTree (st, root, k);
+            //     return y;
+            // }
+            if (rule.LHS == T_NULL && rule.count_rhs == -1) {
                 do {
                     pop (st);
                     
@@ -881,9 +908,10 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
                         printf("Stack be empty, tokens left\n");
                         return 0;
                     }
+                    if (a < NUM_NONTERMS)
                     rule = ParseTable[a][k->t];
 
-                } while (rule.LHS < 0);
+                } while (rule.LHS == T_NULL);
             }
             
             // int f = 0;
@@ -923,11 +951,14 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
     }
 
     if (top(st) == T_DOLLAR) {
-        if (getNextToken().flag == -2) {
-            if (root->x == program)
+        if (k->flag == -2) {
+            if (root->x == program)  {
                 printf("Code is syntactically correct\n");
+                // exit(0);
+            }
         } else {
             printf("Line %d Error : Extra content in input file\n", k->line);
+            // exit(0);
             // Error, Stack empty but leftover tokens found
         }
     }
@@ -941,7 +972,7 @@ TREE_NODE parseInputSourceCode() {
     push(st, program);
     
     returnToken * r = malloc(sizeof(returnToken));
-    r->t = -1;
+    r->t = TK_NULL;
     r->lexeme = NULL;
     r->flag = -1;
     TREE_NODE root = createTreeNode(program, NULL,r);
@@ -972,7 +1003,7 @@ void inOrderTraversal(FILE *fp, TREE_NODE root) {
         isLeafNode = "No";
     }
 
-    fprintf(fp, "%s\t%d\t%s\t%s\t%s\t%s\n", tokenName, lineNumber, value,
+    fprintf(fp, "%s\t%d\t%s\t%s\t%s\t%s\t%s\n",lexeme,lineNumber,  tokenName, value,
             parent, isLeafNode, nodeSymbol);
     
     for (int i = 1; i < root->count_children; i++)

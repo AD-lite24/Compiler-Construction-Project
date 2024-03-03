@@ -64,7 +64,8 @@ enum Token
     TK_EQ,
     TK_GT,
     TK_GE,
-    TK_NE
+    TK_NE,
+    TK_EOF
 };
 
 typedef enum Token Token;

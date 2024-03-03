@@ -153,7 +153,8 @@ char *tokensArr[] = {
     "TK_EQ",
     "TK_GT",
     "TK_GE",
-    "TK_NE"};
+    "TK_NE",
+    "TK_EOF"};
 
 Token tk;
 TRIE trie;
@@ -290,10 +291,17 @@ returnToken makeReturnToken(int t)
 {
 
     returnToken r;
+    if (t == -2) {
+        r.flag = t;
+        r.t = TK_EOF;
+        r.lexeme = getLexeme(lexemeBegin, forward);
+        r.line = lineNumber;
+        return r;
+    }
     if (t < 0)
     {
         r.flag = t;
-        r.t = t;
+        r.t = TK_NULL;
         r.lexeme = getLexeme(lexemeBegin, forward);
         r.line = lineNumber;
         return r;
@@ -321,7 +329,7 @@ void initializeBuffers()
 {
     buf1 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
     buf2 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
-    fpwcom = fopen("/home/harsh/Compiler-Construction-Project/tests/t2.txt", "r");
+    fpwcom = fopen("/home/harsh/Compiler-Construction-Project/tests/t6.txt", "r");
     fseek(fpwcom, 0, SEEK_SET);
     int readlen;
     if (fpwcom && !feof(fpwcom))
@@ -1269,17 +1277,18 @@ returnToken getNextToken()
 
 void printTokens()
 {
-    lexemeBegin = (char *)malloc(sizeof(char));
-    forward = (char *)malloc(sizeof(char));
-    lexemeBegin = buf1;
-    forward = buf1;
-    state = 0;
-    lineNumber = 1;
-    trie = populateTrie();
-    while (1)
+    // lexemeBegin = (char *)malloc(sizeof(char));
+    // forward = (char *)malloc(sizeof(char));
+    // lexemeBegin = buf1;
+    // forward = buf1;
+    // state = 0;
+    // lineNumber = 1;
+    // trie = populateTrie();
+    returnToken r = getNextToken();
+    while (lineNumber < 100)
     {
-        returnToken r = getNextToken();
-        // printf("token %d\t lexeme %s\t line %d\n", r.t, r.lexeme, r.line);
+        r = getNextToken();
+        printf("token %d\t lexeme %s\t line %d\n", r.t, r.lexeme, r.line);
         if (r.t == -2)
             break;
     }
