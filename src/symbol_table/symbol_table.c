@@ -1,4 +1,4 @@
-#include "symbol_table/symbol_table.h"
+#include "../../include/symbol_table/symbol_table.h"
 #include <stdio.h>
 #include <stdlib.h>
 

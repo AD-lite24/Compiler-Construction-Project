@@ -1,4 +1,4 @@
-#include "symbol_table/symbol_table_tree.h"
+#include "../../include/symbol_table/symbol_table_tree.h"
 #include <stdlib.h>
 
 void insert_node_tree(TREESYM tree, NODETREESYM node) {

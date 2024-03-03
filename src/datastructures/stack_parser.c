@@ -1,4 +1,4 @@
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/datastructures/stack_parser.h"
+#include "../../include/datastructures/stack_parser.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -11,7 +11,7 @@ Stack* createStack(){
 
 void push(Stack* st,Elements element){
     NODE_ELE node=createNewNode_Ele(element);
-    insertNode_EleLast(node,st->list);
+    insertNode_EleFirst(node,st->list);
 }
 
 Elements top(Stack* st){
@@ -22,7 +22,7 @@ void pop(Stack* st){
     if(!st || st->list->count==0 || !st->list){
         return;
     }else{
-        removeNode_EleLast(st->list);
+        removeNode_EleFirst(st->list);
     }
 }
 

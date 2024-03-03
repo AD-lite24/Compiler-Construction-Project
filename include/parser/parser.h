@@ -1,10 +1,10 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/datastructures/linked_list_parser.h"
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/datastructures/stack_parser.h"
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/lexer/lexer.h"
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/lexer/lexerDef.h"
+#include "../datastructures/linked_list_parser.h"
+#include "../datastructures/stack_parser.h"
+#include "../lexer/lexer.h"
+#include "../lexer/lexerDef.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

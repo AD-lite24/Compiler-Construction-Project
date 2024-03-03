@@ -1,8 +1,8 @@
 #ifndef LINKED_L
 #define LINKED_L
 
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/symbol_table/symbol_table.h"
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/parser/parser.h"
+#include "../../include/symbol_table/symbol_table.h"
+#include "../parser/parser.h"
 
 typedef struct Node {
     node_item item;

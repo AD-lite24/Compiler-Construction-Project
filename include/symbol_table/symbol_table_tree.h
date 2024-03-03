@@ -1,8 +1,8 @@
 #ifndef SYMBOL_TABLE_TREE_H
 #define SYMBOL_TABLE_TREE_H
 
-#include "datastructures/hashtable.h"
-#include "symbol_table.h"
+#include "../datastructures/hashtable.h"
+// #include "../symbol_table.h"
 #include <stdio.h>
 
 typedef struct SymbolTree {

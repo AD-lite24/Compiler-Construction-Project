@@ -1,9 +1,9 @@
-#include "../../include/lexer/lexer.h"
-#include "../../include/lexer/lexerDef.h"
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include "../../include/lexer/lexer.h"
+#include "../../include/lexer/lexerDef.h"
 
 void insertIntoTrie(TRIE root, char *word, enum Token tk)
 {
@@ -29,10 +29,12 @@ void insertIntoTrie(TRIE root, char *word, enum Token tk)
     }
 }
 
-TRIE populateTrie() {
+TRIE populateTrie()
+{
     TRIE root = (TRIE)malloc(sizeof(struct Trie));
     root->c = '`';
-    for (int i = 0; i < 26; i++) {
+    for (int i = 0; i < 26; i++)
+    {
         root->next[i] = NULL;
     }
     insertIntoTrie(root, "with", TK_WITH);
@@ -66,14 +68,19 @@ TRIE populateTrie() {
     return root;
 }
 
-enum Token lookupTrie(TRIE root, char *word) {
+enum Token lookupTrie(TRIE root, char *word)
+{
     TRIE current = root;
-    for (int i = 0; i < strlen(word); i++) {
-        if (current->next[word[i] - 'a'] == NULL) {
+    for (int i = 0; i < strlen(word); i++)
+    {
+        if (current->next[word[i] - 'a'] == NULL)
+        {
             return TK_NULL;
-        } else
+        }
+        else
             current = current->next[word[i] - 'a'];
-        if (i == strlen(word) - 1) {
+        if (i == strlen(word) - 1)
+        {
             return current->tk;
         }
     }
@@ -89,27 +96,75 @@ FILE *fpwcom;
 int state;
 int lineNumber;
 char *tokensArr[] = {
-    "TK_NULL",       "TK_ASSIGNOP", "TK_COMMENT",   "TK_FIELDID", "TK_ID",
-    "TK_NUM",        "TK_RNUM",     "TK_FUNID",     "TK_RUID",    "TK_WITH",
-    "TK_PARAMETERS", "TK_END",      "TK_WHILE",     "TK_UNION",   "TK_ENDUNION",
-    "TK_DEFINETYPE", "TK_AS",       "TK_TYPE",      "TK_MAIN",    "TK_GLOBAL",
-    "TK_PARAMETER",  "TK_LIST",     "TK_SQL",       "TK_SQR",     "TK_INPUT",
-    "TK_OUTPUT",     "TK_INT",      "TK_REAL",      "TK_COMMA",   "TK_SEM",
-    "TK_COLON",      "TK_DOT",      "TK_ENDWHILE",  "TK_OP",      "TK_CL",
-    "TK_IF",         "TK_THEN",     "TK_ENDIF",     "TK_READ",    "TK_WRITE",
-    "TK_RETURN",     "TK_PLUS",     "TK_MINUS",     "TK_MUL",     "TK_DIV",
-    "TK_CALL",       "TK_RECORD",   "TK_ENDRECORD", "TK_ELSE",    "TK_AND",
-    "TK_OR",         "TK_NOT",      "TK_LT",        "TK_LE",      "TK_EQ",
-    "TK_GT",         "TK_GE",       "TK_NE"};
+    "TK_NULL",
+    "TK_ASSIGNOP",
+    "TK_COMMENT",
+    "TK_FIELDID",
+    "TK_ID",
+    "TK_NUM",
+    "TK_RNUM",
+    "TK_FUNID",
+    "TK_RUID",
+    "TK_WITH",
+    "TK_PARAMETERS",
+    "TK_END",
+    "TK_WHILE",
+    "TK_UNION",
+    "TK_ENDUNION",
+    "TK_DEFINETYPE",
+    "TK_AS",
+    "TK_TYPE",
+    "TK_MAIN",
+    "TK_GLOBAL",
+    "TK_PARAMETER",
+    "TK_LIST",
+    "TK_SQL",
+    "TK_SQR",
+    "TK_INPUT",
+    "TK_OUTPUT",
+    "TK_INT",
+    "TK_REAL",
+    "TK_COMMA",
+    "TK_SEM",
+    "TK_COLON",
+    "TK_DOT",
+    "TK_ENDWHILE",
+    "TK_OP",
+    "TK_CL",
+    "TK_IF",
+    "TK_THEN",
+    "TK_ENDIF",
+    "TK_READ",
+    "TK_WRITE",
+    "TK_RETURN",
+    "TK_PLUS",
+    "TK_MINUS",
+    "TK_MUL",
+    "TK_DIV",
+    "TK_CALL",
+    "TK_RECORD",
+    "TK_ENDRECORD",
+    "TK_ELSE",
+    "TK_AND",
+    "TK_OR",
+    "TK_NOT",
+    "TK_LT",
+    "TK_LE",
+    "TK_EQ",
+    "TK_GT",
+    "TK_GE",
+    "TK_NE"};
 
 Token tk;
 TRIE trie;
 
-FILE *removeComments(FILE *testcaseFile, FILE *cleanFile) {
+FILE *removeComments(FILE *testcaseFile, FILE *cleanFile)
+{
 
     // open the file in which we supposed to write
 
-    if (testcaseFile == NULL || cleanFile == NULL) {
+    if (testcaseFile == NULL || cleanFile == NULL)
+    {
         // handle error in opening of any file
         printf("Error reading file");
         exit(1);
@@ -120,18 +175,21 @@ FILE *removeComments(FILE *testcaseFile, FILE *cleanFile) {
     // if start==0, no comment is being read
     // if start==1, a comment is being read
 
-    while ((c = fgetc(testcaseFile)) != EOF) {
-        if (c == '%') {
+    while ((c = fgetc(testcaseFile)) != EOF)
+    {
+        if (c == '%')
+        {
             // comment start
             start = 1;
         }
-        if (start == 0) {
+        if (start == 0)
+        {
             // write only when no comment is being read
             fputc(c, cleanFile);
         }
-        if (start == 1 && c == '\n') {
-            // if comment is in progress and we encounter endline, end the
-            // comment
+        if (start == 1 && c == '\n')
+        {
+            // if comment is in progress and we encounter endline, end the comment
             start = 0;
             lineNumber++;
             fputc('\n', cleanFile);
@@ -140,22 +198,22 @@ FILE *removeComments(FILE *testcaseFile, FILE *cleanFile) {
     return cleanFile;
 }
 
-char *getLexeme(char *begin, char *forward) {
-    if ((begin <= (buf1 + BUFFER_SIZE + 1) &&
-         forward <= (buf1 + BUFFER_SIZE + 1)) ||
-        ((begin > (buf1 + BUFFER_SIZE + 1) &&
-          begin <= (buf2 + BUFFER_SIZE + 1)) &&
-         (forward > (buf1 + BUFFER_SIZE + 1)) &&
-         forward <= (buf2 + BUFFER_SIZE + 1))) {
+char *getLexeme(char *begin, char *forward)
+{
+    if ((begin <= (buf1 + BUFFER_SIZE + 1) && forward <= (buf1 + BUFFER_SIZE + 1)) || ((begin > (buf1 + BUFFER_SIZE + 1) && begin <= (buf2 + BUFFER_SIZE + 1)) && (forward > (buf1 + BUFFER_SIZE + 1)) && forward <= (buf2 + BUFFER_SIZE + 1)))
+    {
         char *res = (char *)malloc(sizeof(char) * (forward - begin));
         memcpy(res, begin, forward - begin - 1);
         res[forward - begin - 1] = '\0';
         return res;
-    } else {
-        if (begin <= (buf1 + BUFFER_SIZE + 1) &&
-            forward <= (buf2 + BUFFER_SIZE + 1)) {
+    }
+    else
+    {
+        if (begin <= (buf1 + BUFFER_SIZE + 1) && forward <= (buf2 + BUFFER_SIZE + 1))
+        {
             char *temp = (char *)malloc(sizeof(char));
-            while (*temp != '\0') {
+            while (*temp != '\0')
+            {
                 temp++;
             }
             char *temp1 = (char *)malloc(sizeof(char) * (temp - begin));
@@ -164,14 +222,16 @@ char *getLexeme(char *begin, char *forward) {
             char *temp2 = (char *)malloc(sizeof(char) * (forward - buf2));
             memcpy(temp2, buf2, forward - buf2 - 1);
             temp2[forward - buf2 - 1] = '\0';
-            char *res = (char *)malloc(sizeof(char) *
-                                       (strlen(temp1) + strlen(temp2) + 1));
+            char *res = (char *)malloc(sizeof(char) * (strlen(temp1) + strlen(temp2) + 1));
             strcpy(res, temp1);
             strcat(res, temp2);
             return res;
-        } else {
+        }
+        else
+        {
             char *temp = (char *)malloc(sizeof(char));
-            while (*temp != '\0') {
+            while (*temp != '\0')
+            {
                 temp++;
             }
             char *temp1 = (char *)malloc(sizeof(char) * (temp - begin));
@@ -180,8 +240,7 @@ char *getLexeme(char *begin, char *forward) {
             char *temp2 = (char *)malloc(sizeof(char) * (forward - buf1));
             memcpy(temp2, buf1, forward - buf1 - 1);
             temp2[forward - buf1 - 1] = '\0';
-            char *res = (char *)malloc(sizeof(char) *
-                                       (strlen(temp1) + strlen(temp2) + 1));
+            char *res = (char *)malloc(sizeof(char) * (strlen(temp1) + strlen(temp2) + 1));
             strcpy(res, temp1);
             strcat(res, temp2);
             return res;
@@ -189,13 +248,17 @@ char *getLexeme(char *begin, char *forward) {
     }
 }
 
-void failure() {
-    if (strlen(getLexeme(lexemeBegin, forward)) == 1) {
+void failure()
+{
+    if (strlen(getLexeme(lexemeBegin, forward)) == 1)
+    {
         printf("Line No %d: ", lineNumber);
         printf("Error : Unknown symbol <");
         printf("%s", getLexeme(lexemeBegin, forward));
         printf(">\n");
-    } else {
+    }
+    else
+    {
         printf("Line No %d: ", lineNumber);
         printf("Error : Unknown pattern <");
         printf("%s", getLexeme(lexemeBegin, forward));
@@ -203,56 +266,65 @@ void failure() {
     }
 }
 
-void printToken(Token tk) {
-    if (tk != TK_ID || strlen(getLexeme(lexemeBegin, forward)) <= 20) {
+void printToken(Token tk)
+{
+    if (tk != TK_ID || strlen(getLexeme(lexemeBegin, forward)) <= 20)
+    {
         printf("Line no. %d", lineNumber);
         printf("\t ");
         printf("Lexeme %s", getLexeme(lexemeBegin, forward));
         printf("\t\t ");
         printf("Token ");
         printf("%s\n", tokensArr[tk]);
-    } else {
+    }
+    else
+    {
         printf("Line no. %d", lineNumber);
         printf("\t ");
-        printf("Error :Variable Identifier is longer than the prescribed "
-               "length of 20 characters");
+        printf("Error :Variable Identifier is longer than the prescribed length of 20 characters");
         printf("\n");
     }
 }
 
-returnToken makeReturnToken(int flag) {
+returnToken makeReturnToken(int t)
+{
+
     returnToken r;
-    if (flag < 0) {
-        r.flag = flag;
+    if (t < 0)
+    {
+        r.flag = t;
+        r.t = t;
         r.lexeme = getLexeme(lexemeBegin, forward);
         r.line = lineNumber;
-        r.t = flag;
         return r;
     }
-    r.t = flag;
+    r.t = t;
     r.line = lineNumber;
     char *lex = getLexeme(lexemeBegin, forward);
-    if (tk != TK_ID || strlen(lex) <= 20) {
+    if (tk != TK_ID || strlen(lex) <= 20)
+    {
         r.lexeme = lex;
-    } else {
-        printf("Line No. %d\t Error :Variable Identifier is longer than the "
-               "prescribed length of 20 characters %s\n",
-               lineNumber, lex);
+    }
+    else
+    {
+        printf("Line No. %d\t Error :Variable Identifier is longer than the prescribed length of 20 characters %s\n", lineNumber, lex);
         r.lexeme = lex;
+        // r.t = -1;
         r.flag = -1;
     }
-    // printf("line %d\t token %d\t lexeme %s\n", r.line, r.t, r.lexeme);
+    printf("line %d\t token %d\t lexeme %s\n", r.line, r.t, r.lexeme);
     return r;
 }
 
-void initializeBuffers() {
+void initializeBuffers()
+{
     buf1 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
     buf2 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
-    fpwcom = fopen("/home/rakshit/Gen/BITS/Sem3-2/CoCo/Compiler-Construction-Project/tests/t2.txt","r");
-    // fseek(fpwcom, 0, SEEK_SET);
-    int readlen = 0;
-    // printf("%d %pwaa\n", readlen, (fpwcom));
-    if (fpwcom && !feof(fpwcom)) {
+    fpwcom = fopen("/home/rakshit/Gen/BITS/Sem3-2/CoCo/Compiler-Construction-Project/tests/t2.txt", "r");
+    fseek(fpwcom, 0, SEEK_SET);
+    int readlen;
+    if (fpwcom && !feof(fpwcom))
+    {
         readlen = fread(buf1, sizeof(char), BUFFER_SIZE, fpwcom);
     }
     if (feof(fpwcom))
@@ -260,7 +332,8 @@ void initializeBuffers() {
     buf1[readlen++] = '\0';
 }
 
-void reloadBuffer(char *buf) {
+void reloadBuffer(char *buf)
+{
     int readlen;
     if (fpwcom && !feof(fpwcom))
         readlen = fread(buf, sizeof(char), BUFFER_SIZE, fpwcom);
@@ -269,8 +342,10 @@ void reloadBuffer(char *buf) {
     buf[readlen++] = '\0';
 }
 
-void incrementLexemeBegin(int val) {
-    for (int i = 0; i < val; i++) {
+void incrementLexemeBegin(int val)
+{
+    for (int i = 0; i < val; i++)
+    {
         if (*(lexemeBegin + 1) != '\0')
             lexemeBegin++;
         else if ((lexemeBegin - buf1) < BUFFER_SIZE + 2)
@@ -280,26 +355,36 @@ void incrementLexemeBegin(int val) {
     }
 }
 
-void decrementForward(int val) {
-    if (forward == buf1) {
+void decrementForward(int val)
+{
+    if (forward == buf1)
+    {
         forward = buf2 + BUFFER_SIZE - val;
-    } else if (forward == buf2) {
+    }
+    else if (forward == buf2)
+    {
         forward = buf1 + BUFFER_SIZE - val;
-    } else {
+    }
+    else
+    {
         forward -= val;
     }
 }
 
-void incrementForward() {
-    if ((forward) == (buf1 + BUFFER_SIZE + 1) ||
-        (forward) == (buf1 + BUFFER_SIZE + 2)) {
+void incrementForward()
+{
+    if ((forward) == (buf1 + BUFFER_SIZE + 1) || (forward) == (buf1 + BUFFER_SIZE + 2))
+    {
         reloadBuffer(buf2);
         forward = buf2;
-    } else if ((forward) == (buf2 + BUFFER_SIZE + 1) ||
-               (forward) == (buf2 + BUFFER_SIZE + 2)) {
+    }
+    else if ((forward) == (buf2 + BUFFER_SIZE + 1) || (forward) == (buf2 + BUFFER_SIZE + 2))
+    {
         reloadBuffer(buf1);
         forward = buf1;
-    } else {
+    }
+    else
+    {
         forward++;
     }
 }
@@ -329,7 +414,7 @@ returnToken getNextToken()
         {
             // terminate lexical analysis
             r = makeReturnToken(-2);
-            
+            ;
             return r;
         }
         break;
@@ -1175,6 +1260,23 @@ returnToken getNextToken()
     }
 }
 
+void printTokens()
+{
+    lexemeBegin = (char *)malloc(sizeof(char));
+    forward = (char *)malloc(sizeof(char));
+    lexemeBegin = buf1;
+    forward = buf1;
+    state = 0;
+    lineNumber = 1;
+    trie = populateTrie();
+    while (1)
+    {
+        returnToken r = getNextToken();
+        // printf("token %d\t lexeme %s\t line %d\n", r.t, r.lexeme, r.line);
+        if (r.t == -2)
+            break;
+    }
+}
 
 void initLexer() {
     initializeBuffers();
@@ -1185,22 +1287,6 @@ void initLexer() {
     state = 0;
     lineNumber = 1;
     trie = populateTrie();
-}
-
-void printTokens() {
-    lexemeBegin = (char *)malloc(sizeof(char));
-    forward = (char *)malloc(sizeof(char));
-    lexemeBegin = buf1;
-    forward = buf1;
-    state = 0;
-    lineNumber = 1;
-    trie = populateTrie();
-    while (1) {
-        returnToken r = getNextToken();
-        // printf("token %d\t lexeme %s\t line %d\n", r.t, r.lexeme, r.line);
-        if (r.t == -2)
-            break;
-    }
 }
 
 // int main()

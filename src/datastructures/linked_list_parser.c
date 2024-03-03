@@ -1,4 +1,4 @@
-#include "/mnt/d/Coco/Compiler-Construction-Project/include/datastructures/linked_list_parser.h"
+#include "../../include/datastructures/linked_list_parser.h"
 // #include "symbol_table/symbol_table.h"
 #include <stdlib.h>
 
