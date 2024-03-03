@@ -804,9 +804,8 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
     if (k->flag == -1) {
         // printf("%d\n", k.lexeme[2]);
         if (k->lexeme == NULL) {
-            printf("123\n");
             *k = getNextToken();
-            printf("%d %d\n",k->t,k->flag);
+            // printf("%d %d\n",k->t,k->flag);
             return createParseTree(st, root, k);
         }
         printf ("Line %d Error : Unknown pattern <%s> %d\n", k->line, k->lexeme,k->t);
@@ -815,8 +814,8 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
         // k = getNextToken(); // has to return line number of code and value if
                             // number and lexeme
     }
-
-    printf("%s, %s, %s, %s\n", enumToString[top(st)], enumToString[root->x], enumToString[k->t+NUM_NONTERMS], k->lexeme);
+    if (root->x == T_EPSILON) return 0;
+    // printf("%s, %s, %s, %s\n", enumToString[top(st)], enumToString[root->x], enumToString[k->t+NUM_NONTERMS], k->lexeme);
 
     // printf("hehe\n");
     Elements a = top(st);
@@ -843,10 +842,7 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
                     push(st, rule.RHS[i]);
             }
             for (int i = 0; i < rule.count_rhs; i++) {
-                if (rule.RHS[i] == T_EPSILON) {
-                    root->count_children--;
-                    continue;
-                }
+                
                 root->children[i] = createTreeNode(rule.RHS[i], root,k);
                 int y = createParseTree(st,root->children[i],k);
                 if (y == -1) {
@@ -854,6 +850,7 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
                     // printf ("usaahfpouwfho;%s %s %d\n", enumToString[k->t+NUM_NONTERMS], k->lexeme,k->flag);
                 }
             }
+
         } else {
             printf("Line %d Error : Invalid Token %s encountered with value %s stack top %s\n", 
                     k->line, enumToString[k->t+NUM_NONTERMS], k->lexeme, enumToString[a]);
@@ -915,14 +912,20 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
             printf("Line %d Error : The token %s for %s does not match with the expected token %s\n", k->line, enumToString[k->t+NUM_NONTERMS], k->lexeme, enumToString[a]);
             printf("                Token was automatically inserted, resuming parsing\n");
             // k = getNextToken();
+            if (top(st) == T_DOLLAR) {
+                printf("Stack is now Empty\n");
+                return 0;
+            }
             pop(st);
+
             return createParseTree(st, root, k);
         }
     }
 
     if (top(st) == T_DOLLAR) {
         if (getNextToken().flag == -2) {
-            printf("Code is syntactically correct\n");
+            if (root->x == program)
+                printf("Code is syntactically correct\n");
         } else {
             printf("Line %d Error : Extra content in input file\n", k->line);
             // Error, Stack empty but leftover tokens found
@@ -1000,6 +1003,7 @@ int main(){
     TREE_NODE one = parseInputSourceCode();
     printf("here6\n");
     printParseTree(one, "/home/harsh/Compiler-Construction-Project/src/hehe.txt");
+    printf("here7\n");
     return 0;
 }
 // int main() {
