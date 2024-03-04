@@ -3,134 +3,136 @@
 
 #include <stdbool.h>
 
-void synchPopulateParseTable(FIRSTANDFOLLOW Fnf){
-    Elements arr[] = {T_ID, T_FUNID, T_RUID, T_WHILE, T_UNION, T_DEFINETYPE, T_TYPE, T_MAIN, T_IF, T_READ, T_WRITE, T_RETURN, T_CALL, T_RECORD, T_THEN, T_ELSE};
-    for(int i = 0; i<NUM_NONTERMS; i++){
-        for (int j = 0 ; j < 16 ; j++) {
-            if (ParseTable[i][arr[j]-NUM_NONTERMS].LHS == T_NULL)
-                ParseTable[i][arr[j]-NUM_NONTERMS].count_rhs = -1;
+void synchPopulateParseTable(FIRSTANDFOLLOW Fnf) {
+    Elements arr[] = {T_ID,   T_FUNID,  T_RUID, T_WHILE, T_UNION, T_DEFINETYPE,
+                      T_TYPE, T_MAIN,   T_IF,   T_READ,  T_WRITE, T_RETURN,
+                      T_CALL, T_RECORD, T_THEN, T_ELSE};
+    for (int i = 0; i < NUM_NONTERMS; i++) {
+        for (int j = 0; j < 16; j++) {
+            if (ParseTable[i][arr[j] - NUM_NONTERMS].LHS == T_NULL)
+                ParseTable[i][arr[j] - NUM_NONTERMS].count_rhs = -1;
         }
     }
 }
 
 char *enumToString[] = {"program",
-                             "mainFunction",
-                             "otherFunctions",
-                             "function",
-                             "input_par",
-                             "output_par",
-                             "parameter_list",
-                             "dataType",
-                             "primitiveDatatype",
-                             "constructedDatatype",
-                             "remaining_list",
-                             "stmts",
-                             "typeDefinitions",
-                             "actualOrRedefined",
-                             "typeDefinition",
-                             "fieldDefinitions",
-                             "fieldDefinition",
-                             "fieldType",
-                             "moreFields",
-                             "declarations",
-                             "declaration",
-                             "global_or_not",
-                             "otherStmts",
-                             "stmt",
-                             "assignmentStmt",
-                             "singleOrRecId",
-                             "option_single_constructed",
-                             "oneExpansion",
-                             "moreExpansions",
-                             "funCallStmt",
-                             "outputParameters",
-                             "inputParameters",
-                             "iterativeStmt",
-                             "conditionalStmt",
-                             "elsePart",
-                             "ioStmt",
-                             "arithmeticExpression",
-                             "expPrime",
-                             "term",
-                             "termPrime",
-                             "factor",
-                             "highPrecedenceOperator",
-                             "lowPrecedenceOperators",
-                             "booleanExpression",
-                             "var",
-                             "logicalOp",
-                             "relationalOp",
-                             "returnStmt",
-                             "optionalReturn",
-                             "idList",
-                             "more_ids",
-                             "definetypestmt",
-                             "A",
-                             "TK_NULL",
-                             "TK_ASSIGNOP",
-                             "TK_COMMENT",
-                             "TK_FIELDID",
-                             "TK_ID",
-                             "TK_NUM",
-                             "TK_RNUM",
-                             "TK_FUNID",
-                             "TK_RUID",
-                             "TK_WITH",
-                             "TK_PARAMETERS",
-                             "TK_END",
-                             "TK_WHILE",
-                             "TK_UNION",
-                             "TK_ENDUNION",
-                             "TK_DEFINETYPE",
-                             "TK_AS",
-                             "TK_TYPE",
-                             "TK_MAIN",
-                             "TK_GLOBAL",
-                             "TK_PARAMETER",
-                             "TK_LIST",
-                             "TK_SQL",
-                             "TK_SQR",
-                             "TK_INPUT",
-                             "TK_OUTPUT",
-                             "TK_INT",
-                             "TK_REAL",
-                             "TK_COMMA",
-                             "TK_SEM",
-                             "TK_COLON",
-                             "TK_DOT",
-                             "TK_ENDWHILE",
-                             "TK_OP",
-                             "TK_CL",
-                             "TK_IF",
-                             "TK_THEN",
-                             "TK_ENDIF",
-                             "TK_READ",
-                             "TK_WRITE",
-                             "TK_RETURN",
-                             "TK_PLUS",
-                             "TK_MINUS",
-                             "TK_MUL",
-                             "TK_DIV",
-                             "TK_CALL",
-                             "TK_RECORD",
-                             "TK_ENDRECORD",
-                             "TK_ELSE",
-                             "TK_AND",
-                             "TK_OR",
-                             "TK_NOT",
-                             "TK_LT",
-                             "TK_LE",
-                             "TK_EQ",
-                             "TK_GT",
-                             "TK_GE",
-                             "TK_NE",
-                             "TK_DOLLAR",
-                             "TK_EPSILON"};
+                        "mainFunction",
+                        "otherFunctions",
+                        "function",
+                        "input_par",
+                        "output_par",
+                        "parameter_list",
+                        "dataType",
+                        "primitiveDatatype",
+                        "constructedDatatype",
+                        "remaining_list",
+                        "stmts",
+                        "typeDefinitions",
+                        "actualOrRedefined",
+                        "typeDefinition",
+                        "fieldDefinitions",
+                        "fieldDefinition",
+                        "fieldType",
+                        "moreFields",
+                        "declarations",
+                        "declaration",
+                        "global_or_not",
+                        "otherStmts",
+                        "stmt",
+                        "assignmentStmt",
+                        "singleOrRecId",
+                        "option_single_constructed",
+                        "oneExpansion",
+                        "moreExpansions",
+                        "funCallStmt",
+                        "outputParameters",
+                        "inputParameters",
+                        "iterativeStmt",
+                        "conditionalStmt",
+                        "elsePart",
+                        "ioStmt",
+                        "arithmeticExpression",
+                        "expPrime",
+                        "term",
+                        "termPrime",
+                        "factor",
+                        "highPrecedenceOperator",
+                        "lowPrecedenceOperators",
+                        "booleanExpression",
+                        "var",
+                        "logicalOp",
+                        "relationalOp",
+                        "returnStmt",
+                        "optionalReturn",
+                        "idList",
+                        "more_ids",
+                        "definetypestmt",
+                        "A",
+                        "TK_NULL",
+                        "TK_ASSIGNOP",
+                        "TK_COMMENT",
+                        "TK_FIELDID",
+                        "TK_ID",
+                        "TK_NUM",
+                        "TK_RNUM",
+                        "TK_FUNID",
+                        "TK_RUID",
+                        "TK_WITH",
+                        "TK_PARAMETERS",
+                        "TK_END",
+                        "TK_WHILE",
+                        "TK_UNION",
+                        "TK_ENDUNION",
+                        "TK_DEFINETYPE",
+                        "TK_AS",
+                        "TK_TYPE",
+                        "TK_MAIN",
+                        "TK_GLOBAL",
+                        "TK_PARAMETER",
+                        "TK_LIST",
+                        "TK_SQL",
+                        "TK_SQR",
+                        "TK_INPUT",
+                        "TK_OUTPUT",
+                        "TK_INT",
+                        "TK_REAL",
+                        "TK_COMMA",
+                        "TK_SEM",
+                        "TK_COLON",
+                        "TK_DOT",
+                        "TK_ENDWHILE",
+                        "TK_OP",
+                        "TK_CL",
+                        "TK_IF",
+                        "TK_THEN",
+                        "TK_ENDIF",
+                        "TK_READ",
+                        "TK_WRITE",
+                        "TK_RETURN",
+                        "TK_PLUS",
+                        "TK_MINUS",
+                        "TK_MUL",
+                        "TK_DIV",
+                        "TK_CALL",
+                        "TK_RECORD",
+                        "TK_ENDRECORD",
+                        "TK_ELSE",
+                        "TK_AND",
+                        "TK_OR",
+                        "TK_NOT",
+                        "TK_LT",
+                        "TK_LE",
+                        "TK_EQ",
+                        "TK_GT",
+                        "TK_GE",
+                        "TK_NE",
+                        "TK_DOLLAR",
+                        "TK_EPSILON"};
 
-void printStack(Stack * st) {
+void printStack(Stack *st) {
     NODE_ELE x = st->list->head;
     while (x) {
-        printf("%s\n",enumToString[x->item]);
+        printf("%s\n", enumToString[x->item]);
         x = x->next;
     }
 }
@@ -381,7 +383,8 @@ void parseFile(char *filename) {
     char buff[1024];
     while (fgets(buff, 1024, fp) != NULL) {
         Elements tempArr[15];
-        for (int i = 0;i<15;i++) tempArr[i] = T_NULL;
+        for (int i = 0; i < 15; i++)
+            tempArr[i] = T_NULL;
         // memset(tempArr, -1, sizeof(tempArr));
         char delim1[] = " ";
         char delim2[] = "\n";
@@ -648,7 +651,7 @@ FIRSTANDFOLLOW ComputeFirstAndFollowSets() {
 ProdRule convertLLtoProd(Elements lhs, NODE_LL rule) {
     ProdRule ans;
     ans.LHS = lhs;
-    for (int i = 0 ; i < 10 ; i++)
+    for (int i = 0; i < 10; i++)
         ans.RHS[i] = T_NULL;
     // memset(ans.RHS, -1, 10 * sizeof(Elements));
     NODE_ELE ptr = rule->item->head;
@@ -660,20 +663,20 @@ ProdRule convertLLtoProd(Elements lhs, NODE_LL rule) {
     ans.count_rhs = cnt;
     return ans;
 }
-void printRule (ProdRule r) {
+void printRule(ProdRule r) {
     printf("%s -> ", enumToString[r.LHS]);
-    for (int i = 0;i<r.count_rhs;i++) {
-        printf("%s\t",enumToString[r.RHS[i]]);
+    for (int i = 0; i < r.count_rhs; i++) {
+        printf("%s\t", enumToString[r.RHS[i]]);
     }
     printf("\n");
 }
 
 void initialiseParseTable() {
     for (int i = 0; i < NUM_NONTERMS; i++) {
-        for (int j = 0; j < NUM_TERMS+1; j++) {
+        for (int j = 0; j < NUM_TERMS + 1; j++) {
             ParseTable[i][j].LHS = T_NULL;
-            for(int k=0;k<10;k++){
-                ParseTable[i][j].RHS[k]=T_NULL;
+            for (int k = 0; k < 10; k++) {
+                ParseTable[i][j].RHS[k] = T_NULL;
             }
             ParseTable[i][j].count_rhs = 0;
         }
@@ -727,8 +730,6 @@ void entryIntoParseTable(FIRSTANDFOLLOW F, Elements lhs, ProdRule rule) {
     }
 }
 
-
-
 void createParseTable(FIRSTANDFOLLOW F) {
     for (int i = 0; i < NUM_NONTERMS; i++) {
         LL_LL rulesForNonTerm = grammar_glob->rules[i];
@@ -741,7 +742,7 @@ void createParseTable(FIRSTANDFOLLOW F) {
     }
 }
 
-TREE_NODE createTreeNode(Elements x, TREE_NODE parent,returnToken * k) {
+TREE_NODE createTreeNode(Elements x, TREE_NODE parent, returnToken *k) {
     TREE_NODE y = malloc(sizeof(TreeNode));
     if (x >= NUM_NONTERMS) {
         y->lexeme = k->lexeme;
@@ -757,7 +758,7 @@ TREE_NODE createTreeNode(Elements x, TREE_NODE parent,returnToken * k) {
     return y;
 }
 
-int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
+int createParseTree(Stack *st, TREE_NODE root, returnToken *k) {
     // Invalid Token
     if (k->flag == -1) {
         // Start of File
@@ -777,15 +778,18 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
                 return 0;
             }
             // Reached a terminal present in SynchArray
-            if (ParseTable[0][k->t].LHS == T_NULL && ParseTable[0][k->t].count_rhs == -1)
+            if (ParseTable[0][k->t].LHS == T_NULL &&
+                ParseTable[0][k->t].count_rhs == -1)
                 break;
         } while (1);
         return createParseTree(st, root, k);
     }
-    if (root->x == T_EPSILON) return 0;
+    if (root->x == T_EPSILON)
+        return 0;
 
-    // Uncomment to see input token and top of stack, and line until which code is running    
-    // printf("Line %d : %s, %s\n", k->line, enumToString[top(st)], enumToString[k->t+NUM_NONTERMS]);
+    // Uncomment to see input token and top of stack, and line until which code
+    // is running printf("Line %d : %s, %s\n", k->line, enumToString[top(st)],
+    // enumToString[k->t+NUM_NONTERMS]);
     Elements a = top(st);
     if (a == T_DOLLAR && k->flag != -2) {
         printf("Wont ever expand\n");
@@ -793,8 +797,10 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
     }
 
     if (a != T_DOLLAR && k->flag == -2) {
-        printf("Line %d Error : Some token expected but file abrupty ended\n", k->line);
-        // printf("Line %d Error : Input file ended before complete parsing\n", k->line);
+        printf("Line %d Error : Some token expected but file abrupty ended\n",
+               k->line);
+        // printf("Line %d Error : Input file ended before complete parsing\n",
+        // k->line);
         return 0;
         // Error, no tokens left but stack is not empty
     }
@@ -810,24 +816,28 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
                     push(st, rule.RHS[i]);
             }
             for (int i = 0; i < rule.count_rhs; i++) {
-                
-                root->children[i] = createTreeNode(rule.RHS[i], root,k);
-                int y = createParseTree(st,root->children[i],k);
+
+                root->children[i] = createTreeNode(rule.RHS[i], root, k);
+                int y = createParseTree(st, root->children[i], k);
                 if (y == -1) {
                     *k = getNextToken();
-                    // printf ("usaahfpouwfho;%s %s %d\n", enumToString[k->t+NUM_NONTERMS], k->lexeme,k->flag);
+                    // printf ("usaahfpouwfho;%s %s %d\n",
+                    // enumToString[k->t+NUM_NONTERMS], k->lexeme,k->flag);
                 }
             }
 
         } else {
-            printf("Line %d Error : Invalid Token %s encountered with value %s stack top %s\n", 
-                    k->line, enumToString[k->t+NUM_NONTERMS], k->lexeme, enumToString[a]);
-            if (rule.LHS == T_NULL && rule.count_rhs==0) {
+            printf("Line %d Error : Invalid Token %s encountered with value %s "
+                   "stack top %s\n",
+                   k->line, enumToString[k->t + NUM_NONTERMS], k->lexeme,
+                   enumToString[a]);
+            if (rule.LHS == T_NULL && rule.count_rhs == 0) {
                 do {
                     *k = getNextToken();
                     if (k->flag == -1) {
                         // Unknown patter/symbol has appeared
-                        // printf ("Line %d Error : Unknown pattern <%s> \n", k->line, k->lexeme);
+                        // printf ("Line %d Error : Unknown pattern <%s> \n",
+                        // k->line, k->lexeme);
                         continue;
                     } else if (k->flag == -2) {
                         printf("File has ended\n");
@@ -838,15 +848,15 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
             }
             if (rule.LHS == T_NULL && rule.count_rhs == -1) {
                 do {
-                    pop (st);
-                    
+                    pop(st);
+
                     a = top(st);
                     if (a == T_DOLLAR) {
                         printf("Stack be empty, tokens left\n");
                         break;
                     }
                     if (a < NUM_NONTERMS)
-                    rule = ParseTable[a][k->t];
+                        rule = ParseTable[a][k->t];
 
                 } while (rule.LHS == T_NULL);
             }
@@ -860,7 +870,10 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
             // Error, Incorrect terminal found
 
             // TODO : See prints
-            printf("Line %d Error : The token %s for %s does not match with the expected token %s\n", k->line, enumToString[k->t+NUM_NONTERMS], k->lexeme, enumToString[a]);
+            printf("Line %d Error : The token %s for %s does not match with "
+                   "the expected token %s\n",
+                   k->line, enumToString[k->t + NUM_NONTERMS], k->lexeme,
+                   enumToString[a]);
             // k = getNextToken();
             if (top(st) == T_DOLLAR) {
                 printf("Stack is now Empty\n");
@@ -874,7 +887,7 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
 
     if (top(st) == T_DOLLAR) {
         if (k->flag == -2) {
-            if (root->x == program)  {
+            if (root->x == program) {
                 printf("Code is syntactically correct\n");
                 // exit(0);
             }
@@ -892,12 +905,12 @@ TREE_NODE parseInputSourceCode() {
     Stack *st = createStack();
     push(st, T_DOLLAR);
     push(st, program);
-    
-    returnToken * r = malloc(sizeof(returnToken));
+
+    returnToken *r = malloc(sizeof(returnToken));
     r->t = TK_NULL;
     r->lexeme = NULL;
     r->flag = -1;
-    TREE_NODE root = createTreeNode(program, NULL,r);
+    TREE_NODE root = createTreeNode(program, NULL, r);
     createParseTree(st, root, r);
     return root;
 }
@@ -925,9 +938,9 @@ void inOrderTraversal(FILE *fp, TREE_NODE root) {
         isLeafNode = "No";
     }
 
-    fprintf(fp, "%s\t%d\t%s\t%s\t%s\t%s\t%s\n",lexeme,lineNumber,  tokenName, value,
-            parent, isLeafNode, nodeSymbol);
-    
+    fprintf(fp, "%s\t%d\t%s\t%s\t%s\t%s\t%s\n", lexeme, lineNumber, tokenName,
+            value, parent, isLeafNode, nodeSymbol);
+
     for (int i = 1; i < root->count_children; i++)
         inOrderTraversal(fp, root->children[i]);
 
@@ -941,15 +954,17 @@ void printParseTree(TREE_NODE root, char *outfile) {
     return;
 }
 
-int main(){
-    parseFile("/home/rakshit/Gen/BITS/Sem3-2/CoCo/Compiler-Construction-Project/src/parser/ModifiedGrammar.txt");
+int main() {
+    parseFile("/home/rakshit/Gen/BITS/Sem3-2/CoCo/"
+              "Compiler-Construction-Project/src/parser/ModifiedGrammar.txt");
     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
     initLexer();
     initialiseParseTable();
     createParseTable(fnfset);
     synchPopulateParseTable(fnfset);
     TREE_NODE one = parseInputSourceCode();
-    printParseTree(one, "/home/rakshit/Gen/BITS/Sem3-2/CoCo/Compiler-Construction-Project/src/hehe.txt");
+    printParseTree(one, "/home/rakshit/Gen/BITS/Sem3-2/CoCo/"
+                        "Compiler-Construction-Project/src/hehe.txt");
     return 0;
 }
 // int main() {
