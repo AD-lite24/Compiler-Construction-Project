@@ -1,12 +1,11 @@
 #ifndef LEXERDEF_H
 #define LEXERDEF_H
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 
-enum Token
-{
+enum Token {
     TK_NULL,
     TK_ASSIGNOP,
     TK_COMMENT,
@@ -70,24 +69,22 @@ enum Token
 
 typedef enum Token Token;
 
-struct returnToken{
+struct returnToken {
     Token t;
-    char* lexeme;
+    char *lexeme;
     int line;
     int flag;
 };
 typedef struct returnToken returnToken;
 
-typedef struct Lexeme
-{
+typedef struct Lexeme {
     Token tk;
     char *attr;
 } Lexeme;
 
 typedef struct Trie *TRIE;
 
-struct Trie
-{
+struct Trie {
     char c;
     TRIE next[26];
     enum Token tk;

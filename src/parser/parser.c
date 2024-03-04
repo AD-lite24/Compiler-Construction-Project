@@ -921,14 +921,16 @@ void inOrderTraversal(FILE *fp, TREE_NODE root) {
     char *lexeme = root->lexeme;
     int lineNumber = root->lineNumber;
     char *tokenName = enumToString[root->x];
-    char value[10];
 
     char *nodeSymbol = "----";
     char *isLeafNode = "Yes";
+
     char *parent = "ROOT";
+
 
     if (root->parent)
         parent = enumToString[root->parent->x];
+
 
     if (root->count_children) {
         lexeme = "----";

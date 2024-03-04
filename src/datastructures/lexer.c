@@ -1128,8 +1128,8 @@ void printTokens() {
         if (r.t == 58) {
             int fuckyoumf = 69;
         }
-        printf("token %d\t lexeme %s\t line %d\n", r.t, r.lexeme, r.line);
-        if (r.t == -2) {
+        printf("line %d\t token %d\t lexeme %s\n", r.line, r.t, r.lexeme);
+        if (r.flag == -2) {
             break;
         }
     }

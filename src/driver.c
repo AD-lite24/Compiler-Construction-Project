@@ -18,12 +18,12 @@ int main() {
     grammar_glob = (GRAMMAR)malloc(sizeof(grammar));
     parseFile("src/parser/ModifiedGrammar.txt");
     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
-    while (1) {
+    // while (1) {
         // printf("Please enter your choice:");
         // scanf("%d", &choice);
-        choice = 2;
+        choice = 3;
         if (choice == 0) {
-            break;
+            // break;
         }
         if (choice == 1) {
             FILE *fp1 = (FILE *)malloc(sizeof(FILE));
@@ -50,6 +50,7 @@ int main() {
             TREE_NODE one = parseInputSourceCode();
             printParseTree(one, "given_test_cases/test_output/f_five.txt ");
         }
+
         if (choice == 4) {
             clock_t start_time, end_time;
             double total_CPU_time, total_CPU_time_in_seconds;
@@ -68,5 +69,5 @@ int main() {
             printf("Total CPU time: %lf", total_CPU_time);
             printf("Total CPU time in second: %lf", total_CPU_time_in_seconds);
         }
-    }
+    // }
 }
