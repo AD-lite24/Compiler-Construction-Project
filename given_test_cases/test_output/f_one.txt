@@ -1,0 +1,7 @@
+_main	5	TK_EPSILON	----	otherFunctions	Yes	----
+----	-1	----	----	program	No	otherFunctions
+----	-1	----	----	ROOT	No	program
+_main	5	TK_MAIN	----	mainFunction	Yes	----
+----	-1	----	----	program	No	mainFunction
+----	-1	stmts	----	mainFunction	Yes	----
+_input	5	TK_END	----	mainFunction	Yes	----

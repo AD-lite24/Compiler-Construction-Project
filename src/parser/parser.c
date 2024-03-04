@@ -3,6 +3,11 @@
 
 #include <stdbool.h>
 
+extern GRAMMAR grammar_glob;
+// extern ParseTable 
+extern ProdRule ParseTable[NUM_NONTERMS][NUM_TERMS+1];
+
+
 void synchPopulateParseTable(FIRSTANDFOLLOW Fnf) {
     Elements arr[] = {T_ID,   T_FUNID,  T_RUID, T_WHILE, T_UNION, T_DEFINETYPE,
                       T_TYPE, T_MAIN,   T_IF,   T_READ,  T_WRITE, T_RETURN,
@@ -375,7 +380,7 @@ void parseFile(char *filename) {
         printf("Error in opening file\n");
         return;
     }
-    grammar_glob = malloc(sizeof(grammar));
+    // grammar_glob = malloc(sizeof(grammar));
     for (int i = 0; i < NUM_NONTERMS; i++) {
         grammar_glob->rules[i] = createNewList_LL();
     }
@@ -745,7 +750,7 @@ void createParseTable(FIRSTANDFOLLOW F) {
 TREE_NODE createTreeNode(Elements x, TREE_NODE parent, returnToken *k) {
     TREE_NODE y = malloc(sizeof(TreeNode));
 
-    y->value = malloc(25);  
+    y->value = malloc(25);
     y->value = "----";
     if (k->t == TK_NUM || k->t == TK_RNUM) {
         y->value = NULL;
@@ -774,7 +779,7 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken *k) {
         if (k->flag == -2) {
             if (root->x == program) {
                 printf("Code is syntactically correct\n");
-                return 0; 
+                return 0;
                 // exit(0);
             }
         } else {
@@ -810,11 +815,14 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken *k) {
 
     if (a == T_DOLLAR && k->flag != -2) {
     }
-    if (root->x == T_EPSILON)
+    if (root->x == T_EPSILON) {
+        root->lexeme = "(-";
         return 0;
+    }
 
     // Uncomment to see input token and top of stack, and line until which code
-    // printf("Line %d : %s, %s\n", k->line, enumToString[top(st)], enumToString[k->t+NUM_NONTERMS]);
+    // printf("Line %d : %s, %s\n", k->line, enumToString[top(st)],
+    // enumToString[k->t+NUM_NONTERMS]);
 
     if (st->list->count == 1) {
         int jkl = 99; // For testing purposes remove later (but not now)
@@ -890,7 +898,7 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken *k) {
     //     int fuck_you_again = 10;
     //     int fuck_you = 5;
     // }
-    
+
     return 0;
 }
 
@@ -930,8 +938,8 @@ void inOrderTraversal(FILE *fp, TREE_NODE root) {
         isLeafNode = "No";
     }
 
-    fprintf(fp, "%s\t%d\t%s\t%s\t%s\t%s\t%s\n", lexeme, lineNumber, tokenName,
-            root->value, parent, isLeafNode, nodeSymbol);
+    fprintf(fp, "%-20s%-10d%-20s%-20s%-20s%-10s%-20s\n", lexeme, lineNumber,
+            tokenName, root->value, parent, isLeafNode, nodeSymbol);
 
     for (int i = 1; i < root->count_children; i++)
         inOrderTraversal(fp, root->children[i]);
@@ -946,107 +954,131 @@ void printParseTree(TREE_NODE root, char *outfile) {
     return;
 }
 
-int main() {
-    parseFile("src/parser/ModifiedGrammar.txt");
-    FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
-    printf("here1\n");
-    initLexer();
-    printf("here2\n");
-    initialiseParseTable();
-    printf("here3\n");
-    createParseTable(fnfset);
-    printf("here4\n");
-    synchPopulateParseTable(fnfset);
-    printf("here5\n");
-    TREE_NODE one = parseInputSourceCode();
-    printf("here6\n");
-    printParseTree(one, "src/parser/inorder_traversal.txt ");
-    printf("here7\n");
-    return 0;
-}
 // int main() {
 //     parseFile("src/parser/ModifiedGrammar.txt");
-//     printf("Grammar Rules : \n");
-//     for (int i = 0; i < NUM_NONTERMS; i++) {
-//         printf("%-3d  :  ", i);
-//         // printHEHE(grammar_glob->rules[i]);
-//         // printf("\n");
 
-//         NODE_LL ptr =grammar_glob->rules[i]->head;
-//         while (ptr != NULL) {
-//             NODE_ELE hehe = ptr->item->head;
-//             while (hehe != NULL) {
-//                 printf("%-3d ", hehe->item);
-//                 hehe = hehe->next;
-//             }
-//             printf("| ");
-//             ptr = ptr->next;
-//         }
-//         // printHEHE(GG->rules[i]);
-//         printf("\n");
-//     }
-//     printf("----\n");
 //     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
-//     printf("/*************************************************\n");
-//     printf("First Sets\n");
-//     for (int i = 0; i < NUM_ELEMENTS; i++) {
-//         printf("{ %s\t-> ", enumToString[i]);
-//         NODE_ELE ptr = fnfset->firstSet[i]->head;
-//         while (ptr != NULL) {
-//             printf("%s ", enumToString[ptr->item]);
-//             ptr = ptr->next;
-//         }
-//         printf("}\n");
-//     }
-//     printf("/*************************************************\n");
-//     printf("Follow Sets\n");
-//     for (int i = 0; i < NUM_NONTERMS; i++) {
-//         printf("{ %s  =>  ", enumToString[i]);
-//         NODE_ELE ptr = fnfset->followSet[i]->head;
-//         while (ptr != NULL) {
-//             printf("%s ", enumToString[ptr->item]);
-//             ptr = ptr->next;
-//         }
-//         printf("}\n");
-//     }
-//     printf("/*************************************************\n");
-//     printf("Checking Prod Rule Conversion\n");
-//     for (int i = 0; i < NUM_NONTERMS; i++) {
-//         LL_LL rulesForNonTerm = grammar_glob->rules[i];
-//         NODE_LL currRule = rulesForNonTerm->head;
-//         while (currRule) {
-//             ProdRule temp = convertLLtoProd(i, currRule);
-//             printf("%-3d  -> ", i);
-//             for (int j = 0; j < temp.count_rhs; j++) {
-//                 printf("%-3d ", temp.RHS[j]);
-//             }
-//             printf("\n");
-//             currRule = currRule->next;
-//         }
-//     }
-//     printf("/*************************************************\n");
-//     printf("Checking Parse Table Filling\n");
+//     printf("First and Follow sets automated\n");
+
+//     // initLexer("given_test_cases/test_cases/t1.txt");
+//     initLexer("given_test_cases/test_cases/t2.txt");
+//     // initLexer("given_test_cases/test_cases/t3.txt");
+//     // initLexer("given_test_cases/test_cases/t4.txt");
+//     // initLexer("given_test_cases/test_cases/t5.txt");
+//     // initLexer("given_test_cases/test_cases/t6.txt");
+
 //     initialiseParseTable();
+
 //     createParseTable(fnfset);
-//     int cnt = 0;
-//     for (int i = 0; i < 53; i++) {
-//         for (int j = 0; j < 59; j++) {
-//             // printf("%-3d ",ParseTable[i][j].count_rhs);
-//             if (ParseTable[i][j].count_rhs) {
-//                 printf("NT %s, \t", enumToString[i]);
-//                 printf("Term %s, \t", enumToString[j + 53]);
-//                 printf("Rule \t");
-//                 printf("%s => ", enumToString[ParseTable[i][j].LHS]);
-//                 for (int k = 0; k < ParseTable[i][j].count_rhs; k++) {
-//                     printf("%s ",
-//                     enumToString[ParseTable[i][j].RHS[k]]);
-//                 }
-//                 printf("\n");
-//                 cnt++;
-//             }
-//         }
-//         // printf("\n");
-//     }
-//     printf("%-3d \n", cnt);
+
+//     synchPopulateParseTable(fnfset);
+
+//     printf("Populated Parse Table and Initialized Lexer\n");
+
+//     // TREE_NODE f_one = parseInputSourceCode();
+//     TREE_NODE f_two = parseInputSourceCode();
+//     // printf("one\n");
+//     // TREE_NODE f_three = parseInputSourceCode();
+//     // printf("two\n");
+//     // TREE_NODE f_four = parseInputSourceCode();
+//     // printf("sthree\n");
+//     // TREE_NODE f_five = parseInputSourceCode();
+//     // printf("three\n");
+//     // TREE_NODE f_six= parseInputSourceCode();
+
+//     // printParseTree(f_one, "given_test_cases/test_output/f_one.txt");
+//     printParseTree(f_two, "given_test_cases/test_output/f_two.txt");
+//     // printParseTree(f_three, "given_test_cases/test_output/f_three.txt");
+//     // printParseTree(f_four, "given_test_cases/test_output/f_four.txt");
+//     // printParseTree(f_five, "given_test_cases/test_output/f_five.txt");
+//     // printParseTree(f_six, "given_test_cases/test_output/f_six.txt");
+
+//     printf("Parse Tree populated in file\n");
 //     return 0;
 // }
+// // int main() {
+// //     parseFile("src/parser/ModifiedGrammar.txt");
+// //     printf("Grammar Rules : \n");
+// //     for (int i = 0; i < NUM_NONTERMS; i++) {
+// //         printf("%-3d  :  ", i);
+// //         // printHEHE(grammar_glob->rules[i]);
+// //         // printf("\n");
+
+// //         NODE_LL ptr =grammar_glob->rules[i]->head;
+// //         while (ptr != NULL) {
+// //             NODE_ELE hehe = ptr->item->head;
+// //             while (hehe != NULL) {
+// //                 printf("%-3d ", hehe->item);
+// //                 hehe = hehe->next;
+// //             }
+// //             printf("| ");
+// //             ptr = ptr->next;
+// //         }
+// //         // printHEHE(GG->rules[i]);
+// //         printf("\n");
+// //     }
+// //     printf("----\n");
+// //     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
+// //     printf("/*************************************************\n");
+// //     printf("First Sets\n");
+// //     for (int i = 0; i < NUM_ELEMENTS; i++) {
+// //         printf("{ %s\t-> ", enumToString[i]);
+// //         NODE_ELE ptr = fnfset->firstSet[i]->head;
+// //         while (ptr != NULL) {
+// //             printf("%s ", enumToString[ptr->item]);
+// //             ptr = ptr->next;
+// //         }
+// //         printf("}\n");
+// //     }
+// //     printf("/*************************************************\n");
+// //     printf("Follow Sets\n");
+// //     for (int i = 0; i < NUM_NONTERMS; i++) {
+// //         printf("{ %s  =>  ", enumToString[i]);
+// //         NODE_ELE ptr = fnfset->followSet[i]->head;
+// //         while (ptr != NULL) {
+// //             printf("%s ", enumToString[ptr->item]);
+// //             ptr = ptr->next;
+// //         }
+// //         printf("}\n");
+// //     }
+// //     printf("/*************************************************\n");
+// //     printf("Checking Prod Rule Conversion\n");
+// //     for (int i = 0; i < NUM_NONTERMS; i++) {
+// //         LL_LL rulesForNonTerm = grammar_glob->rules[i];
+// //         NODE_LL currRule = rulesForNonTerm->head;
+// //         while (currRule) {
+// //             ProdRule temp = convertLLtoProd(i, currRule);
+// //             printf("%-3d  -> ", i);
+// //             for (int j = 0; j < temp.count_rhs; j++) {
+// //                 printf("%-3d ", temp.RHS[j]);
+// //             }
+// //             printf("\n");
+// //             currRule = currRule->next;
+// //         }
+// //     }
+// //     printf("/*************************************************\n");
+// //     printf("Checking Parse Table Filling\n");
+// //     initialiseParseTable();
+// //     createParseTable(fnfset);
+// //     int cnt = 0;
+// //     for (int i = 0; i < 53; i++) {
+// //         for (int j = 0; j < 59; j++) {
+// //             // printf("%-3d ",ParseTable[i][j].count_rhs);
+// //             if (ParseTable[i][j].count_rhs) {
+// //                 printf("NT %s, \t", enumToString[i]);
+// //                 printf("Term %s, \t", enumToString[j + 53]);
+// //                 printf("Rule \t");
+// //                 printf("%s => ", enumToString[ParseTable[i][j].LHS]);
+// //                 for (int k = 0; k < ParseTable[i][j].count_rhs; k++) {
+// //                     printf("%s ",
+// //                     enumToString[ParseTable[i][j].RHS[k]]);
+// //                 }
+// //                 printf("\n");
+// //                 cnt++;
+// //             }
+// //         }
+// //         // printf("\n");
+// //     }
+// //     printf("%-3d \n", cnt);
+// //     return 0;
+// // }

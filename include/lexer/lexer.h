@@ -35,7 +35,7 @@ void incrementForward();
 
 returnToken getNextToken();
 
-void initLexer();
+void initLexer(char* file_input);
 
 void printTokens();
 
