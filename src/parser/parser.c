@@ -2,54 +2,17 @@
 #include "../../include/tokens/tokens.h"
 
 #include <stdbool.h>
-// #include <parser.h>
-// #include <tokens.h>
-// void populateSynchSet() {
-//     memset(SynchSet, -1, NUM_NONTERMS*25);
-//     FIRSTANDFOLLOW;
-//     for (int i = 0 ; i < NUM_NONTERMS ; i++) {
-//         int ind = 0;
-//         NODE_ELE ptr = FIRSTANDFOLLOW->followSet[i]->head;
-//         while (ptr != NULL) {
-//             SynchSet[i][ind++] = ptr->item;
-//             ptr = ptr->next;
-//         }
-//         ptr = FIRSTANDFOLLOW->firstSet[i]->head;
-//         while (ptr != NULL) {
-//             if (!terminalBelongsSynchSet(i, ptr->item - NUM_NONTERMS))
-//                 SynchSet[i][ind++] = ptr->item;
-//         }
-//     }
-// }
+
 void synchPopulateParseTable(FIRSTANDFOLLOW Fnf){
-    // FIRSTANDFOLLOW->fir
     Elements arr[] = {T_ID, T_FUNID, T_RUID, T_WHILE, T_UNION, T_DEFINETYPE, T_TYPE, T_MAIN, T_IF, T_READ, T_WRITE, T_RETURN, T_CALL, T_RECORD, T_THEN, T_ELSE};
     for(int i = 0; i<NUM_NONTERMS; i++){
-        // NODE_ELE fol = Fnf->followSet[i]->head;
-    
-        // while (fol != NULL) {
-        //     if (ParseTable[i][fol->item].LHS == -1)
-        //         ParseTable[i][fol->item].LHS = -2;
-        //     fol = fol->next;
-        // }
         for (int j = 0 ; j < 16 ; j++) {
             if (ParseTable[i][arr[j]-NUM_NONTERMS].LHS == T_NULL)
                 ParseTable[i][arr[j]-NUM_NONTERMS].count_rhs = -1;
         }
-        
     }
-    // for (int i = 0 ; )
 }
-// bool terminalBelongsSynchSet(Elements a, Token t){
-//     Elements synchSeta[] = SynchSet[a];
-//     int i = 0;
-//     while(synchSeta[i] != -1){
-//         if(synchSeta[i] == t){
-//             return 1;
-//         }
-//     }
-//     return 0;
-// }
+
 char *enumToString[] = {"program",
                              "mainFunction",
                              "otherFunctions",
@@ -706,10 +669,6 @@ void printRule (ProdRule r) {
 }
 
 void initialiseParseTable() {
-    ProdRule dummy;
-    // dummy.LHS = -1;
-    // memset(dummy.RHS, -1, 10 * sizeof(Elements));
-    // dummy.count_rhs = 0;
     for (int i = 0; i < NUM_NONTERMS; i++) {
         for (int j = 0; j < NUM_TERMS+1; j++) {
             ParseTable[i][j].LHS = T_NULL;
@@ -719,8 +678,6 @@ void initialiseParseTable() {
             ParseTable[i][j].count_rhs = 0;
         }
     }
-    printf("MY NIGA\n");
-    printRule(ParseTable[4][70]);
 }
 
 void entryIntoParseTable(FIRSTANDFOLLOW F, Elements lhs, ProdRule rule) {
@@ -789,10 +746,6 @@ TREE_NODE createTreeNode(Elements x, TREE_NODE parent,returnToken * k) {
     if (x >= NUM_NONTERMS) {
         y->lexeme = k->lexeme;
         y->lineNumber = k->line;
-        // if (x == TK_INT || x == TK_REAL) 
-        //     // y->value = strtod(k.lexeme,);
-        // else
-        //     y->value = -1;
     } else {
         y->lexeme = "----";
         y->lineNumber = -1;
@@ -805,55 +758,43 @@ TREE_NODE createTreeNode(Elements x, TREE_NODE parent,returnToken * k) {
 }
 
 int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
-
-
-    /*
-    ERROR HANDLING :
-        1. Unknown pattern vs Unknown Symbol
-        2. If invalid token, call on next token seedha
-
-    TYPES OF ERRORS :
-        Line <LineNo.> Error :
-        : Invalid Token <Terminal Enum> encountered with value <Terminal lexeme> stack top <NonTerminal enum>
-        : The token <Terminal Enum> for <lexeme Terminal>  does not match with the expected token <Terminal enum> 
-        : Unknown Pattern <lexeme>
-        : Unknown Symbol <lexeme>
-    */
-    // returnToken k;
+    // Invalid Token
     if (k->flag == -1) {
-        // printf("%d\n", k.lexeme[2]);
+        // Start of File
         if (k->lexeme == NULL) {
             *k = getNextToken();
-            // printf("%d %d\n",k->t,k->flag);
             return createParseTree(st, root, k);
         }
-        printf ("Line %d Error : Unknown pattern <%s> %d\n", k->line, k->lexeme,k->t);
-        *k = getNextToken();
-        while (1) {
+        // When, Unknown pattern/Symbol is coming in input
+        do {
+            *k = getNextToken();
+            // Invalid token
+            if (k->flag == -1)
+                continue;
+            // EOF reached
+            if (k->flag == -2) {
+                printf("Reached File End, and Stack not empty\n");
+                return 0;
+            }
+            // Reached a terminal present in SynchArray
             if (ParseTable[0][k->t].LHS == T_NULL && ParseTable[0][k->t].count_rhs == -1)
                 break;
-            *k = getNextToken();
-        }
-
-
+        } while (1);
         return createParseTree(st, root, k);
-        // k = getNextToken(); // has to return line number of code and value if
-                            // number and lexeme
     }
     if (root->x == T_EPSILON) return 0;
-    // printf("%s, %s, %s, %s\n", enumToString[top(st)], enumToString[root->x], enumToString[k->t+NUM_NONTERMS], k->lexeme);
-            // printStack(st);
 
-    // printf("hehe\n");
+    // Uncomment to see input token and top of stack, and line until which code is running    
+    // printf("Line %d : %s, %s\n", k->line, enumToString[top(st)], enumToString[k->t+NUM_NONTERMS]);
     Elements a = top(st);
-
-    // if (k.flag == -1) {
-    //     // Error, lexer could not identify token
-    // } else 
+    if (a == T_DOLLAR && k->flag != -2) {
+        printf("Wont ever expand\n");
+        return 0;
+    }
 
     if (a != T_DOLLAR && k->flag == -2) {
         printf("Line %d Error : Some token expected but file abrupty ended\n", k->line);
-        printf("Line %d Error : Input file ended before complete parsing\n", k->line);
+        // printf("Line %d Error : Input file ended before complete parsing\n", k->line);
         return 0;
         // Error, no tokens left but stack is not empty
     }
@@ -885,7 +826,8 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
                 do {
                     *k = getNextToken();
                     if (k->flag == -1) {
-                        printf ("Line %d Error : Unknown pattern <%s> \n", k->line, k->lexeme);
+                        // Unknown patter/symbol has appeared
+                        // printf ("Line %d Error : Unknown pattern <%s> \n", k->line, k->lexeme);
                         continue;
                     } else if (k->flag == -2) {
                         printf("File has ended\n");
@@ -894,11 +836,6 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
                     rule = ParseTable[a][k->t];
                 } while (rule.LHS == T_NULL);
             }
-            // if (rule.LHS == -2) {
-            //     pop(st);
-            //     int y = createParseTree (st, root, k);
-            //     return y;
-            // }
             if (rule.LHS == T_NULL && rule.count_rhs == -1) {
                 do {
                     pop (st);
@@ -906,27 +843,13 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
                     a = top(st);
                     if (a == T_DOLLAR) {
                         printf("Stack be empty, tokens left\n");
-                        return 0;
+                        break;
                     }
                     if (a < NUM_NONTERMS)
                     rule = ParseTable[a][k->t];
 
                 } while (rule.LHS == T_NULL);
             }
-            
-            // int f = 0;
-            // while(!f){
-            //     k = getNextToken();
-            //     if (k.flag == -2)
-            //         return 0;
-            //     if(terminalBelongsSynchSet(a, k.t) == 1){
-            //         f = 1;
-            //     }
-            //     else{
-            //         //getNextToken()
-            //     }
-            // }
-            // createParseTree(st, root, k);
             // Error, syntactically incorrect as no production rule found
         }
     } else {
@@ -938,7 +861,6 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken * k) {
 
             // TODO : See prints
             printf("Line %d Error : The token %s for %s does not match with the expected token %s\n", k->line, enumToString[k->t+NUM_NONTERMS], k->lexeme, enumToString[a]);
-            printf("                Token was automatically inserted, resuming parsing\n");
             // k = getNextToken();
             if (top(st) == T_DOLLAR) {
                 printf("Stack is now Empty\n");
@@ -1020,21 +942,14 @@ void printParseTree(TREE_NODE root, char *outfile) {
 }
 
 int main(){
-    parseFile("/home/harsh/Compiler-Construction-Project/src/parser/ModifiedGrammar.txt");
-    printf("here1\n");
+    parseFile("/home/rakshit/Gen/BITS/Sem3-2/CoCo/Compiler-Construction-Project/src/parser/ModifiedGrammar.txt");
     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
-    printf("here2\n");
     initLexer();
     initialiseParseTable();
-    printf("here3\n");
     createParseTable(fnfset);
-    printf("here4\n");
     synchPopulateParseTable(fnfset);
-    printf("here5\n");
     TREE_NODE one = parseInputSourceCode();
-    printf("here6\n");
-    printParseTree(one, "/home/harsh/Compiler-Construction-Project/src/hehe.txt");
-    printf("here7\n");
+    printParseTree(one, "/home/rakshit/Gen/BITS/Sem3-2/CoCo/Compiler-Construction-Project/src/hehe.txt");
     return 0;
 }
 // int main() {

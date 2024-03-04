@@ -329,7 +329,7 @@ void initializeBuffers()
 {
     buf1 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
     buf2 = (char *)calloc(BUFFER_SIZE + 2, sizeof(char));
-    fpwcom = fopen("/home/harsh/Compiler-Construction-Project/tests/t6.txt", "r");
+    fpwcom = fopen("/home/rakshit/Gen/BITS/Sem3-2/CoCo/Compiler-Construction-Project/tests/t4.txt", "r");
     fseek(fpwcom, 0, SEEK_SET);
     int readlen;
     if (fpwcom && !feof(fpwcom))
