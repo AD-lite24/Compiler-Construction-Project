@@ -5,22 +5,24 @@
 #include <string.h>
 #include <time.h>
 
-
 GRAMMAR grammar_glob;
-ProdRule ParseTable[NUM_NONTERMS][NUM_TERMS+1];
-
+ProdRule ParseTable[NUM_NONTERMS][NUM_TERMS + 1];
+FILE *fp_trace;
 
 int main() {
+
+    fp_trace = fopen("given_test_cases/test_output/stack_trace_5.txt", "w+");
     int choice = -1;
     grammar_glob = (GRAMMAR)malloc(sizeof(grammar));
     parseFile("src/parser/ModifiedGrammar.txt");
     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
-    while (1) {
-        printf("Please enter your choice:");
-        scanf("%d", &choice);
-        if (choice == 0) {
-            break;
-        }
+    choice=3;
+    // while (1) {
+        // printf("Please enter your choice:");
+        // scanf("%d", &choice);
+        // if (choice == 0) {
+        //     break;
+        // }
         if (choice == 1) {
             FILE *fp1 = (FILE *)malloc(sizeof(FILE));
             fp1 = fopen("given_test_cases/test_cases/t1.txt", "r");
@@ -63,7 +65,10 @@ int main() {
             total_CPU_time_in_seconds = total_CPU_time / CLOCKS_PER_SEC;
             // Print both total_CPU_time and total_CPU_time_in_seconds
             printf("Total CPU time: %lf \n", total_CPU_time);
-            printf("Total CPU time in second: %lf \n", total_CPU_time_in_seconds);
+            printf("Total CPU time in second: %lf \n",
+                   total_CPU_time_in_seconds);
         }
-    }
+    // }
+    fflush(fp_trace);
+    fclose(fp_trace);
 }

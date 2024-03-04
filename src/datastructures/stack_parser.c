@@ -10,6 +10,7 @@ Stack* createStack(){
 }
 
 void push(Stack* st,Elements element){
+    
     NODE_ELE node=createNewNode_Ele(element);
     insertNode_EleFirst(node,st->list);
 }

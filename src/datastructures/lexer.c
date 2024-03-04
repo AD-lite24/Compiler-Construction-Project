@@ -136,8 +136,14 @@ FILE *removeComments(FILE *testcaseFile, FILE *cleanFile) {
 }
 
 char *getLexeme(char *begin, char *forward) {
+
+    if(forward==begin){
+        char* stng="";
+        return stng;
+    }
+    
     if ((begin <= (buf1 + BUFFER_SIZE + 1) &&
-         forward <= (buf1 + BUFFER_SIZE + 1)) ||
+         forward <= (buf1 + BUFFER_SIZE + 1)) ||    
         ((begin > (buf1 + BUFFER_SIZE + 1) &&
           begin <= (buf2 + BUFFER_SIZE + 1)) &&
          (forward > (buf1 + BUFFER_SIZE + 1)) &&
