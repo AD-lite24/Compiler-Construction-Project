@@ -1,7 +1,4 @@
-// #include "../include/lexer/lexer.h"
-// #include "../include/lexer/lexerDef.h"
 #include "../include/parser/parser.h"
-// #include "../include/tokens/tokens.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,12 +15,11 @@ int main() {
     grammar_glob = (GRAMMAR)malloc(sizeof(grammar));
     parseFile("src/parser/ModifiedGrammar.txt");
     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
-    // while (1) {
-        // printf("Please enter your choice:");
-        // scanf("%d", &choice);
-        choice = 3;
+    while (1) {
+        printf("Please enter your choice:");
+        scanf("%d", &choice);
         if (choice == 0) {
-            // break;
+            break;
         }
         if (choice == 1) {
             FILE *fp1 = (FILE *)malloc(sizeof(FILE));
@@ -48,7 +44,7 @@ int main() {
             createParseTable(fnfset);
             synchPopulateParseTable(fnfset);
             TREE_NODE one = parseInputSourceCode();
-            printParseTree(one, "given_test_cases/test_output/f_five.txt ");
+            printParseTree(one, "given_test_cases/test_output/f_five.txt");
         }
 
         if (choice == 4) {
@@ -61,13 +57,13 @@ int main() {
             createParseTable(fnfset);
             synchPopulateParseTable(fnfset);
             TREE_NODE one = parseInputSourceCode();
-            printParseTree(one, "given_test_cases/test_output/f_six.txt ");
+            printParseTree(one, "given_test_cases/test_output/f_six.txt");
             end_time = clock();
             total_CPU_time = (double)(end_time - start_time);
             total_CPU_time_in_seconds = total_CPU_time / CLOCKS_PER_SEC;
             // Print both total_CPU_time and total_CPU_time_in_seconds
-            printf("Total CPU time: %lf", total_CPU_time);
-            printf("Total CPU time in second: %lf", total_CPU_time_in_seconds);
+            printf("Total CPU time: %lf \n", total_CPU_time);
+            printf("Total CPU time in second: %lf \n", total_CPU_time_in_seconds);
         }
-    // }
+    }
 }
