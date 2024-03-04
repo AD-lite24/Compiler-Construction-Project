@@ -744,6 +744,16 @@ void createParseTable(FIRSTANDFOLLOW F) {
 
 TREE_NODE createTreeNode(Elements x, TREE_NODE parent, returnToken *k) {
     TREE_NODE y = malloc(sizeof(TreeNode));
+
+    y->value = malloc(25);  
+    y->value = "----";
+    if (k->t == TK_NUM || k->t == TK_RNUM) {
+        y->value = NULL;
+        free(y->value);
+        y->value = malloc(25);
+        strcpy(y->value, k->lexeme);
+    }
+
     if (x >= NUM_NONTERMS) {
         y->lexeme = k->lexeme;
         y->lineNumber = k->line;
@@ -759,6 +769,20 @@ TREE_NODE createTreeNode(Elements x, TREE_NODE parent, returnToken *k) {
 }
 
 int createParseTree(Stack *st, TREE_NODE root, returnToken *k) {
+    Elements a = top(st);
+    if (a == T_DOLLAR) {
+        if (k->flag == -2) {
+            if (root->x == program) {
+                printf("Code is syntactically correct\n");
+                return 0; 
+                // exit(0);
+            }
+        } else {
+            printf("Line %d Error : Extra content in input file\n", k->line);
+            // exit(0);
+            // Error, Stack empty but leftover tokens found
+        }
+    }
     // Invalid Token
     if (k->flag == -1) {
         // Start of File
@@ -767,38 +791,36 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken *k) {
             return createParseTree(st, root, k);
         }
         // When, Unknown pattern/Symbol is coming in input
-        do {
-            *k = getNextToken();
-            // Invalid token
-            if (k->flag == -1)
-                continue;
-            // EOF reached
-            if (k->flag == -2) {
-                printf("Reached File End, and Stack not empty\n");
-                return 0;
-            }
-            // Reached a terminal present in SynchArray
-            if (ParseTable[0][k->t].LHS == T_NULL &&
-                ParseTable[0][k->t].count_rhs == -1)
-                break;
-        } while (1);
+        *k = getNextToken();
         return createParseTree(st, root, k);
+    }
+    if (k->flag == -2) {
+        if (a == T_DOLLAR) {
+            // printf("Wont ever expand\n");
+            printf("Code is syntactically correct\n");
+            return 0;
+        } else {
+            // EOF reached
+            printf("Stack is not empty but file ended\n");
+            return 0;
+        }
+        return 0;
+    }
+    // Reached a terminal present in SynchArray
+
+    if (a == T_DOLLAR && k->flag != -2) {
     }
     if (root->x == T_EPSILON)
         return 0;
 
     // Uncomment to see input token and top of stack, and line until which code
-    // is running printf("Line %d : %s, %s\n", k->line, enumToString[top(st)],
-    // enumToString[k->t+NUM_NONTERMS]);
-    Elements a = top(st);
-    if (a == T_DOLLAR && k->flag != -2) {
-        printf("Wont ever expand\n");
-        return 0;
+    // printf("Line %d : %s, %s\n", k->line, enumToString[top(st)], enumToString[k->t+NUM_NONTERMS]);
+
+    if (st->list->count == 1) {
+        int jkl = 99; // For testing purposes remove later (but not now)
     }
 
     if (a != T_DOLLAR && k->flag == -2) {
-        printf("Line %d Error : Some token expected but file abrupty ended\n",
-               k->line);
         // printf("Line %d Error : Input file ended before complete parsing\n",
         // k->line);
         return 0;
@@ -831,34 +853,13 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken *k) {
                    "stack top %s\n",
                    k->line, enumToString[k->t + NUM_NONTERMS], k->lexeme,
                    enumToString[a]);
-            if (rule.LHS == T_NULL && rule.count_rhs == 0) {
-                do {
-                    *k = getNextToken();
-                    if (k->flag == -1) {
-                        // Unknown patter/symbol has appeared
-                        // printf ("Line %d Error : Unknown pattern <%s> \n",
-                        // k->line, k->lexeme);
-                        continue;
-                    } else if (k->flag == -2) {
-                        printf("File has ended\n");
-                        return 0;
-                    }
-                    rule = ParseTable[a][k->t];
-                } while (rule.LHS == T_NULL);
+            if (rule.count_rhs == 0) {
+                *k = getNextToken();
+                createParseTree(st, root, k);
             }
-            if (rule.LHS == T_NULL && rule.count_rhs == -1) {
-                do {
-                    pop(st);
-
-                    a = top(st);
-                    if (a == T_DOLLAR) {
-                        printf("Stack be empty, tokens left\n");
-                        break;
-                    }
-                    if (a < NUM_NONTERMS)
-                        rule = ParseTable[a][k->t];
-
-                } while (rule.LHS == T_NULL);
+            if (rule.count_rhs == -1) {
+                pop(st);
+                return createParseTree(st, root, k);
             }
             // Error, syntactically incorrect as no production rule found
         }
@@ -885,18 +886,11 @@ int createParseTree(Stack *st, TREE_NODE root, returnToken *k) {
         }
     }
 
-    if (top(st) == T_DOLLAR) {
-        if (k->flag == -2) {
-            if (root->x == program) {
-                printf("Code is syntactically correct\n");
-                // exit(0);
-            }
-        } else {
-            printf("Line %d Error : Extra content in input file\n", k->line);
-            // exit(0);
-            // Error, Stack empty but leftover tokens found
-        }
-    }
+    // if (st->list->count == 1) {
+    //     int fuck_you_again = 10;
+    //     int fuck_you = 5;
+    // }
+    
     return 0;
 }
 
@@ -925,8 +919,6 @@ void inOrderTraversal(FILE *fp, TREE_NODE root) {
     char *isLeafNode = "Yes";
     char *parent = "ROOT";
 
-    if (root->x == T_INT || root->x == T_REAL)
-        sprintf(value, "%.2f\n", root->value);
     if (root->parent)
         parent = enumToString[root->parent->x];
 
@@ -939,7 +931,7 @@ void inOrderTraversal(FILE *fp, TREE_NODE root) {
     }
 
     fprintf(fp, "%s\t%d\t%s\t%s\t%s\t%s\t%s\n", lexeme, lineNumber, tokenName,
-            value, parent, isLeafNode, nodeSymbol);
+            root->value, parent, isLeafNode, nodeSymbol);
 
     for (int i = 1; i < root->count_children; i++)
         inOrderTraversal(fp, root->children[i]);
@@ -955,16 +947,21 @@ void printParseTree(TREE_NODE root, char *outfile) {
 }
 
 int main() {
-    parseFile("/home/rakshit/Gen/BITS/Sem3-2/CoCo/"
-              "Compiler-Construction-Project/src/parser/ModifiedGrammar.txt");
+    parseFile("src/parser/ModifiedGrammar.txt");
     FIRSTANDFOLLOW fnfset = ComputeFirstAndFollowSets(grammar_glob);
+    printf("here1\n");
     initLexer();
+    printf("here2\n");
     initialiseParseTable();
+    printf("here3\n");
     createParseTable(fnfset);
+    printf("here4\n");
     synchPopulateParseTable(fnfset);
+    printf("here5\n");
     TREE_NODE one = parseInputSourceCode();
-    printParseTree(one, "/home/rakshit/Gen/BITS/Sem3-2/CoCo/"
-                        "Compiler-Construction-Project/src/hehe.txt");
+    printf("here6\n");
+    printParseTree(one, "src/parser/inorder_traversal.txt ");
+    printf("here7\n");
     return 0;
 }
 // int main() {

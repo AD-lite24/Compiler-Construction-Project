@@ -40,7 +40,7 @@ ProdRule ParseTable[NUM_NONTERMS][NUM_TERMS+1];
 struct TreeNode {
     Elements x; //NodeSymbol
     int lineNumber; // lineno
-    double value; // ValueIfNumber
+    char* value; // ValueIfNumber
     char * lexeme; // lexeme
 
     struct TreeNode * children[10];
