@@ -14,12 +14,7 @@ void synchPopulateParseTable(FIRSTANDFOLLOW Fnf) {
                       T_TYPE, T_MAIN,   T_IF,   T_READ,  T_WRITE, T_RETURN,
                       T_CALL, T_RECORD, T_THEN, T_ELSE};
     for (int i = 0; i < NUM_NONTERMS; i++) {
-        NODE_ELE ptr = Fnf->followSet[i]->head;
-        while (ptr != NULL) {
-            if (ParseTable[i][ptr->item - NUM_NONTERMS].LHS == T_NULL)
-                ParseTable[i][arr[j] - NUM_NONTERMS].count_rhs = -2;
-
-        }
+        
         for (int j = 0; j < 16; j++) {
             if (ParseTable[i][arr[j] - NUM_NONTERMS].LHS == T_NULL)
                 ParseTable[i][arr[j] - NUM_NONTERMS].count_rhs = -1;

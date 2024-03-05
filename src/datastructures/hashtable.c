@@ -1,6 +1,6 @@
-#include "../../include/datastructures/hashtable.h"
-#include "../../include/datastructures/linked_list.h"
-#include "../../include/symbol_table/symbol_table.h"
+#include "include/datastructures/hashtable.h"
+#include "include/datastructures/linked_list.h"
+#include "include/symbol_table/symbol_table.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
