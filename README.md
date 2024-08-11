@@ -2,6 +2,10 @@
 
 C code for the compiler project
 
+Note: This the original code structure with the automated testing pipeline and other devops features, but is not complete
+because of changes in the submission guidelines. The actual submission ready code is on the submission branch, albeit without any
+devops features sadly.
+
 ## Table of contents:
 
 1. [Overview of Compiler](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#overview-of-a-compiler)
