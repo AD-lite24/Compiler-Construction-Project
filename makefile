@@ -1,42 +1,17 @@
 CC = gcc
-UNITYDIR = tests/unity
-CFLAGS = -Wall -I./include -I./include/datastructures -I$(UNITYDIR) -g
-LIBS = -lm
+CFLAGS = -Wall -Wextra -g
 
-SRCDIR = src
-TESTDIR = tests
-OBJDIR = build
-BINDIR = bin
+SRC_FILES = driver.c lexer.c parser.c
+OBJ_FILES = $(SRC_FILES:.c=.o)
+EXEC = output
 
-SOURCES = $(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/datastructures/*.c) $(wildcard $(SRCDIR)/symbol_table/*.c)
-TEST_SOURCES = $(wildcard $(TESTDIR)/*.c) $(UNITYDIR)/unity.c
-OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
-TEST_OBJECTS = $(patsubst $(TESTDIR)/%.c, $(OBJDIR)/%.o, $(TEST_SOURCES))
-EXECUTABLE = $(BINDIR)/my_program
-TEST_EXECUTABLE = $(BINDIR)/test_suite
+all: $(EXEC)
 
-all: $(EXECUTABLE) $(TEST_EXECUTABLE)
+$(EXEC): $(OBJ_FILES)
+	$(CC) $(CFLAGS) -o $@ $^
 
-tests: $(TEST_EXECUTABLE)
-	./$(TEST_EXECUTABLE)
-
-$(EXECUTABLE): $(OBJECTS)
-	@mkdir -p $(BINDIR)
-	$(CC) $(CFLAGS) $^ -o $@
-
-$(TEST_EXECUTABLE): $(TEST_OBJECTS) $(OBJECTS)
-	@mkdir -p $(BINDIR)
-	$(CC) $(CFLAGS) $(LIBS) $^ -o $@
-
-$(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-$(OBJDIR)/%.o: $(TESTDIR)/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(OBJDIR)/*.o $(EXECUTABLE) $(TEST_EXECUTABLE)
-
-.PHONY: tests
+	rm -f $(OBJ_FILES) $(EXEC)
