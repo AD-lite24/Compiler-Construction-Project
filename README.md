@@ -2,6 +2,9 @@
 
 C code for the compiler project
 
+Note: The code structure was modified to meet the submission guidelines. The original code structure
+is present at the master branch.
+
 ## Table of contents:
 
 1. [Overview of Compiler](https://github.com/AD-lite24/Compiler-Construction-Project/tree/master?tab=readme-ov-file#overview-of-a-compiler)
